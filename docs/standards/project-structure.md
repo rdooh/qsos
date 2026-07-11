@@ -62,15 +62,34 @@ work/                              — point-in-time work (transient)
   tix-manifest.json                — compiled ticket registry (auto-generated)
   TIX-NNN-slug/                    — one folder per ticket
     TIX-NNN-slug.md                — always present; frontmatter + description
-    screenshots/                   — optional: UI evidence
-    evidence/                      — optional: verify runs, test output
-    logs/                          — optional: debug output (typically git-ignored)
+    screenshots/                   — UI evidence captured during verification (committed)
+    evidence/                      — verify runs, test logs captured during verification (committed)
+    logs/                          — debug output (typically git-ignored)
+
+testing/                           — test harness configurations and manifests (never test code)
+  manifest.json                    — declarative test harness posture manifest
+
+test-results/                      — transient test runner output (always git-ignored)
+  unit.json                        — unit test output (e.g. mocha/jest JSON reporter)
+  integration.json                 — integration test output
+  coverage.json                    — coverage statistics
 
 .audit-baseline.json               — optional: acknowledged pre-existing violations (see below)
 logs/                              — tool status files and diagnostic reports (git-ignored)
 ```
 
 Each top-level directory carries a `README.md` that self-identifies its quadrant role.
+
+### Directory boundaries and routing rules
+
+> [!IMPORTANT]
+> **Test Code vs. Test Configuration**:
+> - All test code files (unit, integration, E2E/Playwright) **must live inside the application source tree** (e.g., `src/test/`, `tests/`, or adjacent to the source files).
+> - The `testing/` directory is reserved solely for configurations, test harness manifests, and mocks. **Never place executable test suites in `testing/`**.
+>
+> **Transient Output vs. Committed Evidence**:
+> - Machine-readable test runner outputs (`unit.json`, `coverage.json`) are transient and **must go to the `test-results/` directory**. This directory is machine-specific and **must be git-ignored**.
+> - Point-in-time proof of success captured during the verification phase (screenshots, curl payloads, CLI execution logs) **must go to the active ticket folder** (`work/TIX-NNN/evidence/` or `work/TIX-NNN/screenshots/`) and **must be committed to git**. This ensures a durable history of the ticket's verification.
 
 ---
 

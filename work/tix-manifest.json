@@ -69,8 +69,14 @@
     {
       "id": "TIX-012",
       "title": "TDD discipline in qsos-implement + test runner floor in qsos-verify",
-      "status": "todo",
+      "status": "done",
       "path": "work/TIX-012-tdd-and-verify-floor/TIX-012-tdd-and-verify-floor.md"
+    },
+    {
+      "id": "TIX-013",
+      "title": "Codify standard directories for tests, transient results, and ticket evidence",
+      "status": "done",
+      "path": "work/TIX-013-workspace-directory-standards/TIX-013-workspace-directory-standards.md"
     }
   ]
 }

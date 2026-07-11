@@ -8,3 +8,6 @@ work/*/logs/
 # Python
 __pycache__/
 *.pyc
+
+# Transient test results
+test-results/

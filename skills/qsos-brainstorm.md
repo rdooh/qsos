@@ -91,7 +91,7 @@ Rules:
 
 Determine the next TIX number by reading `work/tix-manifest.json` (or start at TIX-001 if none exists).
 
-Create `work/TIX-NNN-<slug>/ticket.md` using the format from `common-skills/standards/project-structure.md`:
+Create `work/TIX-NNN-<slug>/TIX-NNN-<slug>.md` using the format from `common-skills/standards/project-structure.md`:
 
 ```markdown
 ---
@@ -122,7 +122,7 @@ Then call `/task update` to register the new ticket in the active medium.
 BRAINSTORM VERDICT: READY FOR /feature-doc | NEEDS CLARIFICATION — <reason>
 
 FEATURE FILE: docs/features/<slug>.feature [@proposed] — created
-TICKET: work/TIX-NNN-<slug>/ticket.md [todo] — created
+TICKET: work/TIX-NNN-<slug>/TIX-NNN-<slug>.md [todo] — created
 OVERLAPS: none | <description>
 CONFLICTS: none | BLOCKED — <ADR reference and nature of conflict>
 VOCABULARY ALIGNED: yes | <terms adjusted>

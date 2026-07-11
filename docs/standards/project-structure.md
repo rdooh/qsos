@@ -61,7 +61,7 @@ docs/                              — durable specification + durable evidence
 work/                              — point-in-time work (transient)
   tix-manifest.json                — compiled ticket registry (auto-generated)
   TIX-NNN-slug/                    — one folder per ticket
-    ticket.md                      — always present; frontmatter + description
+    TIX-NNN-slug.md                — always present; frontmatter + description
     screenshots/                   — optional: UI evidence
     evidence/                      — optional: verify runs, test output
     logs/                          — optional: debug output (typically git-ignored)
@@ -81,7 +81,7 @@ Each top-level directory carries a `README.md` that self-identifies its quadrant
 
 | Artifact | Location | Format | Strux sensor |
 |---|---|---|---|
-| Ticket | `work/TIX-NNN-slug/ticket.md` | Markdown with YAML frontmatter | `strux-tix` |
+| Ticket | `work/TIX-NNN-slug/TIX-NNN-slug.md` | Markdown with YAML frontmatter | `strux-tix` |
 | Feature file | `docs/features/feature-name.feature` | Gherkin + lifecycle tags | `gherkin-rules` |
 
 ### Group 2 — Architecture + Decisions
@@ -242,13 +242,13 @@ Each ticket is a directory under `work/`:
 
 ```
 work/TIX-NNN-slug/
-  ticket.md          — always present
+  TIX-NNN-slug.md    — always present; named to match directory so open tabs are self-identifying
   screenshots/       — optional
   evidence/          — optional
   logs/              — optional (typically git-ignored)
 ```
 
-The `ticket.md` file is the minimum viable ticket. Subfolders accumulate as the work generates artifacts.
+The `TIX-NNN-slug.md` file is the minimum viable ticket. Subfolders accumulate as the work generates artifacts.
 
 ### Medium preference order
 Skills resolve the task tracking medium in this order:
@@ -272,7 +272,7 @@ On resolution: *"I'll use [medium] for task tracking — proceed?"* Continue unl
 | close with evidence pointer | ✓ | ✓ | ✓ (check off) |
 | sprint / priority / watchers | ✓ | — | — |
 
-### TIX ticket.md format
+### TIX file format
 ```markdown
 ---
 id: TIX-NNN

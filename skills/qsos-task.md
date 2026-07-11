@@ -55,7 +55,7 @@ Return tickets/tasks that are `ready` or `todo` and have no unresolved blocking 
 Return the full ticket: title, description, status, linked feature files, linked ADRs, `architecture_updated` field, dependencies.
 
 - **Jira:** fetch the issue; note the description and any linked docs in fields or comments
-- **TIX files:** read `work/<id>-slug/ticket.md` including YAML frontmatter
+- **TIX files:** read `work/<id>-slug/<id>-slug.md` including YAML frontmatter
 - **Local plan:** find the matching checkbox line and any sub-items beneath it
 
 ### `start <id>` — mark in-progress
@@ -63,7 +63,7 @@ Return the full ticket: title, description, status, linked feature files, linked
 Update the ticket status to `in-progress`.
 
 - **Jira:** transition the issue to In Progress
-- **TIX files:** update `status: in-progress` in the frontmatter of `work/<id>-slug/ticket.md`; update entry in `work/tix-manifest.json`
+- **TIX files:** update `status: in-progress` in the frontmatter of `work/<id>-slug/<id>-slug.md`; update entry in `work/tix-manifest.json`
 - **Local plan:** change `- [ ]` to `- [~]` (in-progress marker)
 
 ### `update <id> <note>` — attach a note or artifact
@@ -71,7 +71,7 @@ Update the ticket status to `in-progress`.
 Add information to the ticket without changing its status.
 
 - **Jira:** post a comment
-- **TIX files:** append a note to the body of `work/<id>-slug/ticket.md` under a `## Updates` section
+- **TIX files:** append a note to the body of `work/<id>-slug/<id>-slug.md` under a `## Updates` section
 - **Local plan:** not supported — note this and continue
 
 ### `close <id> <evidence>` — mark done

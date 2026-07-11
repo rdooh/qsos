@@ -1,0 +1,52 @@
+{
+  "tickets": [
+    {
+      "id": "TIX-001",
+      "title": "Consolidate QSOS into monorepo structure with deploy script",
+      "status": "done",
+      "path": "work/TIX-001-monorepo-consolidation/TIX-001-monorepo-consolidation.md"
+    },
+    {
+      "id": "TIX-002",
+      "title": "Define five QSOS agent definitions",
+      "status": "done",
+      "path": "work/TIX-002-agent-definitions/TIX-002-agent-definitions.md"
+    },
+    {
+      "id": "TIX-003",
+      "title": "Add qsos-review skill — post-implement code quality gate",
+      "status": "done",
+      "path": "work/TIX-003-review-skill/TIX-003-review-skill.md"
+    },
+    {
+      "id": "TIX-004",
+      "title": "Add qsos-security skill — optional architect-triggered security gate",
+      "status": "done",
+      "path": "work/TIX-004-security-skill/TIX-004-security-skill.md"
+    },
+    {
+      "id": "TIX-005",
+      "title": "Refactor qsos-verify to dispatch verifier agent + update qsos-doc-sync",
+      "status": "done",
+      "path": "work/TIX-005-verify-refactor/TIX-005-verify-refactor.md"
+    },
+    {
+      "id": "TIX-006",
+      "title": "Add deploy.sh health check mode",
+      "status": "done",
+      "path": "work/TIX-006-deploy-health-check/TIX-006-deploy-health-check.md"
+    },
+    {
+      "id": "TIX-007",
+      "title": "Unified multi-runtime deployer (replace deploy.sh + deploy_gemini.py)",
+      "status": "todo",
+      "path": "work/TIX-007-unified-deployer/TIX-007-unified-deployer.md"
+    },
+    {
+      "id": "TIX-008",
+      "title": "Agent model tier configuration — abstract low/mid/high tiers with config-driven mapping",
+      "status": "todo",
+      "path": "work/TIX-008-agent-model-tier-config/TIX-008-agent-model-tier-config.md"
+    }
+  ]
+}

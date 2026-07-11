@@ -1,8 +1,8 @@
 # ADR-001: Consolidate QSOS into a dedicated monorepo
 
-Date: 2026-07-10
-Status: Accepted
-Decision makers: Rob Dooh
+**Date:** 2026-07-10
+**Status:** Accepted
+**Decision makers:** Rob Dooh
 
 ## Considered Options
 

@@ -58,7 +58,7 @@ State what was found: overlaps noted, conflicts found (BLOCKED), or clean.
 
 Create `docs/features/<slug>.feature` (create `docs/features/` if it does not exist).
 
-Use the format from `common-skills/standards/project-structure.md`:
+Use the format from `docs/standards/project-structure.md`:
 
 ```gherkin
 @proposed
@@ -91,7 +91,7 @@ Rules:
 
 Determine the next TIX number by reading `work/tix-manifest.json` (or start at TIX-001 if none exists).
 
-Create `work/TIX-NNN-<slug>/TIX-NNN-<slug>.md` using the format from `common-skills/standards/project-structure.md`:
+Create `work/TIX-NNN-<slug>/TIX-NNN-<slug>.md` using the format from `docs/standards/project-structure.md`:
 
 ```markdown
 ---

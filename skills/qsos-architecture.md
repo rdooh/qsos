@@ -46,7 +46,7 @@ Identify:
 
 Name the specific containers, components, or relationships that need to change. Be precise — use the exact names and IDs from the DSL, or the names being proposed for new elements.
 
-For new elements, confirm: does this warrant a structural model change? Adding a button does not. Adding a new service does. Applying the test from `common-skills/standards/project-structure.md`: if removing this element in six months would require migrating data or refactoring multiple files, it belongs in the model.
+For new elements, confirm: does this warrant a structural model change? Adding a button does not. Adding a new service does. Applying the test from `docs/standards/project-structure.md`: if removing this element in six months would require migrating data or refactoring multiple files, it belongs in the model.
 
 ---
 
@@ -78,7 +78,7 @@ For each affected element, apply:
 
 ## Step 5 — Update the DSL
 
-Make the minimum changes needed. Preserve all existing content not related to the triggered change. Use Structurizr DSL format per `common-skills/standards/project-structure.md`.
+Make the minimum changes needed. Preserve all existing content not related to the triggered change. Use Structurizr DSL format per `docs/standards/project-structure.md`.
 
 DSL rules:
 - Single file: `docs/architecture/architecture.dsl`
@@ -90,7 +90,7 @@ DSL rules:
 
 ## Step 6 — ADR check and creation
 
-Apply the 6-month reversal test from `common-skills/standards/project-structure.md`:
+Apply the 6-month reversal test from `docs/standards/project-structure.md`:
 
 > *If this decision were reversed in six months, would it require migrating data, refactoring multiple files, or changing how other features work?*
 

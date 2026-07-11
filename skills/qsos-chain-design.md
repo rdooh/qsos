@@ -2,7 +2,7 @@
 
 This document captures the design decisions and current state of the QSOS workflow chain.
 For artifact formats, file locations, and cross-artifact relationships, see
-`common-skills/standards/project-structure.md` — that is the canonical reference.
+`docs/standards/project-structure.md` — that is the canonical reference.
 
 ---
 

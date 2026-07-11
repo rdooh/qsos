@@ -1,8 +1,8 @@
 # ADR-002: Introduce named agent definitions for QSOS specialist roles
 
-Date: 2026-07-10
-Status: Accepted
-Decision makers: Rob Dooh
+**Date:** 2026-07-10
+**Status:** Accepted
+**Decision makers:** Rob Dooh
 
 ## Considered Options
 

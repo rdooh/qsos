@@ -107,7 +107,7 @@ Do not silently omit the operation. Do not pretend it happened.
 | close with evidence pointer | ✓ | ✓ | ✓ (check off) |
 | sprint / priority / watchers | ✓ | — | — |
 
-For full TIX file format and ticket readiness gate definitions, see `common-skills/standards/project-structure.md`.
+For full TIX file format and ticket readiness gate definitions, see `docs/standards/project-structure.md`.
 
 ---
 

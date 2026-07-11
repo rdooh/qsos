@@ -1,8 +1,8 @@
 # ADR-003: Multi-runtime deployment strategy
 
-Date: 2026-07-10
-Status: Proposed
-Decision makers: Rob Dooh
+**Date:** 2026-07-10
+**Status:** Proposed
+**Decision makers:** Rob Dooh
 
 ## Context
 

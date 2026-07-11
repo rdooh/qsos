@@ -1,7 +1,10 @@
 # ADR-003: Multi-runtime deployment strategy
 
+## Status
+
+Proposed
+
 **Date:** 2026-07-10
-**Status:** Proposed
 **Decision makers:** Rob Dooh
 
 ## Context
@@ -12,6 +15,12 @@ Two independent deployers now exist for the same source. At two runtimes this is
 
 A unified deployment architecture is needed before a third runtime target is added.
 
+## Decision
+
+**Not yet made.** This ADR records the open decision and the two realistic options. Option B is the leading candidate. The two-script interim state is acknowledged and intentional — do not remove `deploy_gemini.py` without resolving this ADR.
+
+**When this decision is made, update status to Accepted and add the chosen option.**
+
 ## Considered Options
 
 - **Option A: Keep separate scripts per runtime (status quo)** — `deploy.sh` for Claude, `deploy_gemini.py` for Gemini, `deploy_<runtime>.x` for each new target. Pro: each script is self-contained and independently testable. Con: shared logic (health check, stale detection, status vocabulary) duplicates across scripts; no single entry point.
@@ -20,21 +29,12 @@ A unified deployment architecture is needed before a third runtime target is add
 
 - **Option C: Shared library + thin per-runtime wrappers** — Extract common logic into a module, keep per-runtime entry points. More engineering for marginal gain at current scale.
 
-## Decision
-
-**Not yet made.** This ADR records the open decision and the two realistic options. Option B is the leading candidate. The two-script interim state is acknowledged and intentional — do not remove `deploy_gemini.py` without resolving this ADR.
-
-**When this decision is made, update status to Accepted and add the chosen option.**
-
 ## Consequences
 
-**If Option B is chosen:**
-- `deploy.sh` and `deploy_gemini.py` are replaced by a single `deploy.py`
+- If Option B is chosen: `deploy.sh` and `deploy_gemini.py` are replaced by a single `deploy.py`
 - Runtime detection logic must be kept current as new runtimes ship
 - `--check` output vocabulary is unified across all targets
 - Adding a new runtime = adding a target adapter class, not a new script
-
-**Known trade-offs:**
 - Per-target transform rules (Claude symlinks vs Gemini file copies + manifest) mean the deployer must understand each runtime's installation format
 - Auto-detection means a newly installed runtime gets deployed to on next run — this is the desired behavior, but operators should be aware
 

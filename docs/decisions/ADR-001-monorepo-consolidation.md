@@ -1,13 +1,11 @@
 # ADR-001: Consolidate QSOS into a dedicated monorepo
 
+## Status
+
+Accepted
+
 **Date:** 2026-07-10
-**Status:** Accepted
 **Decision makers:** Rob Dooh
-
-## Considered Options
-
-- **Option A: Keep skills in common-skills** — continue using `common-skills/skills/workflow/` as the home for QSOS skills; add agent and utility deployment to `common-skills/install.sh`. Con: `common-skills/` has no concept of artifact types beyond skills; the repo's purpose becomes unclear as it grows to host agents, CLIs, and a VS Code extension.
-- **Option B: Consolidate into qsos/ monorepo (chosen)** — move all QSOS artifacts into `qsos/`, which already exists as the documentation home. Pro: single source of truth, single deploy script, natural home for all artifact types as they arrive. Con: one-time symlink migration.
 
 ## Context
 
@@ -28,19 +26,19 @@ The `qsos/` repository becomes the monorepo for all QSOS artifacts:
 
 `common-skills/` retains non-QSOS skills (research, thinking, coding, comms) and its own `install.sh`. It is no longer involved in QSOS deployment.
 
+## Considered Options
+
+- **Option A: Keep skills in common-skills** — continue using `common-skills/skills/workflow/` as the home for QSOS skills; add agent and utility deployment to `common-skills/install.sh`. Con: `common-skills/` has no concept of artifact types beyond skills; the repo's purpose becomes unclear as it grows to host agents, CLIs, and a VS Code extension.
+- **Option B: Consolidate into qsos/ monorepo (chosen)** — move all QSOS artifacts into `qsos/`, which already exists as the documentation home. Pro: single source of truth, single deploy script, natural home for all artifact types as they arrive. Con: one-time symlink migration.
+
 ## Consequences
 
-**Positive:**
 - One repository to clone, one script to run — full QSOS install
 - `deploy.sh` can handle all artifact types as they arrive, without retrofitting
 - QSOS documentation and implementation artifacts are co-located
 - Enables future packaging (npm, brew, installer) from a single source
-
-**Negative:**
 - One-time migration of symlinks — existing `~/.claude/commands/qsos-*` links must be re-pointed
 - `common-skills/registry.yml` requires cleanup after migration
-
-**Neutral:**
 - `deploy.sh` supersedes `common-skills/install.sh` for QSOS only — the two scripts coexist and serve different artifact sets
 
 ## 6-month reversal test

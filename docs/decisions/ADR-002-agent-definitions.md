@@ -1,13 +1,11 @@
 # ADR-002: Introduce named agent definitions for QSOS specialist roles
 
+## Status
+
+Accepted
+
 **Date:** 2026-07-10
-**Status:** Accepted
 **Decision makers:** Rob Dooh
-
-## Considered Options
-
-- **Option A: Inline personas (status quo)** — continue embedding role personas as prose in each Agent tool dispatch call. Con: duplication across skills; no model tier control; tool restrictions are soft (prompt-only); system prompts not eligible for caching.
-- **Option B: Named agent definition files (chosen)** — define roles once in `.claude/agents/*.md` with model tier, tool restrictions, and stable system prompt. Pro: single definition, cacheable, enforced tool restrictions, right-sized model per role. Con: new artifact type to maintain; `subagent_type` mismatch silently falls back to general-purpose.
 
 ## Context
 
@@ -33,19 +31,19 @@ Five named agent definitions are introduced in `qsos/agents/`:
 
 `deploy.sh` deploys agent files to `~/.claude/agents/` alongside skills at `~/.claude/commands/`.
 
+## Considered Options
+
+- **Option A: Inline personas (status quo)** — continue embedding role personas as prose in each Agent tool dispatch call. Con: duplication across skills; no model tier control; tool restrictions are soft (prompt-only); system prompts not eligible for caching.
+- **Option B: Named agent definition files (chosen)** — define roles once in `.claude/agents/*.md` with model tier, tool restrictions, and stable system prompt. Pro: single definition, cacheable, enforced tool restrictions, right-sized model per role. Con: new artifact type to maintain; `subagent_type` mismatch silently falls back to general-purpose.
+
 ## Consequences
 
-**Positive:**
 - Role personas defined once; system prompt caching reduces per-invocation token cost
 - Model tier right-sized per role (security deep-mode can escalate to Opus; mechanical tasks stay on Sonnet)
 - Tool restrictions enforced at the configuration layer, not just the prompt layer
 - Skills that dispatch agents become shorter — no inline persona prose
-
-**Negative:**
 - Agent definitions are a new artifact type to maintain — changes to a role require updating the agent file, not just the skill
 - `subagent_type` must match the deployed filename exactly — a naming mismatch silently falls back to general-purpose
-
-**Neutral:**
 - Skills that don't dispatch agents are unaffected
 - The five agents cover the roles identified in the current roadmap; additional agents can be added as new specialist roles emerge
 

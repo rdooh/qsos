@@ -95,10 +95,10 @@ IMPLEMENTATION: all plan items executed
 UNPLANNED CHANGES: none | <list>
 DEVIATIONS: none | <list>
 
-Next step: run /qsos-review
+Next step: run /qsos-coverage-check
 ```
 
-Then run `/qsos-review`. If a project-specific test skill applies (e.g. `/vscode-ext-test`), run it before `/qsos-review` so test failures surface before the code review pass.
+Then run `/qsos-coverage-check`. If a project-specific test skill applies (e.g. `/vscode-ext-test`), run it before `/qsos-coverage-check` so test failures surface first. After coverage check passes, run `/qsos-review`.
 
 ---
 

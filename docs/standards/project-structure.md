@@ -383,8 +383,51 @@ When `/doc-sync` runs post-implementation, it verifies this graph is internally 
 | Context load | `/orient` | Ticket, features, ADRs, DSL | Nothing — loads into context |
 | Planning | `/plan` | Ticket (readiness), features, ADRs | Nothing — produces plan for approval |
 | Implementation | `/implement` | Plan, feature file | Ticket → `in-progress` |
+| Coverage check | `/coverage-check` | Change set, feature file, test dirs | PASS or GAPS FOUND — blocks `/verify` on uncovered pure functions and happy-path scenarios |
 | Verification | `/verify` | — | Evidence artifact (`work/TIX-NNN/evidence/`) |
 | Doc sync | `/doc-sync` | All of the above | Feature → `@done`, DSL Target → Current, ticket → `done` |
 | Bug triage | `/bug` | Feature files, ticket | Gap scenario or conflict note in feature file |
 
 `/task` is not a stage — it is a cross-cutting adapter called by every skill that needs to read or write task state.
+
+---
+
+## Agent Definitions
+
+Agent definitions live in `agents/` at the project root and are deployed by `deploy.py` to the appropriate runtime directory (`~/.claude/agents/`, `~/.gemini/config/plugins/qsos/agents/`).
+
+### Format
+
+```markdown
+---
+name: agent-name
+description: One-line description of the agent's role and scope.
+model: mid
+tools:
+  - Read
+  - Write
+  - Bash
+---
+
+[Agent instructions body]
+```
+
+### Model tier rule
+
+> [!IMPORTANT]
+> The `model:` field in agent source files **must always be an abstract tier** (`low`, `mid`, or `high`). **Never write a concrete model ID** (e.g. `claude-sonnet-5`, `claude-3-5-sonnet`, `gemini-pro`) in a source agent file.
+
+Concrete model IDs are resolved at deploy time from `qsos.config.yml`, which is git-ignored and operator-controlled. This separation means:
+- Agent definitions are portable across environments, regions, and API providers
+- Model selection is a deliberate operator decision, made in one place
+- `deploy.py` will hard-fail if a concrete model ID is detected in a source file, blocking deployment
+
+**Tiers and their intended use:**
+
+| Tier | Intended use |
+|---|---|
+| `low` | Fast, lightweight tasks — ticket lookups, simple formatting, log parsing |
+| `mid` | Standard reasoning — code review, feature doc, plan generation |
+| `high` | Complex judgment — security audit, architecture, full codebase analysis |
+
+The concrete models mapped to each tier are defined in `qsos.config.yml` by the operator. See `qsos.config.yml.example` for the template.

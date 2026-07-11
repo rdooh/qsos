@@ -47,7 +47,7 @@ Map ticket and feature state to the next skill in the chain:
 | todo, feature `@proposed` | @proposed | `/qsos-feature-doc new` |
 | ready, feature `@accepted`, no plan | @accepted | `/qsos-orient` → `/qsos-plan` |
 | ready, feature `@accepted`, plan approved | @accepted | `/qsos-implement` |
-| in-progress, feature `@in-progress` | @in-progress | `/qsos-verify` (if unverified) |
+| in-progress, feature `@in-progress` | @in-progress | `/qsos-coverage-check` → `/qsos-verify` (if unverified) |
 | in-progress, verified CONFIRMED | @in-progress | `/qsos-doc-sync` |
 | done | @done | nothing — pick next ticket |
 | bug reported | any | `/qsos-bug` |

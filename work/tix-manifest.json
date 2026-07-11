@@ -59,6 +59,18 @@
       "title": "Model tier enforcement — prevent concrete model IDs in agent source files",
       "status": "done",
       "path": "work/TIX-010-model-tier-enforcement/TIX-010-model-tier-enforcement.md"
+    },
+    {
+      "id": "TIX-011",
+      "title": "Test harness manifest and qsos-coverage-check skill",
+      "status": "done",
+      "path": "work/TIX-011-test-harness-manifest/TIX-011-test-harness-manifest.md"
+    },
+    {
+      "id": "TIX-012",
+      "title": "TDD discipline in qsos-implement + test runner floor in qsos-verify",
+      "status": "todo",
+      "path": "work/TIX-012-tdd-and-verify-floor/TIX-012-tdd-and-verify-floor.md"
     }
   ]
 }

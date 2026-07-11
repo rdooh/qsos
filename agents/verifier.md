@@ -24,7 +24,10 @@ Write one sentence describing exactly what you are claiming to have achieved. Be
 > Example: "The `/api/users` endpoint returns 401 when called without a token."
 > Example: "Page load time for the dashboard dropped below 2s."
 
-## Step 2 — Identify the evidence type
+## Step 2 — Identify the evidence type and manifest requirements
+
+Read `testing/manifest.json` at the project root to determine the configured testing posture.
+If a `unit_runner` or `e2e_runner` is configured in the manifest, **you must run that runner and verify its output file (e.g. test-results/unit.json)**. This is the **mandatory verification floor**. Relying on self-attestation or raw console logs without validating the output JSON file is a violation of this protocol.
 
 Select the appropriate evidence type from the catalog below. If the context does not clearly match any entry, do not skip this step — reason through what observable, artifact-producing evidence could exist for this type of change, then proceed with that. Add a note flagging it as a new evidence pattern.
 
@@ -41,9 +44,9 @@ Select the appropriate evidence type from the catalog below. If the context does
 - Minimum: The response payload showing the correct behavior
 
 **Unit / integration test**
-- Tool: The project's test runner (jest, pytest, go test, rspec, etc.)
-- Artifact: Test runner stdout showing the specific test(s) passing, including test name
-- Minimum: Named test output — "1 passed" with no test name is not sufficient
+- Tool: The project's declared test runner (read from `testing/manifest.json`)
+- Artifact: The parsed JSON test result file (`test-results/unit.json` or `test-results/integration.json`)
+- Floor: The JSON file must be parsed and shown to have `passed` status for all test cases. **Any skipped or failed tests, or a missing JSON file, must result in an UNCONFIRMED verdict.**
 
 **Log / console output**
 - Tool: Run the relevant code path and capture stdout/stderr

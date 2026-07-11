@@ -1,18 +1,18 @@
 ---
-description: Test coverage gate — verify that new pure functions and new feature scenarios have corresponding tests before the ticket reaches /qsos-verify.
+description: Testing posture audit and coverage gate — checks that testing infrastructure is correctly declared and wired, then verifies new code has corresponding tests.
 ---
 
 # /qsos-coverage-check
 
 ## Core Principle
 
-Code that has no test is a black box. A feature can pass `/qsos-verify` visually while its core logic is completely untested — the next person who touches it has no safety net. This skill runs after `/qsos-implement` and before `/qsos-verify`. It does not run tests. It checks that tests *exist* for the code that was just written, and produces a PASS or GAPS FOUND verdict before the ticket moves forward.
+Two distinct things can be wrong with a project's testing story: the infrastructure isn't wired up correctly, and the code that was just written isn't tested. This skill checks both — in that order. Posture first (is the declared testing infrastructure actually in place?), then coverage (do the changed files have tests?). Both must pass before `/qsos-verify` runs.
 
 ---
 
 ## When this runs
 
-After `/qsos-implement` has completed all plan items. Before `/qsos-verify`.
+After `/qsos-implement` has completed all plan items. Before `/qsos-review` and `/qsos-verify`.
 
 In the chain: `implement → coverage-check → review → verify → doc-sync`.
 
@@ -20,7 +20,62 @@ Can also be run standalone against any ticket or changed file set.
 
 ---
 
-## Step 1 — Identify changed files
+## Step 0 — Load or create testing/manifest.json
+
+Look for `testing/manifest.json` at the project root.
+
+**If the manifest exists:** read it. This is the authoritative source for what testing infrastructure is declared. Do not scan `package.json`, `pytest.ini`, or other config files to infer the runner — read the manifest.
+
+**If the manifest does not exist:** create it by running detection heuristics and prompting for fields that cannot be auto-detected:
+
+Detection heuristics (run from project root):
+- `unit_runner`: jest → any of `jest.config.*`, `"jest"` in package.json scripts; vitest → `vitest.config.*`; pytest → `pytest.ini`, `pyproject.toml` with `[tool.pytest]`
+- `e2e_runner`: playwright → `playwright.config.*`; cypress → `cypress.config.*`
+- `pre_commit_hook`: `.git/hooks/pre-commit` exists and is executable, or `.pre-commit-config.yaml` exists
+- `pre_push_hook`: `.git/hooks/pre-push` exists and is executable
+- `coverage_threshold`: check jest/vitest config for `coverageThreshold`, pytest-cov for `--cov-fail-under`
+
+For any field that cannot be detected, set to `null` and note it needs configuration.
+
+Write the manifest to `testing/manifest.json` following ADR-006 schema — all fields required, `null` for absent, JSON format. Inform the developer: "Created testing/manifest.json — please review and commit."
+
+---
+
+## Step 1 — Posture audit
+
+Using the loaded manifest, check each declared value against actual project state:
+
+**Unit runner check:**
+- If `unit_runner` is non-null: verify the corresponding config exists
+  - `jest` → `jest.config.*` or `"jest"` key in package.json scripts
+  - `vitest` → `vitest.config.*`
+  - `pytest` → `pytest.ini` or `pyproject.toml` with `[tool.pytest]`
+  - Missing → `[POSTURE_GAP: HIGH]` unit runner declared but config not found
+
+**E2E runner check:**
+- If `e2e_runner` is non-null: verify the corresponding config exists
+  - `playwright` → `playwright.config.*`
+  - `cypress` → `cypress.config.*`
+  - Missing → `[POSTURE_GAP: HIGH]` e2e runner declared but config not found
+
+**Undeclared runner detection:**
+- Scan for `jest.config.*`, `vitest.config.*`, `pytest.ini`, `playwright.config.*`, `cypress.config.*` regardless of manifest
+- If found but not declared in manifest → `[POSTURE_GAP: MEDIUM]` runner config found but not declared — update manifest
+
+**Pre-commit hook check:**
+- If `pre_commit_hook` is `false` or `null` → `[POSTURE_GAP: MEDIUM]` no pre-commit hook wired; add hook to run test suite before commit (hook template: see utilities/ when available)
+
+**Pre-push hook check:**
+- If `pre_push_hook` is `false` or `null` → `[POSTURE_GAP: LOW]` no pre-push hook wired
+
+**Coverage threshold check:**
+- If `coverage_threshold` is `null` → `[POSTURE_GAP: LOW]` no coverage threshold enforced
+
+Collect all posture gaps. If any HIGH gaps exist, surface them prominently in the report.
+
+---
+
+## Step 2 — Identify changed files
 
 Determine what was changed during this ticket's implementation. Use the approved plan from `/qsos-plan` if present in context. Otherwise run:
 
@@ -34,7 +89,7 @@ List every changed source file. This is the **change set**.
 
 ---
 
-## Step 2 — Locate the test directories
+## Step 3 — Locate the test directories
 
 Detect the test structure for this project. Common patterns:
 
@@ -49,7 +104,7 @@ If no test directory exists at all, flag `[NO_TEST_HARNESS]` and stop — this i
 
 ---
 
-## Step 3 — Pure function coverage check
+## Step 4 — Pure function coverage check
 
 For each changed source file, scan for **newly added or modified exported pure functions** — functions that:
 
@@ -64,7 +119,7 @@ Flag any pure function with no matching test reference as `[UNCOVERED_PURE_FUNCT
 
 ---
 
-## Step 4 — Feature scenario coverage check
+## Step 5 — Feature scenario coverage check
 
 Load the feature file(s) linked to the active ticket. For each `Scenario:` block:
 
@@ -79,47 +134,62 @@ Flag uncovered scenarios as `[UNCOVERED_SCENARIO: <scenario name>]`.
 
 ---
 
-## Step 5 — Assess severity
+## Step 6 — Assess severity
 
 Classify each gap:
 
 | Type | Severity | Default action |
 |---|---|---|
+| `[POSTURE_GAP: HIGH]` | **Required** — declared runner has no config | Block ticket progression |
 | `[NO_TEST_HARNESS]` | **Blocker** — no tests can exist | Stop, direct to harness setup |
 | `[UNCOVERED_PURE_FUNCTION]` | **Required** — pure functions must have unit tests | Block ticket progression |
 | `[UNCOVERED_SCENARIO]` | **Required** for happy path; **Advisory** for edge cases | Block on happy path gaps; note edge case gaps |
+| `[POSTURE_GAP: MEDIUM]` | **Advisory** — undeclared runner or missing hook | Note, do not block |
+| `[POSTURE_GAP: LOW]` | **Advisory** — threshold or push hook absent | Note, do not block |
 
 An edge case scenario is one whose `Scenario:` name includes words like: "when no … exists", "advises", "reports clean", "already", "skips", "idempotent", "gracefully".
 
 ---
 
-## Step 6 — Produce coverage report
+## Step 7 — Produce report
 
 ```
 COVERAGE CHECK REPORT
 
 TICKET: <id> — <title>
-CHANGE SET: <N> source files
+MANIFEST: testing/manifest.json [present | created | absent]
 
-PURE FUNCTION COVERAGE:
-  pass — all <N> pure functions have unit test references
+POSTURE AUDIT:
+  HEALTHY — all declared infrastructure confirmed
   | <N> gap(s):
-  - [UNCOVERED_PURE_FUNCTION] <FunctionName> in <file> — no reference found in <test-dir>
+  - [POSTURE_GAP: HIGH] <description> — <remediation>
+  - [POSTURE_GAP: MEDIUM] <description> — <remediation>
+  - [POSTURE_GAP: LOW] <description> — <remediation>
 
-SCENARIO COVERAGE:
-  pass — all <N> scenarios have integration test references
-  | <N> gap(s):
-  - [UNCOVERED_SCENARIO: <name>] — no test reference found (required | advisory)
+COVERAGE:
+  CHANGE SET: <N> source files
+
+  PURE FUNCTION COVERAGE:
+    pass — all <N> pure functions have unit test references
+    | <N> gap(s):
+    - [UNCOVERED_PURE_FUNCTION] <FunctionName> in <file> — no reference found in <test-dir>
+
+  SCENARIO COVERAGE:
+    pass — all <N> scenarios have integration test references
+    | <N> gap(s):
+    - [UNCOVERED_SCENARIO: <name>] — no test reference found (required | advisory)
 
 BLOCKERS: <N> — must resolve before /qsos-verify | none
 NOTES: <N> advisory gaps — worth addressing but do not block
 
-COVERAGE VERDICT: PASS | GAPS FOUND — <N> blocker(s), <N> note(s)
+VERDICT: PASS | GAPS FOUND — <N> blocker(s), <N> note(s)
 ```
+
+If all posture gaps are LOW/MEDIUM and all coverage gaps are advisory: verdict is PASS with notes.
 
 ---
 
-## Step 7 — On GAPS FOUND
+## Step 8 — On GAPS FOUND
 
 Do not proceed to `/qsos-verify`. For each **blocker gap**:
 
@@ -134,4 +204,4 @@ If the user defers: create a follow-up ticket (next TIX number) scoped to "add m
 
 ## Blocking rule
 
-**You may not advance to `/qsos-verify` with uncovered pure functions or uncovered happy-path scenarios unless the user has explicitly chosen deferral and a follow-up ticket has been created.** Advisory gaps (edge cases) do not block but must appear in the report. Silent omission of gaps is not acceptable — a gap that is not reported is a gap that will not be fixed.
+**You may not advance to `/qsos-verify` with HIGH posture gaps, uncovered pure functions, or uncovered happy-path scenarios unless the user has explicitly chosen deferral and a follow-up ticket has been created.** MEDIUM and LOW posture gaps do not block but must appear in the report. Silent omission of gaps is not acceptable.

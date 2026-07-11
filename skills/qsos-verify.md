@@ -16,13 +16,32 @@ After `/qsos-review` (or `/qsos-security` if activated) has passed. Before `/qso
 
 ---
 
+## Step 0 — Coverage-check gate
+
+Before loading verification context, check whether `testing/manifest.json` exists in the project.
+
+**If the manifest exists:** run `/qsos-coverage-check` now. If the report contains any HIGH posture gaps or coverage blockers, surface them to the developer:
+
+```
+Coverage check found issues before verify:
+<gap list>
+
+Proceed to verify anyway? (y/n)
+```
+
+Wait for response. If the developer proceeds, note `COVERAGE DEFERRED` in the evidence record. If they choose to address the gaps first, wait for `/qsos-coverage-check` to return PASS, then continue.
+
+**If the manifest does not exist:** note the absence and continue. The verifier will detect the test runner independently.
+
+---
+
 ## Step 1 — Load context
 
 Gather the following before dispatching the agent:
 
 1. **Active ticket ID** — from `work/` or Jira
 2. **The claim** — the `IMPLEMENTATION: all plan items executed` block from `/qsos-implement`, or ask the user (see Step 1b)
-3. **Test runner** — detect from the project: `package.json` scripts, `pytest.ini`, `go.mod`, `Cargo.toml`, etc. Note which runner is available.
+3. **Test manifest** — load `testing/manifest.json`. Note whether `unit_runner` or `e2e_runner` are defined.
 4. **Evidence directory** — `work/<ticket-slug>/evidence/`
 
 **Step 1b — Standalone invocation (no implementation block in context):**
@@ -43,19 +62,25 @@ Wait for the user's response, then use that as the claim. Continue with Step 2.
 
 ```
 Agent(
-  description: "Verification pass — reads project files and runs test/build tools, writes evidence artifact, low-medium cost",
+  description: "Verification pass — reads project files, runs test tools, and validates test result JSONs, writes evidence, low-medium cost",
   subagent_type: "verifier",
   prompt: "Verify the following claim for ticket <id>:
 
 Claim: <claim from Step 1>
 
-Test runner available: <runner or 'unknown'>
+Test manifest: testing/manifest.json
 Evidence directory: work/<ticket-slug>/evidence/
 
-Apply your evidence type catalog to select the correct evidence type for this claim.
-Gather actual evidence — do not summarise or infer.
-Save the evidence artifact to the evidence directory.
-Issue your verdict: CONFIRMED, UNCONFIRMED, or INCONCLUSIVE."
+INSTRUCTIONS:
+1. Read testing/manifest.json to see what runners are configured.
+2. If a runner is configured, run the test suite and verify that the results are written to a JSON file (e.g. test-results/unit.json or test-results/integration.json).
+3. Open and parse the test result JSON file. Do NOT rely on console stdout or self-attestation.
+4. The test result JSON is the mandatory VERIFICATION FLOOR:
+   - If the JSON file is missing or unreadable -> verdict must be UNCONFIRMED
+   - If any test has status failed or skipped -> verdict must be UNCONFIRMED
+   - If test count is 0 -> verdict must be UNCONFIRMED
+5. Save the evidence artifact (referencing the verified JSON file contents) to the evidence directory.
+6. Issue your verdict: CONFIRMED or UNCONFIRMED."
 )
 ```
 

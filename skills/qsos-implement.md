@@ -38,13 +38,20 @@ Update the feature file's lifecycle tag from `@accepted` to `@in-progress`. This
 
 ---
 
-## Step 4 — Implement the plan
+Follow the approved plan exactly, item by item. For each code change item:
 
-Follow the approved plan exactly, item by item. For each item:
+1. **Verify testing manifest**: Check `testing/manifest.json` for configured runners.
+2. **Write a failing test**: Before writing or modifying any implementation code, write a test in the project's unit or integration test directory that asserts the new behavior.
+3. **Confirm Red state**: Run the test runner to verify the test fails. If no runner is configured, note: "No test runner configured — skipping local run."
+4. **Write implementation code**: Write the minimum code needed to satisfy the test.
+5. **Confirm Green state**: Run the test runner to verify the test now passes.
+6. **Confirm the item is done** before moving to the next.
 
-- Name the file being changed
-- Make the change
-- Confirm the item is done before moving to the next
+**When a plan item is non-testable** (e.g. comment/doc update, configuration file edit, meta-formatting), declare a minor deviation:
+```
+DEVIATION: non-testable item — skipping TDD loop
+REASON: <why the item cannot be verified by a test case>
+```
 
 **When a deviation is necessary** — a file not in the plan needs to change, the approach needs to adjust, or a scenario maps to something different than anticipated — stop before making the change. State:
 

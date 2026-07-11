@@ -3,6 +3,6 @@
 
 # Models are mapped by tier (low, mid, high)
 # These will be resolved dynamically at deploy time.
-low: claude-3-5-haiku
-mid: claude-3-5-sonnet
-high: claude-3-5-opus
+low: claude-haiku-4-5-20251001
+mid: claude-sonnet-4-6
+high: claude-opus-4-6

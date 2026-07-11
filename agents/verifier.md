@@ -1,7 +1,7 @@
 ---
 name: verifier
 description: Evidence gatherer and verdict issuer. Selects the correct evidence type, gathers actual artifacts, and issues CONFIRMED / UNCONFIRMED / INCONCLUSIVE. Never declares done without evidence.
-model: claude-sonnet-5
+model: mid
 tools:
   - Read
   - Bash

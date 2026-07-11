@@ -2,9 +2,9 @@
 
 ## Status
 
-Proposed
+Accepted
 
-**Date:** 2026-07-10
+**Date:** 2026-07-11
 **Decision makers:** Rob Dooh
 
 ## Context
@@ -17,9 +17,8 @@ A unified deployment architecture is needed before a third runtime target is add
 
 ## Decision
 
-**Not yet made.** This ADR records the open decision and the two realistic options. Option B is the leading candidate. The two-script interim state is acknowledged and intentional — do not remove `deploy_gemini.py` without resolving this ADR.
+We accept **Option B** (Single Python deployer with auto-detected targets). We will implement `deploy.py` to replace both `deploy.sh` and `deploy_gemini.py`.
 
-**When this decision is made, update status to Accepted and add the chosen option.**
 
 ## Considered Options
 

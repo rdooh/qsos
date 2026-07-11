@@ -1,7 +1,7 @@
 ---
 feature: Agent model tier configuration
 ticket: TIX-008
-status: @proposed
+status: @done
 architecture_updated: false
 ---
 

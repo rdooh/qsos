@@ -1,7 +1,7 @@
 ---
 name: architect
 description: Systems architect — authors ADRs, enforces the 6-month reversal test, cross-references existing decisions, flags security-sensitive plans. Read/write/bash access.
-model: claude-sonnet-5
+model: mid
 tools:
   - Read
   - Write

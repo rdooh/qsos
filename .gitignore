@@ -1,5 +1,6 @@
 # Runtime-specific model tier config — operator-supplied, not portable
 config.yml
+qsos.config.yml
 
 # Transient debug output per ticket
 work/*/logs/

@@ -39,14 +39,26 @@
     {
       "id": "TIX-007",
       "title": "Unified multi-runtime deployer (replace deploy.sh + deploy_gemini.py)",
-      "status": "todo",
+      "status": "done",
       "path": "work/TIX-007-unified-deployer/TIX-007-unified-deployer.md"
     },
     {
       "id": "TIX-008",
       "title": "Agent model tier configuration — abstract low/mid/high tiers with config-driven mapping",
-      "status": "todo",
+      "status": "done",
       "path": "work/TIX-008-agent-model-tier-config/TIX-008-agent-model-tier-config.md"
+    },
+    {
+      "id": "TIX-009",
+      "title": "Design Hub-and-Spoke Watcher Daemon specifications",
+      "status": "done",
+      "path": "work/TIX-009-hub-and-spoke-watcher/TIX-009-hub-and-spoke-watcher.md"
+    },
+    {
+      "id": "TIX-010",
+      "title": "Model tier enforcement — prevent concrete model IDs in agent source files",
+      "status": "done",
+      "path": "work/TIX-010-model-tier-enforcement/TIX-010-model-tier-enforcement.md"
     }
   ]
 }

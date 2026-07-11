@@ -1,0 +1,8 @@
+# QSOS Model Tier Configuration Example
+# Copy this to qsos.config.yml and customize for your environment.
+
+# Models are mapped by tier (low, mid, high)
+# These will be resolved dynamically at deploy time.
+low: claude-3-5-haiku
+mid: claude-3-5-sonnet
+high: claude-3-5-opus

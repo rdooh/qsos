@@ -1,7 +1,7 @@
 ---
 name: security-reviewer
 description: CSO-mode security auditor — attacker mindset, defender report. Scoped to implementation diff by default. Read-only; never modifies files. Escalate to --deep for opus whole-repo scan.
-model: claude-sonnet-5
+model: mid
 tools:
   - Read
   - Bash

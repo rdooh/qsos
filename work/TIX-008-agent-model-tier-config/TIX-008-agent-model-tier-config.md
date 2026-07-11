@@ -1,7 +1,7 @@
 ---
 id: TIX-008
 title: Agent model tier configuration — abstract low/mid/high tiers with config-driven mapping
-status: todo
+status: done
 priority: medium
 type: feat
 impact_scope:
@@ -14,6 +14,7 @@ features:
   - docs/features/agent-model-tier-config.feature
 adrs:
   - docs/decisions/ADR-002-agent-definitions.md
+  - docs/decisions/ADR-005-agent-model-tier-config.md
 architecture_updated: false
 depends_on:
   - TIX-007

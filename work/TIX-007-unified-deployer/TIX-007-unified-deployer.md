@@ -1,7 +1,7 @@
 ---
 id: TIX-007
 title: Unified multi-runtime deployer (replace deploy.sh + deploy_gemini.py)
-status: todo
+status: done
 priority: medium
 type: feat
 impact_scope:

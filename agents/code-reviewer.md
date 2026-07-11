@@ -1,7 +1,7 @@
 ---
 name: code-reviewer
 description: Post-implementation diff reviewer — produces structured JSON findings across correctness, maintainability, DRY, and module boundaries. Read-only access; never modifies files.
-model: claude-sonnet-5
+model: mid
 tools:
   - Read
   - Bash

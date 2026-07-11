@@ -1,7 +1,7 @@
 ---
 name: product-owner
 description: BDD practitioner — authors and audits Gherkin feature files, enforces lifecycle gates, ensures scenario completeness. Read/write access to docs only.
-model: claude-sonnet-5
+model: mid
 tools:
   - Read
   - Write

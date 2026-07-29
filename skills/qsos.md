@@ -37,42 +37,84 @@ If the user named a specific ticket, feature, or goal in their invocation, ancho
 
 ---
 
-## Step 2 — Determine entry point
+## Step 2 — Classify and propose chain depth
 
-Map ticket and feature state to the next skill in the chain:
+Before determining the entry point, classify the work by type and propose a proportionate chain.
+
+**Classify the ticket type:**
+
+| Type | Criteria | Chain depth |
+|---|---|---|
+| `feat` | New observable behaviour, new files, new interfaces, external impact | Full chain |
+| `fix` | Corrects broken behaviour covered by an existing feature file | Full chain (may skip brainstorm) |
+| `chore` | Config change, doc update, tooling/meta work, no new observable behaviour | Lite chain |
+
+**Chain depths:**
+
+- **Full:** brainstorm → feature-doc → architecture → orient → plan → implement → coverage-check → review → verify → doc-sync
+- **Lite:** plan → implement → close (skips coverage-check, review, verify, doc-sync)
+
+**Present the assessment and require confirmation before proceeding.**
+
+State the assessment as text:
+
+```
+QSOS ASSESSMENT
+
+TICKET: <id> — <title>
+TYPE: <feat | fix | chore> — <one-line rationale>
+PROPOSED CHAIN: <full | lite> — <skills that will run, in order>
+SKIPPING: <skills being omitted, or "nothing">
+REASON: <why this chain depth fits the work>
+```
+
+Then use `AskUserQuestion` with a single question:
+
+- Question: "Proceed with this chain?"
+- Options:
+  - "Proceed — <proposed depth>" (e.g. "Proceed — lite chain")
+  - "Override to full chain"
+  - "Override to lite chain"
+  - "Cancel"
+
+**Do not run a single skill until the user selects an option.** This gate is mandatory — not skippable, not inferred from prior messages.
+
+---
+
+## Step 3 — Determine entry point
+
+Map ticket and feature state to the next skill in the confirmed chain:
 
 | Ticket status | Feature tag | Next skill |
 |---|---|---|
-| todo, no feature file | — | `/qsos-brainstorm` |
+| todo, no feature file | — | `/qsos-brainstorm` (full only) |
 | todo, feature `@proposed` | @proposed | `/qsos-feature-doc new` |
 | ready, feature `@accepted`, no plan | @accepted | `/qsos-orient` → `/qsos-plan` |
 | ready, feature `@accepted`, plan approved | @accepted | `/qsos-implement` |
-| in-progress, feature `@in-progress` | @in-progress | `/qsos-coverage-check` → `/qsos-verify` (if unverified) |
-| in-progress, verified CONFIRMED | @in-progress | `/qsos-doc-sync` |
+| in-progress, feature `@in-progress` | @in-progress | `/qsos-coverage-check` → `/qsos-verify` (full only) |
+| in-progress, verified CONFIRMED | @in-progress | `/qsos-doc-sync` (full only) |
 | done | @done | nothing — pick next ticket |
 | bug reported | any | `/qsos-bug` |
 
-State the entry point and the reasoning in one line:
-
-> "TIX-007 is ready with an accepted feature file and no plan — entering at /qsos-orient."
-
-Then confirm with the user: "Proceed?" and continue unless redirected.
+State the entry point in one line before proceeding.
 
 ---
 
-## Step 3 — Drive the chain
+## Step 4 — Drive the chain
 
 Execute the entry point skill. After it completes:
 
-- If verdict is GO / CONFIRMED / CLEAN → move to the next skill in the chain automatically
+- If verdict is GO / CONFIRMED / CLEAN → move to the next skill in the confirmed chain automatically
 - If verdict is BLOCKED / NEEDS CLARIFICATION / UNCONFIRMED → stop, surface the issue, wait for direction
 - If the skill requires human input (plan approval, scoping questions) → wait for the response, then continue
 
-Do not stop between skills when the path is clear. The user said "take it to the end" — take it to the end.
+For **lite chains**: stop after `/qsos-implement` completes. Update ticket status to `done` and feature tag to `@done`. Do not run coverage-check, review, verify, or doc-sync unless the user explicitly requests them.
+
+Do not run skills outside the confirmed chain without asking first.
 
 ---
 
-## Step 4 — Report progress at each stage
+## Step 5 — Report progress at each stage
 
 After each skill completes, emit a one-line status before moving on:
 
@@ -87,7 +129,7 @@ After each skill completes, emit a one-line status before moving on:
 
 ---
 
-## Step 5 — Final summary
+## Step 6 — Final summary
 
 When the chain reaches a natural stopping point (ticket closed, blocked, or waiting for human input), produce:
 
@@ -106,4 +148,4 @@ NEXT ACTION: <what the user needs to do, or "none — work complete">
 
 ## Blocking rule
 
-**You may not skip human gates.** `/qsos-plan` always waits for approval. `BLOCKED` verdicts always stop. Scoping questions in `/qsos-brainstorm` always wait for answers. Everything else runs unattended. The chain is only as autonomous as its gates allow — do not bypass them to appear faster.
+**You may not skip human gates.** The chain depth confirmation in Step 2 is mandatory — never infer it from context or prior messages. `/qsos-plan` always waits for approval. `BLOCKED` verdicts always stop. Scoping questions in `/qsos-brainstorm` always wait for answers. Everything else runs unattended within the confirmed chain. The chain is only as autonomous as its gates allow — do not bypass them to appear faster.

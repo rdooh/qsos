@@ -22,14 +22,14 @@ Before loading verification context, check whether `testing/manifest.json` exist
 
 **If the manifest exists:** run `/qsos-coverage-check` now. If the report contains any HIGH posture gaps or coverage blockers, surface them to the developer:
 
-```
-Coverage check found issues before verify:
-<gap list>
+State the gaps as text, then use `AskUserQuestion`:
 
-Proceed to verify anyway? (y/n)
-```
+- Question: "Coverage check found issues before verify — how should I proceed?"
+- Options:
+  - "Proceed to verify (note as COVERAGE DEFERRED)"
+  - "Fix gaps first — run /qsos-coverage-check"
 
-Wait for response. If the developer proceeds, note `COVERAGE DEFERRED` in the evidence record. If they choose to address the gaps first, wait for `/qsos-coverage-check` to return PASS, then continue.
+If the user proceeds, note `COVERAGE DEFERRED` in the evidence record. If they choose to fix gaps, wait for `/qsos-coverage-check` to return PASS, then continue.
 
 **If the manifest does not exist:** note the absence and continue. The verifier will detect the test runner independently.
 

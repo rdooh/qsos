@@ -10,8 +10,11 @@ For artifact formats, file locations, and cross-artifact relationships, see
 
 ```
 /qsos-brainstorm → /qsos-feature-doc → /qsos-architecture → /qsos-orient → /qsos-plan → [approve]
-    → /qsos-implement → /qsos-verify → /qsos-doc-sync
+    → /qsos-implement          → /qsos-coverage-check → /qsos-review → /qsos-verify → /qsos-doc-sync
+    → /qsos-implement-fan ↗
 ```
+
+`/qsos-implement-fan` is an opt-in parallel variant of `/qsos-implement`. Both feed into the same downstream chain. Use `/qsos-implement-fan` when the approved plan has 3+ independent items; use `/qsos-implement` (sequential default) otherwise.
 
 `/qsos-task` is not a stage — it is a cross-cutting adapter called by every skill that reads or writes task state.
 `/qsos-bug` is an entry point for bug triage that feeds back into `/qsos-feature-doc`.
@@ -34,7 +37,9 @@ For artifact formats, file locations, and cross-artifact relationships, see
 
 **`/qsos-plan`** — Implementation planning gate. Maps feature scenarios to deliverables, surfaces risks and architectural constraints, requires human approval before any code is written.
 
-**`/qsos-implement`** — Coding phase contract. Follows the approved plan, marks ticket `in-progress`, flags deviations before making them, does not declare done without `/qsos-verify`.
+**`/qsos-implement`** — Coding phase contract (sequential default). Follows the approved plan item by item, marks ticket `in-progress`, flags deviations before making them, does not declare done without `/qsos-verify`. Suggests `/qsos-implement-fan` when the plan has 3+ independent items.
+
+**`/qsos-implement-fan`** — Parallel coding variant. Spawns an Opus subagent to decompose the approved plan into isolated sub-jobs (with TDD contracts and a dependency graph), writes the manifest to `.qsos/manifest.json`, then fans out Sonnet subagents in isolated worktrees. Main agent merges results, runs the full test suite, and hands off to `/qsos-coverage-check`. Use when the plan has 3+ items touching distinct files with no shared exported interfaces.
 
 **`/qsos-verify`** — Post-implementation evidence gate. Evidence-typed catalog: UI, API, unit/integration test, log, perf, data, build, CLI, contract/schema, statechart/lifecycle. Verdicts: CONFIRMED / UNCONFIRMED / INCONCLUSIVE.
 
@@ -97,6 +102,9 @@ All chain skills are built and installed. The chain is complete end-to-end:
 | `/qsos-orient` | ✓ built |
 | `/qsos-plan` | ✓ built |
 | `/qsos-implement` | ✓ built |
+| `/qsos-implement-fan` | ✓ built |
+| `/qsos-coverage-check` | ✓ built |
+| `/qsos-review` | ✓ built |
 | `/qsos-verify` | ✓ built |
 | `/qsos-doc-sync` | ✓ built |
 | `/qsos-bug` | ✓ built |

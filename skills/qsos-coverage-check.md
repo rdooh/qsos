@@ -77,13 +77,17 @@ Collect all posture gaps. If any HIGH gaps exist, surface them prominently in th
 
 ## Step 2 — Identify changed files
 
-Determine what was changed during this ticket's implementation. Use the approved plan from `/qsos-plan` if present in context. Otherwise run:
+Determine what was changed during this ticket's implementation.
+
+**When invoked after `/qsos-implement-fan`:** check for `.qsos/manifest.json` at the project root. If present, the change set is the **union of all `files` arrays across every sub-job** in the manifest. Use this list directly rather than `git diff` — the manifest is authoritative for fan-out implementations and accounts for all worktree merges.
+
+**Otherwise:** use the approved plan from `/qsos-plan` if present in context. Otherwise run:
 
 ```bash
 git diff --name-only HEAD~1
 ```
 
-or read the plan items for file paths. Filter to source files only — exclude test files, docs, configs, and generated output (`out/`, `dist/`, `*.vsix`, etc.).
+Filter to source files only in all cases — exclude test files, docs, configs, and generated output (`out/`, `dist/`, `*.vsix`, etc.).
 
 List every changed source file. This is the **change set**.
 
@@ -191,14 +195,17 @@ If all posture gaps are LOW/MEDIUM and all coverage gaps are advisory: verdict i
 
 ## Step 8 — On GAPS FOUND
 
-Do not proceed to `/qsos-verify`. For each **blocker gap**:
+Do not proceed to `/qsos-verify`. State each blocker gap as text, then use `AskUserQuestion`:
 
-1. State the file and function/scenario that needs a test
-2. Ask: "Write the missing test(s) now, or defer to a follow-up ticket?"
+- Question: "Coverage blockers found — how should I proceed?"
+- Options:
+  - "Write missing tests now"
+  - "Defer to a follow-up ticket and proceed to verify"
+  - "Abort — I'll handle this manually"
 
-If the user chooses to write them now, write the test(s), re-run the relevant test command to confirm they pass, then re-run the coverage check. If they pass and no new gaps are found, issue PASS and proceed to `/qsos-verify`.
+If "Write missing tests now": write the test(s), re-run the test command to confirm they pass, re-run the coverage check. If PASS, proceed to `/qsos-verify`.
 
-If the user defers: create a follow-up ticket (next TIX number) scoped to "add missing tests for <function/scenario>" with `priority: high` and `depends_on: []`. Note it in the coverage report, then proceed to `/qsos-verify` with an explicit `COVERAGE DEFERRED` annotation so the record is clear.
+If "Defer": create a follow-up ticket (next TIX number) scoped to "add missing tests for <function/scenario>" with `priority: high` and `depends_on: []`. Note it in the coverage report, then proceed to `/qsos-verify` with an explicit `COVERAGE DEFERRED` annotation.
 
 ---
 

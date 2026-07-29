@@ -22,6 +22,15 @@ Verify that a `/qsos-plan` output is present in context and that the user has ex
 
 State the plan reference: which ticket, which feature file, how many items in the plan.
 
+If the plan contains **3 or more items** and the items appear to touch distinct files with no shared exported interfaces, use `AskUserQuestion`:
+
+- Question: "This plan has <N> items. Run sequentially or fan out in parallel?"
+- Options:
+  - "Sequential — proceed here"
+  - "Parallel — switch to /qsos-implement-fan"
+
+Do not proceed until the user selects an option.
+
 ---
 
 ## Step 2 — Mark ticket in-progress
@@ -58,10 +67,17 @@ REASON: <why the item cannot be verified by a test case>
 ```
 DEVIATION: <what was planned> → <what is actually needed>
 REASON: <why the plan item does not match reality>
-PROCEEDING: yes (minor, no architectural impact) | no (needs approval)
 ```
 
-Minor deviations (different line numbers, additional helper function in the same file) may proceed. Deviations that add files, change interfaces, or affect other feature areas require a pause for review.
+For **minor deviations** (different line numbers, additional helper in the same file): proceed automatically.
+
+For **significant deviations** (new files, interface changes, affects other feature areas): use `AskUserQuestion`:
+
+- Question: "Deviation found — how should I proceed?"
+- Options:
+  - "Proceed with the deviation"
+  - "Revert to the original plan approach"
+  - "Abort — I need to revise the plan first"
 
 ---
 

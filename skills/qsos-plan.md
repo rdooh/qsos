@@ -82,6 +82,11 @@ SCENARIO MAP:
   Scenario: <name>
     3. <file path> — <what changes and why>
 
+ITEMS: (flat numbered list derived from SCENARIO MAP above — used by /qsos-implement-fan for decomposition)
+  [1] <file/path> — <action>
+  [2] <file/path> — <action>
+  [3] <file/path> — <action>
+
 RISKS:
   - <risk or none>
 
@@ -89,10 +94,17 @@ ARCHITECTURAL CONSTRAINTS:
   - <ADR reference — constraint or none>
 
 ---
-Awaiting your approval before any code is written.
 ```
 
-Do not write any implementation code. Do not proceed past this output until the user explicitly approves the plan.
+Then use `AskUserQuestion` with a single question:
+
+- Question: "Approve this plan?"
+- Options:
+  - "Approved — proceed to implementation"
+  - "Changes needed — I'll describe them"
+  - "Abort — do not implement"
+
+Do not write any implementation code until the user selects "Approved".
 
 ---
 

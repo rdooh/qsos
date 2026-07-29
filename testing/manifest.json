@@ -1,8 +1,8 @@
 {
-  "unit_runner": null,
+  "unit_runner": "pytest",
   "e2e_runner": null,
-  "coverage_threshold": null,
-  "pre_commit_hook": false,
+  "coverage_threshold": 15,
+  "pre_commit_hook": true,
   "pre_push_hook": false,
   "decisions": [
     "docs/decisions/ADR-006-test-harness-manifest-schema.md"

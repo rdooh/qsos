@@ -96,6 +96,16 @@ ARCHITECTURAL CONSTRAINTS:
 ---
 ```
 
+After presenting the plan, log the `plan_produced` event — counting the items in the flat ITEMS list and capturing each as `"<file/path> — <action>"`:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  echo '{"run_id":"<from current-run.json>","timestamp":"<ISO>","ticket":"<id>","skill":"qsos-plan","type":"plan_produced","data":{"item_count":<N>,"items":["<item-ref: file — action>"]}}' >> "$LOG_PATH"
+fi
+```
+
 Then use `AskUserQuestion` with a single question:
 
 - Question: "Approve this plan?"
@@ -103,6 +113,42 @@ Then use `AskUserQuestion` with a single question:
   - "Approved — proceed to implementation"
   - "Changes needed — I'll describe them"
   - "Abort — do not implement"
+
+**If the user selects "Approved — proceed to implementation":**
+
+Log the `plan_approved` event, then hand off to `/qsos-implement`:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  echo '{"run_id":"<id>","timestamp":"<ISO>","ticket":"<id>","skill":"qsos-plan","type":"plan_approved","data":{}}' >> "$LOG_PATH"
+fi
+```
+
+**If the user selects "Changes needed — I'll describe them":**
+
+Ask the user what they want changed. Revise the plan accordingly (increment a `revision_count` starting at 1 for the first revision). Log the `plan_revised` event, then re-present the updated plan and re-ask for approval:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  echo '{"run_id":"<id>","timestamp":"<ISO>","ticket":"<id>","skill":"qsos-plan","type":"plan_revised","data":{"revision_count":<N>,"reason":"<what user described>"}}' >> "$LOG_PATH"
+fi
+```
+
+**If the user selects "Abort — do not implement":**
+
+Log the `plan_aborted` event and stop:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  echo '{"run_id":"<id>","timestamp":"<ISO>","ticket":"<id>","skill":"qsos-plan","type":"plan_aborted","data":{"reason":"user selected abort"}}' >> "$LOG_PATH"
+fi
+```
 
 Do not write any implementation code until the user selects "Approved".
 

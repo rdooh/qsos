@@ -16,6 +16,16 @@ When a feature introduces a new container, component, or relationship. When a `T
 
 ---
 
+Emit the `skill_started` log event:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  python3 -c "import json,datetime; d=json.load(open('.qsos/current-run.json')); print(json.dumps({'run_id':d['run_id'],'timestamp':datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),'ticket':d.get('ticket',''),'skill':'qsos-architecture','type':'skill_started','data':{}}))" >> "$LOG_PATH" 2>/dev/null
+fi
+```
+
 ## Step 1 — Determine the trigger
 
 Identify which of these applies:
@@ -80,6 +90,16 @@ For each affected element, apply:
 
 Make the minimum changes needed. Preserve all existing content not related to the triggered change. Use Structurizr DSL format per `docs/standards/project-structure.md`.
 
+After updating the DSL, emit the `file_modified` log event:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  python3 -c "import json,datetime; d=json.load(open('.qsos/current-run.json')); print(json.dumps({'run_id':d['run_id'],'timestamp':datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),'ticket':d.get('ticket',''),'skill':'qsos-architecture','type':'file_modified','data':{'path':'docs/architecture/architecture.dsl'}}))" >> "$LOG_PATH" 2>/dev/null
+fi
+```
+
 DSL rules:
 - Single file: `docs/architecture/architecture.dsl`
 - `Current` and `Target` elements coexist in the same file — no separate files
@@ -102,6 +122,16 @@ When creating an ADR:
 - Format: MADR per `project-structure.md`
 - Status: `Accepted` (you are recording a decision that has been made, not proposing one)
 - Reference the DSL element names in the Decision section
+
+After creating the ADR, emit the `adr_created` log event (replace `<adr-path>` and `<one-line decision summary>` with actual values):
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  python3 -c "import json,datetime; d=json.load(open('.qsos/current-run.json')); print(json.dumps({'run_id':d['run_id'],'timestamp':datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),'ticket':d.get('ticket',''),'skill':'qsos-architecture','type':'adr_created','data':{'adr_path':'<adr-path>','decision_summary':'<one-line decision summary>'}}))" >> "$LOG_PATH" 2>/dev/null
+fi
+```
 
 ---
 
@@ -142,6 +172,18 @@ COVERAGE AUDIT:
 GENERATED VIEWS: not regenerated — run `strux generate-diagrams` to update docs/architecture/diagrams/
 
 VERDICT: GO | BLOCKED — <reason>
+```
+
+---
+
+Emit the `skill_completed` log event:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  python3 -c "import json,datetime; d=json.load(open('.qsos/current-run.json')); print(json.dumps({'run_id':d['run_id'],'timestamp':datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),'ticket':d.get('ticket',''),'skill':'qsos-architecture','type':'skill_completed','data':{'outcome':'go'}}))" >> "$LOG_PATH" 2>/dev/null
+fi
 ```
 
 ---

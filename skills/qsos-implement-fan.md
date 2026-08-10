@@ -141,6 +141,16 @@ After the subagent returns the manifest, write it to `.qsos/manifest.json` at th
 
 This file persists the manifest across context compression. Subagents (Step 7) read their sub-job from this file rather than relying solely on in-context briefing.
 
+After writing the manifest file, emit a log event:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  echo '{"run_id":"<id>","timestamp":"<ISO>","ticket":"<id>","skill":"qsos-implement-fan","type":"plan_produced","data":{"item_count":<N>,"sub_job_count":<N>}}' >> "$LOG_PATH"
+fi
+```
+
 ---
 
 ## Step 5 — Review manifest and await confirmation
@@ -174,7 +184,17 @@ If the manifest listed pre-conditions (shared test helpers, fixture setup, inter
 
 ## Step 7 — Fan out Sonnet subagents
 
-For each sub-job in the manifest, spawn a Sonnet subagent using the Agent tool with `isolation: "worktree"`. Each subagent receives:
+For each sub-job in the manifest, before spawning the subagent, emit a log event:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  echo '{"run_id":"<id>","timestamp":"<ISO>","ticket":"<id>","skill":"qsos-implement-fan","type":"subagent_spawned","data":{"label":"<sub-job label>","model":"sonnet","scope_files":["<file>"],"purpose":"<item descriptions>"}}' >> "$LOG_PATH"
+fi
+```
+
+Then spawn a Sonnet subagent using the Agent tool with `isolation: "worktree"`. Each subagent receives:
 
 - Its sub-job label and the plan items it covers
 - The exhaustive file list for its sub-job
@@ -223,7 +243,27 @@ Wait for all subagents to return. For each:
 - Check FILES MODIFIED against the manifest — flag any unexpected file
 - Note any DEVIATION, especially BLOCKED ones
 
-If any sub-job returned BLOCKED, surface the deviation to the user and resolve before merging. Do not proceed with a partial merge.
+When a sub-job completes, emit:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  echo '{"run_id":"<id>","timestamp":"<ISO>","ticket":"<id>","skill":"qsos-implement-fan","type":"subagent_completed","data":{"label":"<sub-job label>","outcome":"<complete|partial|blocked>","deviations":"<none|list>"}}' >> "$LOG_PATH"
+fi
+```
+
+If any sub-job returned BLOCKED, emit a blocked event before surfacing to the user:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  echo '{"run_id":"<id>","timestamp":"<ISO>","ticket":"<id>","skill":"qsos-implement-fan","type":"subagent_blocked","data":{"label":"<sub-job label>","reason":"<deviation description>"}}' >> "$LOG_PATH"
+fi
+```
+
+Surface the deviation to the user and resolve before merging. Do not proceed with a partial merge.
 
 ---
 

@@ -18,6 +18,16 @@ Between `/qsos-review` and `/qsos-verify`, when either:
 
 ---
 
+Emit the `skill_started` log event:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  python3 -c "import json,datetime; d=json.load(open('.qsos/current-run.json')); print(json.dumps({'run_id':d['run_id'],'timestamp':datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),'ticket':d.get('ticket',''),'skill':'qsos-security','type':'skill_started','data':{}}))" >> "$LOG_PATH" 2>/dev/null
+fi
+```
+
 ## Step 1 — Evaluate activation
 
 **If invoked explicitly by the user:**
@@ -67,6 +77,16 @@ This is more thorough and more expensive than default mode.
 
 ## Step 3 — Dispatch security-reviewer agent
 
+Before dispatching the agent, emit the `subagent_spawned` log event (substitute the actual diff scope files):
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  python3 -c "import json,datetime; d=json.load(open('.qsos/current-run.json')); print(json.dumps({'run_id':d['run_id'],'timestamp':datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),'ticket':d.get('ticket',''),'skill':'qsos-security','type':'subagent_spawned','data':{'label':'security-reviewer','model':'mid','scope_files':['<diff scope>'],'purpose':'security audit'}}))" >> "$LOG_PATH" 2>/dev/null
+fi
+```
+
 **Default / --full mode:**
 ```
 Agent(
@@ -95,6 +115,27 @@ Wait for the agent to complete before proceeding.
 Read the agent's `VERDICT` line at the end of the report.
 
 **If `VERDICT: CRITICAL-FINDINGS-PRESENT`:**
+
+For each CRITICAL or HIGH finding, emit a `gap_discovered` log event (substitute actual gap type and description):
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  python3 -c "import json,datetime; d=json.load(open('.qsos/current-run.json')); print(json.dumps({'run_id':d['run_id'],'timestamp':datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),'ticket':d.get('ticket',''),'skill':'qsos-security','type':'gap_discovered','data':{'gap_type':'architecture','description':'<one-line finding>'}}))" >> "$LOG_PATH" 2>/dev/null
+fi
+```
+
+Then emit `skill_blocked`:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  python3 -c "import json,datetime; d=json.load(open('.qsos/current-run.json')); print(json.dumps({'run_id':d['run_id'],'timestamp':datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),'ticket':d.get('ticket',''),'skill':'qsos-security','type':'skill_blocked','data':{'reason':'critical security findings','resolution_required':'fix before proceeding'}}))" >> "$LOG_PATH" 2>/dev/null
+fi
+```
+
 ```
 SECURITY: BLOCKED — critical finding requires remediation
 
@@ -111,6 +152,17 @@ There is no bypass for CRITICAL security findings.
 **Stop. Do not proceed.**
 
 **If `VERDICT: CLEAR`:**
+
+Emit `skill_completed`:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  python3 -c "import json,datetime; d=json.load(open('.qsos/current-run.json')); print(json.dumps({'run_id':d['run_id'],'timestamp':datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),'ticket':d.get('ticket',''),'skill':'qsos-security','type':'skill_completed','data':{'outcome':'clean'}}))" >> "$LOG_PATH" 2>/dev/null
+fi
+```
+
 ```
 SECURITY: CLEAR
 [Display any NEEDS-ATTENTION and INFORMATIONAL findings for awareness]

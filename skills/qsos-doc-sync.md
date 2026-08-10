@@ -16,6 +16,16 @@ After `/qsos-verify` has returned CONFIRMED. This skill does not run if verifica
 
 ---
 
+Emit the `skill_started` log event:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  python3 -c "import json,datetime; d=json.load(open('.qsos/current-run.json')); print(json.dumps({'run_id':d['run_id'],'timestamp':datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),'ticket':d.get('ticket',''),'skill':'qsos-doc-sync','type':'skill_started','data':{}}))" >> "$LOG_PATH" 2>/dev/null
+fi
+```
+
 ## Step 1 — Confirm verification is complete
 
 Check that `/qsos-verify` has returned CONFIRMED in this session for the active ticket. If `/qsos-verify` has not run or returned UNCONFIRMED or INCONCLUSIVE, stop. State: "Doc sync cannot run until /verify returns CONFIRMED."
@@ -128,6 +138,16 @@ This is a lightweight manual check — scan the changed files for `require`, `im
 1. Set feature file lifecycle tag to `@done`
 2. Call `/task close <id> <evidence pointer>` — the evidence pointer is the artifact reference from `/qsos-verify` (test result path, screenshot, log excerpt, etc.)
 
+Emit a `file_modified` event for each document updated during this skill run — feature file, DSL, ticket, ADR. Run once per file, substituting the actual path:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  python3 -c "import json,datetime; d=json.load(open('.qsos/current-run.json')); print(json.dumps({'run_id':d['run_id'],'timestamp':datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),'ticket':d.get('ticket',''),'skill':'qsos-doc-sync','type':'file_modified','data':{'path':'<path to updated file>'}}))" >> "$LOG_PATH" 2>/dev/null
+fi
+```
+
 ---
 
 ## Step 9 — Produce sync report
@@ -163,6 +183,18 @@ DEPENDENCY DRIFT:
   [or: none]
 
 SYNC VERDICT: CLEAN | DRIFT FOUND — <details>
+```
+
+---
+
+Emit the `skill_completed` log event:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  python3 -c "import json,datetime; d=json.load(open('.qsos/current-run.json')); print(json.dumps({'run_id':d['run_id'],'timestamp':datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),'ticket':d.get('ticket',''),'skill':'qsos-doc-sync','type':'skill_completed','data':{'outcome':'clean'}}))" >> "$LOG_PATH" 2>/dev/null
+fi
 ```
 
 ---

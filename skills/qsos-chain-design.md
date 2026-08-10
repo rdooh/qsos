@@ -10,7 +10,7 @@ For artifact formats, file locations, and cross-artifact relationships, see
 
 ```
 /qsos-brainstorm → /qsos-feature-doc → /qsos-architecture → /qsos-orient → /qsos-plan → [approve]
-    → /qsos-implement          → /qsos-coverage-check → /qsos-review → /qsos-verify → /qsos-doc-sync
+    → /qsos-implement          → /qsos-coverage-check → /qsos-review → /qsos-verify → /qsos-validate (optional) → /qsos-doc-sync
     → /qsos-implement-fan ↗
 ```
 
@@ -42,6 +42,8 @@ For artifact formats, file locations, and cross-artifact relationships, see
 **`/qsos-implement-fan`** — Parallel coding variant. Spawns an Opus subagent to decompose the approved plan into isolated sub-jobs (with TDD contracts and a dependency graph), writes the manifest to `.qsos/manifest.json`, then fans out Sonnet subagents in isolated worktrees. Main agent merges results, runs the full test suite, and hands off to `/qsos-coverage-check`. Use when the plan has 3+ items touching distinct files with no shared exported interfaces.
 
 **`/qsos-verify`** — Post-implementation evidence gate. Evidence-typed catalog: UI, API, unit/integration test, log, perf, data, build, CLI, contract/schema, statechart/lifecycle. Verdicts: CONFIRMED / UNCONFIRMED / INCONCLUSIVE.
+
+**`/qsos-validate`** — Human-in-the-loop validation checklist with CTRF JSON output. Optional step after verify, before doc-sync. Run when the developer wants structured human sign-off on the implementation before the chain closes.
 
 **`/qsos-doc-sync`** — Post-implementation reconciliation. Checks behavioral drift, DSL duality, ADR completeness, stale lifecycle tags, and code dependency drift. Closes ticket and sets feature `@done`. Delegates to compliance tooling when available.
 
@@ -106,6 +108,7 @@ All chain skills are built and installed. The chain is complete end-to-end:
 | `/qsos-coverage-check` | ✓ built |
 | `/qsos-review` | ✓ built |
 | `/qsos-verify` | ✓ built |
+| `/qsos-validate` | ✓ built |
 | `/qsos-doc-sync` | ✓ built |
 | `/qsos-bug` | ✓ built |
 | `/qsos-audit` | ✓ built |

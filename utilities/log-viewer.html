@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QSOS Run Log Viewer</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", monospace;
+    background: #0d1117;
+    color: #c9d1d9;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #161b22;
+    border-bottom: 1px solid #30363d;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  header h1 { font-size: 15px; font-weight: 600; color: #f0f6fc; flex: 1; }
+
+  .controls { display: flex; gap: 10px; align-items: center; }
+
+  button {
+    background: #21262d;
+    border: 1px solid #30363d;
+    color: #c9d1d9;
+    padding: 5px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+  }
+  button:hover { background: #30363d; }
+  button.primary { background: #1f6feb; border-color: #1f6feb; color: #fff; }
+  button.primary:hover { background: #388bfd; }
+
+  .status-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #3fb950; display: inline-block;
+    animation: pulse 2s infinite;
+  }
+  .status-dot.idle { background: #6e7681; animation: none; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+  #status-text { font-size: 11px; color: #6e7681; }
+
+  main { padding: 16px 20px; max-width: 1100px; margin: 0 auto; }
+
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #6e7681;
+  }
+  .empty-state h2 { font-size: 16px; margin-bottom: 8px; color: #8b949e; }
+  .empty-state code {
+    background: #161b22;
+    border: 1px solid #30363d;
+    padding: 8px 16px;
+    border-radius: 6px;
+    display: inline-block;
+    margin-top: 12px;
+    font-size: 12px;
+    color: #79c0ff;
+  }
+
+  /* Run card */
+  .run {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+
+  .run-header {
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+    border-bottom: 1px solid #21262d;
+  }
+  .run-header:hover { background: #1c2128; }
+
+  .run-outcome {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .outcome-done    { background: #0d4429; color: #3fb950; }
+  .outcome-blocked { background: #3d1f00; color: #f0883e; }
+  .outcome-interrupted { background: #2d1a1a; color: #f85149; }
+  .outcome-running { background: #0c2d6b; color: #79c0ff; }
+
+  .run-meta { flex: 1; }
+  .run-title { font-weight: 600; color: #f0f6fc; font-size: 13px; }
+  .run-subtitle { color: #6e7681; font-size: 11px; margin-top: 1px; }
+
+  .run-id-badge {
+    font-size: 11px;
+    color: #6e7681;
+    font-family: monospace;
+  }
+
+  .chevron {
+    color: #6e7681;
+    font-size: 10px;
+    transition: transform 0.15s;
+  }
+  .run.expanded .chevron { transform: rotate(90deg); }
+
+  /* Event list */
+  .events {
+    display: none;
+    padding: 8px 0;
+  }
+  .run.expanded .events { display: block; }
+
+  .event {
+    display: grid;
+    grid-template-columns: 140px 160px 1fr;
+    gap: 8px;
+    padding: 5px 14px;
+    border-left: 3px solid transparent;
+    font-size: 12px;
+  }
+  .event:hover { background: #1c2128; }
+
+  /* Signal levels */
+  .event.signal-high  { border-left-color: #f85149; }
+  .event.signal-med   { border-left-color: #f0883e; }
+  .event.signal-info  { border-left-color: #21262d; }
+
+  .event-time  { color: #6e7681; font-family: monospace; font-size: 11px; padding-top: 1px; }
+  .event-type  {
+    font-family: monospace;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  /* Type colours */
+  .type-run_started, .type-run_completed       { color: #3fb950; }
+  .type-run_interrupted                         { color: #f85149; }
+  .type-deviation_flagged, .type-plan_aborted,
+  .type-skill_blocked, .type-subagent_blocked   { color: #f85149; }
+  .type-verdict_unconfirmed, .type-verdict_inconclusive,
+  .type-test_failure, .type-coverage_gap,
+  .type-loop_detected, .type-churn_detected,
+  .type-rabbit_hole_risk                        { color: #f0883e; }
+  .type-verdict_issued                          { color: #79c0ff; }
+  .type-plan_produced, .type-plan_approved      { color: #d2a8ff; }
+  .type-skill_started, .type-skill_completed,
+  .type-skill_skipped                           { color: #8b949e; }
+  .type-item_started, .type-item_completed      { color: #8b949e; }
+  .type-subagent_spawned, .type-subagent_completed { color: #8b949e; }
+  .type-insight, .type-gap_discovered,
+  .type-assumption_flagged                      { color: #e3b341; }
+  .type-file_created, .type-file_modified,
+  .type-evidence_written, .type-commit_made,
+  .type-deploy_run                              { color: #6e7681; }
+  .type-test_run, .type-chain_depth_decided,
+  .type-deviation_resolved, .type-unplanned_change { color: #79c0ff; }
+
+  .event-data { color: #8b949e; font-family: monospace; font-size: 11px; word-break: break-all; }
+  .event-data .key   { color: #6e7681; }
+  .event-data .val   { color: #a5d6ff; }
+  .event-data .val-str { color: #a5d6ff; }
+  .event-data .val-num { color: #79c0ff; }
+  .event-data .val-bool { color: #d2a8ff; }
+
+  /* Stats bar */
+  .run-stats {
+    display: flex;
+    gap: 16px;
+    padding: 6px 14px;
+    background: #0d1117;
+    border-top: 1px solid #21262d;
+    font-size: 11px;
+    color: #6e7681;
+  }
+  .stat-item { display: flex; gap: 4px; align-items: center; }
+  .stat-dot  { width: 6px; height: 6px; border-radius: 50%; }
+
+  /* Divider */
+  .section-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #6e7681;
+    padding: 4px 14px 2px;
+    border-top: 1px solid #21262d;
+    margin-top: 4px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>QSOS Run Log Viewer</h1>
+  <div class="controls">
+    <span class="status-dot idle" id="dot"></span>
+    <span id="status-text">No folder loaded</span>
+    <button class="primary" id="btn-open">Open log folder</button>
+    <button id="btn-refresh" style="display:none">Refresh</button>
+  </div>
+</header>
+
+<main id="main">
+  <div class="empty-state">
+    <h2>No runs loaded</h2>
+    <p>Click <strong>Open log folder</strong> and select your QSOS <code>work/</code> directory.<br>
+    The viewer will scan all <code>**/logs/qsos-run-*.jsonl</code> files.</p>
+    <br>
+    <p style="color:#6e7681;font-size:12px">Or serve locally to auto-watch:</p>
+    <code>python3 utilities/serve.py</code>
+    <br><br>
+    <p style="color:#6e7681;font-size:12px">Then open: <code>http://localhost:8765/utilities/log-viewer.html</code></p>
+  </div>
+</main>
+
+<script>
+const SIGNAL = {
+  high: new Set(['run_interrupted','deviation_flagged','plan_aborted','skill_blocked',
+                 'subagent_blocked','test_failure','loop_detected','churn_detected',
+                 'rabbit_hole_risk','verdict_unconfirmed','verdict_inconclusive']),
+  med:  new Set(['verdict_issued','coverage_gap','unplanned_change','gap_discovered',
+                 'assumption_flagged','plan_revised','chain_depth_overridden']),
+};
+
+function signalClass(type) {
+  if (SIGNAL.high.has(type)) return 'signal-high';
+  if (SIGNAL.med.has(type))  return 'signal-med';
+  return 'signal-info';
+}
+
+function fmtTime(iso) {
+  if (!iso) return '—';
+  try { return iso.slice(11, 19); } catch { return iso; }
+}
+
+function fmtData(data) {
+  if (!data || Object.keys(data).length === 0) return '';
+  const parts = Object.entries(data).map(([k, v]) => {
+    let cls = 'val';
+    if (typeof v === 'string')  cls = 'val-str';
+    if (typeof v === 'number')  cls = 'val-num';
+    if (typeof v === 'boolean') cls = 'val-bool';
+    const display = Array.isArray(v) ? `[${v.map(x => JSON.stringify(x)).join(', ')}]`
+                  : typeof v === 'object' ? JSON.stringify(v)
+                  : JSON.stringify(v);
+    return `<span class="key">${k}:</span><span class="${cls}">${display}</span>`;
+  });
+  return parts.join('  ');
+}
+
+function buildRunCard(runId, events) {
+  // Determine outcome
+  const last = events[events.length - 1];
+  const completed = events.find(e => e.type === 'run_completed');
+  const interrupted = events.find(e => e.type === 'run_interrupted');
+  const started = events.find(e => e.type === 'run_started');
+
+  let outcome = 'running';
+  if (completed) outcome = completed.data?.outcome || 'done';
+  if (interrupted) outcome = 'interrupted';
+
+  const ticket = started?.ticket || events[0]?.ticket || '—';
+  const entryPoint = started?.data?.entry_point || '—';
+  const startTime = started?.timestamp ? started.timestamp.slice(0,19).replace('T',' ') : '—';
+  const skillsRun = completed?.data?.skills_run || [];
+
+  // Count signal events
+  const highCount = events.filter(e => SIGNAL.high.has(e.type)).length;
+  const medCount  = events.filter(e => SIGNAL.med.has(e.type)).length;
+
+  const outcomeClass = {
+    done: 'outcome-done', blocked: 'outcome-blocked',
+    interrupted: 'outcome-interrupted', running: 'outcome-running',
+    abandoned: 'outcome-interrupted',
+  }[outcome] || 'outcome-running';
+
+  // Group events by skill for section labels
+  let lastSkill = null;
+  const eventRows = events.map(e => {
+    let sectionLabel = '';
+    if (e.skill !== lastSkill && e.skill) {
+      sectionLabel = `<div class="section-label">${e.skill}</div>`;
+      lastSkill = e.skill;
+    }
+    return `${sectionLabel}<div class="event ${signalClass(e.type)}">
+      <span class="event-time">${fmtTime(e.timestamp)}</span>
+      <span class="event-type type-${e.type}">${e.type}</span>
+      <span class="event-data">${fmtData(e.data)}</span>
+    </div>`;
+  }).join('');
+
+  const statsHtml = [
+    highCount > 0 ? `<span class="stat-item"><span class="stat-dot" style="background:#f85149"></span>${highCount} high-signal</span>` : '',
+    medCount  > 0 ? `<span class="stat-item"><span class="stat-dot" style="background:#f0883e"></span>${medCount} medium</span>` : '',
+    `<span class="stat-item">${events.length} events</span>`,
+    skillsRun.length > 0 ? `<span class="stat-item">skills: ${skillsRun.join(' → ')}</span>` : '',
+  ].filter(Boolean).join('');
+
+  return `<div class="run" id="run-${runId}">
+    <div class="run-header" onclick="toggleRun('run-${runId}')">
+      <span class="chevron">▶</span>
+      <div class="run-meta">
+        <div class="run-title">${ticket} &mdash; entry: ${entryPoint}</div>
+        <div class="run-subtitle">${startTime}</div>
+      </div>
+      <span class="run-outcome ${outcomeClass}">${outcome}</span>
+      <span class="run-id-badge">${runId}</span>
+    </div>
+    <div class="run-stats">${statsHtml}</div>
+    <div class="events">${eventRows}</div>
+  </div>`;
+}
+
+function toggleRun(id) {
+  document.getElementById(id)?.classList.toggle('expanded');
+}
+
+function parseJsonl(text) {
+  return text.trim().split('\n').filter(Boolean).map(line => {
+    try { return JSON.parse(line); } catch { return null; }
+  }).filter(Boolean);
+}
+
+function groupByRunId(allEvents) {
+  const runs = new Map();
+  for (const e of allEvents) {
+    const id = e.run_id || 'unknown';
+    if (!runs.has(id)) runs.set(id, []);
+    runs.get(id).push(e);
+  }
+  return runs;
+}
+
+function render(allEvents) {
+  const main = document.getElementById('main');
+  if (allEvents.length === 0) {
+    main.innerHTML = `<div class="empty-state"><h2>No events found</h2><p>No qsos-run-*.jsonl files were found in the selected folder.</p></div>`;
+    return;
+  }
+
+  const runs = groupByRunId(allEvents);
+  const sorted = [...runs.entries()].sort((a, b) => {
+    const ta = a[1][0]?.timestamp || '';
+    const tb = b[1][0]?.timestamp || '';
+    return tb.localeCompare(ta);
+  });
+
+  // Preserve expanded state and scroll position across re-renders
+  const expanded = new Set(
+    [...document.querySelectorAll('.run.expanded')].map(el => el.id)
+  );
+  const scrollY = window.scrollY;
+
+  main.innerHTML = sorted.map(([runId, events]) => buildRunCard(runId, events)).join('');
+
+  expanded.forEach(id => document.getElementById(id)?.classList.add('expanded'));
+  window.scrollTo(0, scrollY);
+}
+
+// ── File System Access API (Chrome/Edge) ──────────────────────────────────────
+let dirHandle = null;
+let pollTimer = null;
+
+document.getElementById('btn-open').addEventListener('click', async () => {
+  try {
+    dirHandle = await window.showDirectoryPicker({ mode: 'read' });
+    document.getElementById('btn-refresh').style.display = '';
+    startPolling();
+  } catch (e) {
+    if (e.name !== 'AbortError') console.error(e);
+  }
+});
+
+document.getElementById('btn-refresh').addEventListener('click', () => loadFromDir());
+
+async function collectJsonlFiles(dirHandle, path = '') {
+  const files = [];
+  for await (const [name, handle] of dirHandle.entries()) {
+    if (handle.kind === 'directory') {
+      const sub = await collectJsonlFiles(handle, path + name + '/');
+      files.push(...sub);
+    } else if (name.match(/^qsos-run-.*\.jsonl$/)) {
+      files.push({ path: path + name, handle });
+    }
+  }
+  return files;
+}
+
+async function loadFromDir() {
+  if (!dirHandle) return;
+  setStatus('loading…', true);
+  try {
+    const files = await collectJsonlFiles(dirHandle);
+    const allEvents = [];
+    for (const { handle } of files) {
+      const file = await handle.getFile();
+      const text = await file.text();
+      allEvents.push(...parseJsonl(text));
+    }
+    render(allEvents);
+    setStatus(`${files.length} log file${files.length !== 1 ? 's' : ''} — last checked ${new Date().toLocaleTimeString()}`, false);
+  } catch (e) {
+    setStatus('Error reading files', false);
+    console.error(e);
+  }
+}
+
+function startPolling() {
+  loadFromDir();
+  clearInterval(pollTimer);
+  pollTimer = setInterval(loadFromDir, 5000);
+}
+
+// ── API server mode (serve.py) ────────────────────────────────────────────────
+// When served via utilities/serve.py, /api/logs returns all events as JSON array.
+// Auto-detected: if we're on localhost and not using the file:// protocol.
+if (location.protocol !== 'file:') {
+  document.getElementById('btn-open').style.display = 'none';
+
+  async function fetchLogs() {
+    setStatus('fetching…', true);
+    try {
+      const events = await fetch('/api/logs').then(r => r.json());
+      render(events);
+      setStatus(`${events.length} events — last updated ${new Date().toLocaleTimeString()}`, false);
+    } catch (e) {
+      setStatus('Cannot reach /api/logs — is serve.py running?', false);
+    }
+  }
+
+  fetchLogs();
+  setInterval(fetchLogs, 5000);
+}
+
+function setStatus(msg, active) {
+  document.getElementById('status-text').textContent = msg;
+  const dot = document.getElementById('dot');
+  dot.className = 'status-dot' + (active ? '' : ' idle');
+}
+</script>
+</body>
+</html>

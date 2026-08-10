@@ -18,6 +18,16 @@ If you arrive at this skill mid-implementation, stop — implementation should n
 
 ---
 
+Log `skill_started` before reading any project files:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  python3 -c "import json,datetime; d=json.load(open('.qsos/current-run.json')); print(json.dumps({'run_id':d['run_id'],'timestamp':datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),'ticket':d.get('ticket',''),'skill':'qsos-brainstorm','type':'skill_started','data':{}}))" >> "$LOG_PATH"
+fi
+```
+
 ## Step 1 — Load existing context
 
 Before asking a single question, read the project's existing documentation:
@@ -85,6 +95,16 @@ Rules:
 - Do not describe implementation details — describe observable behavior only
 - Present the draft to the user before writing the file; incorporate any corrections
 
+After writing the file, log `file_created`:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  python3 -c "import json,datetime; d=json.load(open('.qsos/current-run.json')); print(json.dumps({'run_id':d['run_id'],'timestamp':datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),'ticket':d.get('ticket',''),'skill':'qsos-brainstorm','type':'file_created','data':{'path':'docs/features/<slug>.feature'}}))" >> "$LOG_PATH"
+fi
+```
+
 ---
 
 ## Step 5 — Draft the ticket
@@ -112,7 +132,15 @@ depends_on: []
 <Description from the scoping conversation. Include the expected outcome.>
 ```
 
-Then call `/task update` to register the new ticket in the active medium.
+Then call `/task update` to register the new ticket in the active medium. After writing the ticket file, log `file_created`:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  python3 -c "import json,datetime; d=json.load(open('.qsos/current-run.json')); print(json.dumps({'run_id':d['run_id'],'timestamp':datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),'ticket':d.get('ticket',''),'skill':'qsos-brainstorm','type':'file_created','data':{'path':'work/TIX-NNN-<slug>/TIX-NNN-<slug>.md'}}))" >> "$LOG_PATH"
+fi
+```
 
 ---
 
@@ -128,6 +156,16 @@ CONFLICTS: none | BLOCKED — <ADR reference and nature of conflict>
 VOCABULARY ALIGNED: yes | <terms adjusted>
 
 Next step: run /feature-doc new to audit and promote @proposed → @accepted.
+```
+
+After emitting the verdict block, log `skill_completed`:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  python3 -c "import json,datetime; d=json.load(open('.qsos/current-run.json')); print(json.dumps({'run_id':d['run_id'],'timestamp':datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),'ticket':d.get('ticket',''),'skill':'qsos-brainstorm','type':'skill_completed','data':{'outcome':'ready_for_feature_doc'}}))" >> "$LOG_PATH"
+fi
 ```
 
 ---

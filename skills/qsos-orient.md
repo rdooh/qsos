@@ -16,6 +16,16 @@ After `/qsos-feature-doc` has set a feature `@accepted` and before `/qsos-plan` 
 
 ---
 
+Log `skill_started` before resolving the ticket:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  python3 -c "import json,datetime; d=json.load(open('.qsos/current-run.json')); print(json.dumps({'run_id':d['run_id'],'timestamp':datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),'ticket':d.get('ticket',''),'skill':'qsos-orient','type':'skill_started','data':{}}))" >> "$LOG_PATH"
+fi
+```
+
 ## Step 1 — Resolve the ticket
 
 Call `/task read` with the ticket ID from context, or infer the ticket from the task description. If no ticket ID can be determined, ask for one before continuing — planning without a ticket reference is planning without a record.
@@ -73,6 +83,16 @@ Check the following conditions and note any that apply:
 - Any dependency ticket is not `done` — **flag as unresolved blocker**
 - Feature file references a concept not in any ADR or DSL element — **flag as undocumented assumption**
 
+For each gap found, emit a `gap_discovered` event:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  python3 -c "import json,datetime; d=json.load(open('.qsos/current-run.json')); print(json.dumps({'run_id':d['run_id'],'timestamp':datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),'ticket':d.get('ticket',''),'skill':'qsos-orient','type':'gap_discovered','data':{'gap_type':'<feature|architecture|test|doc>','description':'<one-line gap description>'}}))" >> "$LOG_PATH"
+fi
+```
+
 ---
 
 ## Step 6 — Produce context summary
@@ -101,6 +121,19 @@ READY FOR /plan: yes | no — <reason if no>
 ```
 
 Do not proceed to `/qsos-plan` until the summary shows `READY FOR /plan: yes`.
+
+After emitting the summary, log `skill_completed` (if READY FOR /plan: yes) or `skill_blocked` (if no):
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  # If READY FOR /plan: yes:
+  python3 -c "import json,datetime; d=json.load(open('.qsos/current-run.json')); print(json.dumps({'run_id':d['run_id'],'timestamp':datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),'ticket':d.get('ticket',''),'skill':'qsos-orient','type':'skill_completed','data':{'outcome':'ready'}}))" >> "$LOG_PATH"
+  # If READY FOR /plan: no — replace the above with:
+  # python3 -c "import json,datetime; d=json.load(open('.qsos/current-run.json')); print(json.dumps({'run_id':d['run_id'],'timestamp':datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),'ticket':d.get('ticket',''),'skill':'qsos-orient','type':'skill_blocked','data':{'reason':'<why not ready>','resolution_required':'<redirect skill>'}}))" >> "$LOG_PATH"
+fi
+```
 
 ---
 

@@ -22,6 +22,16 @@ Documentation is not a record of what was built — it is a specification of wha
 
 ---
 
+Log `skill_started` before identifying the mode:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  python3 -c "import json,datetime; d=json.load(open('.qsos/current-run.json')); print(json.dumps({'run_id':d['run_id'],'timestamp':datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),'ticket':d.get('ticket',''),'skill':'qsos-feature-doc','type':'skill_started','data':{}}))" >> "$LOG_PATH"
+fi
+```
+
 ## Step 1 — Identify mode
 
 Determine which mode applies:
@@ -87,6 +97,18 @@ When this skill returns GO, update the tag from `@proposed` to `@accepted` befor
 ### For `change` mode
 
 Open the existing feature file. Identify which scenarios are affected by the change. Update them to reflect the new behavior. If the change adds a new case, add a new scenario. If it removes a case, remove or mark the scenario as obsolete with a comment.
+
+After writing or updating the feature file, log `file_created` (new mode) or `file_modified` (change/bug mode):
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  # For new mode — file_created:
+  python3 -c "import json,datetime; d=json.load(open('.qsos/current-run.json')); print(json.dumps({'run_id':d['run_id'],'timestamp':datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),'ticket':d.get('ticket',''),'skill':'qsos-feature-doc','type':'file_created','data':{'path':'docs/features/<slug>.feature'}}))" >> "$LOG_PATH"
+  # For change/bug mode — replace 'file_created' with 'file_modified' above
+fi
+```
 
 ### For `bug` mode
 
@@ -156,6 +178,16 @@ Accepted
 
 Number sequentially from existing ADRs in `docs/decisions/`. If none exist, start at ADR-001.
 
+After writing the ADR (if one was warranted), log `adr_created`:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  python3 -c "import json,datetime; d=json.load(open('.qsos/current-run.json')); print(json.dumps({'run_id':d['run_id'],'timestamp':datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),'ticket':d.get('ticket',''),'skill':'qsos-feature-doc','type':'adr_created','data':{'adr_path':'docs/decisions/ADR-NNN-<slug>.md','decision_summary':'<one line>'}}))" >> "$LOG_PATH"
+fi
+```
+
 ---
 
 ## Step 6 — Verdict
@@ -178,6 +210,19 @@ VERDICT: GO | BLOCKED — <reason>
 **GO** means: the feature file is in place, the audit passed, any required ADR exists, and implementation may begin (or the fix may ship).
 
 **BLOCKED** means: stop. Surface the specific issue. Do not proceed to implementation. Wait for direction.
+
+After emitting the verdict block, log `skill_completed` (GO) or `skill_blocked` (BLOCKED):
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  # If GO:
+  python3 -c "import json,datetime; d=json.load(open('.qsos/current-run.json')); print(json.dumps({'run_id':d['run_id'],'timestamp':datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),'ticket':d.get('ticket',''),'skill':'qsos-feature-doc','type':'skill_completed','data':{'outcome':'go'}}))" >> "$LOG_PATH"
+  # If BLOCKED — replace the above with:
+  # python3 -c "import json,datetime; d=json.load(open('.qsos/current-run.json')); print(json.dumps({'run_id':d['run_id'],'timestamp':datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),'ticket':d.get('ticket',''),'skill':'qsos-feature-doc','type':'skill_blocked','data':{'reason':'<audit failure>','resolution_required':'fix feature file'}}))" >> "$LOG_PATH"
+fi
+```
 
 ---
 

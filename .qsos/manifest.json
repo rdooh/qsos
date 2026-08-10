@@ -1,0 +1,101 @@
+{
+  "ticket": "TIX-016",
+  "generated_at": "2026-07-29T00:00:00Z",
+  "dependency_graph": "Sub-job 1 (qsos.md) must complete before sub-jobs 2-5 — all skill files read .qsos/current-run.json and copy the canonical append pattern defined there. Sub-job 6 (ADR-009) is independent. No shared files across sub-jobs.",
+  "sub_jobs": [
+    {
+      "label": "sub-job-1: orchestrator-run-lifecycle",
+      "items": ["[1+2]"],
+      "files": ["skills/qsos.md"],
+      "execution_order": ["[1+2] — single file, single pass"],
+      "tdd_contract": {
+        "test_file": "N/A",
+        "failing_assertion": "N/A",
+        "passing_criterion": "N/A",
+        "non_testable_items": [
+          "Markdown instruction file. Structural checks: current-run.json schema defined (run_id, log_path, ticket, started_at); run_id format specified (timestamp slug); log_path resolution logic; run_started/run_completed/run_interrupted events instructed; checkpoint format replaces verbose prose; 'no prose reasoning' instruction present. Canonical Bash append snippet defined for downstream sub-jobs to copy."
+        ]
+      }
+    },
+    {
+      "label": "sub-job-2: implementation-skills-logging",
+      "items": ["[3]", "[4]"],
+      "files": ["skills/qsos-implement.md", "skills/qsos-implement-fan.md"],
+      "execution_order": ["[3] qsos-implement.md first, then [4] qsos-implement-fan.md"],
+      "tdd_contract": {
+        "test_file": "N/A",
+        "failing_assertion": "N/A",
+        "passing_criterion": "N/A",
+        "non_testable_items": [
+          "Markdown files. Structural checks: item_started, item_completed, deviation_flagged, deviation_resolved, unplanned_change events in qsos-implement.md; plan_produced, subagent_spawned, sub-job complete, merge events in qsos-implement-fan.md; graceful skip on absent current-run.json in both."
+        ]
+      }
+    },
+    {
+      "label": "sub-job-3: plan-skill-logging",
+      "items": ["[5]"],
+      "files": ["skills/qsos-plan.md"],
+      "execution_order": ["[5] — single file"],
+      "tdd_contract": {
+        "test_file": "N/A",
+        "failing_assertion": "N/A",
+        "passing_criterion": "N/A",
+        "non_testable_items": [
+          "Markdown file. Structural checks: plan_produced, plan_approved, plan_revised, plan_aborted events present with Bash append and graceful skip."
+        ]
+      }
+    },
+    {
+      "label": "sub-job-4: verification-validation-logging",
+      "items": ["[6]", "[7]"],
+      "files": ["skills/qsos-verify.md", "skills/qsos-validate.md"],
+      "execution_order": ["[6] qsos-verify.md first, then [7] qsos-validate.md"],
+      "tdd_contract": {
+        "test_file": "N/A",
+        "failing_assertion": "N/A",
+        "passing_criterion": "N/A",
+        "non_testable_items": [
+          "Markdown files. Structural checks: skill_started, verdict_issued (evidence_links array), verdict_unconfirmed, verdict_inconclusive in qsos-verify.md; skill_started, step events (automated+human), evidence_written (ctrf path), final verdict in qsos-validate.md."
+        ]
+      }
+    },
+    {
+      "label": "sub-job-5: quality-gate-skills-logging",
+      "items": ["[8]", "[9]"],
+      "files": ["skills/qsos-coverage-check.md", "skills/qsos-review.md"],
+      "execution_order": ["[8] qsos-coverage-check.md then [9] qsos-review.md"],
+      "tdd_contract": {
+        "test_file": "N/A",
+        "failing_assertion": "N/A",
+        "passing_criterion": "N/A",
+        "non_testable_items": [
+          "Markdown files. Structural checks: skill_started, test_run (result_link), coverage_gap, skill_completed in qsos-coverage-check.md; skill_started, gap_discovered/insight per finding severity, skill_completed/blocked in qsos-review.md."
+        ]
+      }
+    },
+    {
+      "label": "sub-job-6: adr-taxonomy-and-example",
+      "items": ["[10]"],
+      "files": ["docs/decisions/ADR-009-qsos-run-logging-schema.md"],
+      "execution_order": ["[10] — single file"],
+      "tdd_contract": {
+        "test_file": "N/A",
+        "failing_assertion": "N/A",
+        "passing_criterion": "N/A",
+        "non_testable_items": [
+          "ADR markdown. Structural checks: subagent_spawned/subagent_completed/subagent_blocked added to taxonomy table; worked example has 8-10 JSONL lines showing envelope + high-signal payload + process health event."
+        ]
+      }
+    }
+  ],
+  "pre_conditions": [
+    "Sub-job 1 must complete before sub-jobs 2-5 begin — canonical append pattern must be defined first",
+    "Sub-job 6 (ADR-009) can run in parallel with sub-job 1 or after it",
+    "After sub-job 1, canonical Bash append snippet and current-run.json field names are passed to sub-jobs 2-5"
+  ],
+  "isolation_risks": [
+    "Naming consistency: all skill files must use identical field names and append idiom — mitigated by running sub-job 1 first and passing its canonical snippet to all others",
+    "subagent_spawned/completed/blocked type names must be consistent between sub-job 6 (ADR) and sub-job 2 (qsos-implement-fan.md) — type names are fixed in the plan"
+  ],
+  "coverage_check": "PASS"
+}

@@ -20,6 +20,22 @@ Can also be run standalone against any ticket or changed file set.
 
 ---
 
+## Logging — skill_started
+
+At the start of execution, before Step 0, emit a `skill_started` log entry:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  RUN_ID=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['run_id'])" 2>/dev/null)
+  TS=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+  echo "{\"run_id\":\"$RUN_ID\",\"timestamp\":\"$TS\",\"ticket\":\"$TICKET_ID\",\"skill\":\"qsos-coverage-check\",\"type\":\"skill_started\",\"data\":{}}" >> "$LOG_PATH"
+fi
+```
+
+---
+
 ## Step 0 — Load or create testing/manifest.json
 
 Look for `testing/manifest.json` at the project root.
@@ -155,6 +171,34 @@ An edge case scenario is one whose `Scenario:` name includes words like: "when n
 
 ---
 
+## Logging — test_run and coverage_gap
+
+After running tests (or after Step 5 — the feature scenario coverage check), emit a `test_run` log entry with results:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  RUN_ID=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['run_id'])" 2>/dev/null)
+  TS=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+  echo "{\"run_id\":\"$RUN_ID\",\"timestamp\":\"$TS\",\"ticket\":\"$TICKET_ID\",\"skill\":\"qsos-coverage-check\",\"type\":\"test_run\",\"data\":{\"runner\":\"<pytest|jest|vitest|etc>\",\"passed\":<N>,\"failed\":<N>,\"skipped\":<N>,\"coverage_pct\":<N>,\"result_link\":\"file://<absolute-path-to-results>\"}}" >> "$LOG_PATH"
+fi
+```
+
+If coverage gaps are identified (uncovered pure functions, uncovered scenarios, or posture gaps at HIGH), emit a `coverage_gap` log entry per gap set:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  RUN_ID=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['run_id'])" 2>/dev/null)
+  TS=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+  echo "{\"run_id\":\"$RUN_ID\",\"timestamp\":\"$TS\",\"ticket\":\"$TICKET_ID\",\"skill\":\"qsos-coverage-check\",\"type\":\"coverage_gap\",\"data\":{\"files_uncovered\":[\"<list>\"],\"threshold\":<N>,\"actual\":<N>}}" >> "$LOG_PATH"
+fi
+```
+
+---
+
 ## Step 7 — Produce report
 
 ```
@@ -190,6 +234,24 @@ VERDICT: PASS | GAPS FOUND — <N> blocker(s), <N> note(s)
 ```
 
 If all posture gaps are LOW/MEDIUM and all coverage gaps are advisory: verdict is PASS with notes.
+
+---
+
+## Logging — skill_completed
+
+After producing the Step 7 report, emit a `skill_completed` log entry:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  RUN_ID=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['run_id'])" 2>/dev/null)
+  TS=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+  echo "{\"run_id\":\"$RUN_ID\",\"timestamp\":\"$TS\",\"ticket\":\"$TICKET_ID\",\"skill\":\"qsos-coverage-check\",\"type\":\"skill_completed\",\"data\":{\"outcome\":\"<pass|fail|deferred>\"}}" >> "$LOG_PATH"
+fi
+```
+
+Outcome values: `pass` (no blockers), `fail` (blockers found, not deferred), `deferred` (user chose to defer gaps to a follow-up ticket).
 
 ---
 

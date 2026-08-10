@@ -14,13 +14,13 @@
     },
     {
       "id": "TIX-003",
-      "title": "Add qsos-review skill — post-implement code quality gate",
+      "title": "Add qsos-review skill \u2014 post-implement code quality gate",
       "status": "done",
       "path": "work/TIX-003-review-skill/TIX-003-review-skill.md"
     },
     {
       "id": "TIX-004",
-      "title": "Add qsos-security skill — optional architect-triggered security gate",
+      "title": "Add qsos-security skill \u2014 optional architect-triggered security gate",
       "status": "done",
       "path": "work/TIX-004-security-skill/TIX-004-security-skill.md"
     },
@@ -44,7 +44,7 @@
     },
     {
       "id": "TIX-008",
-      "title": "Agent model tier configuration — abstract low/mid/high tiers with config-driven mapping",
+      "title": "Agent model tier configuration \u2014 abstract low/mid/high tiers with config-driven mapping",
       "status": "done",
       "path": "work/TIX-008-agent-model-tier-config/TIX-008-agent-model-tier-config.md"
     },
@@ -56,7 +56,7 @@
     },
     {
       "id": "TIX-010",
-      "title": "Model tier enforcement — prevent concrete model IDs in agent source files",
+      "title": "Model tier enforcement \u2014 prevent concrete model IDs in agent source files",
       "status": "done",
       "path": "work/TIX-010-model-tier-enforcement/TIX-010-model-tier-enforcement.md"
     },
@@ -83,6 +83,30 @@
       "title": "Add pytest coverage threshold enforcement",
       "status": "done",
       "path": "work/TIX-014-pytest-coverage-threshold/TIX-014-pytest-coverage-threshold.md"
+    },
+    {
+      "id": "TIX-015",
+      "title": "Verify hardening and qsos-validate human-in-the-loop skill",
+      "status": "done",
+      "path": "work/TIX-015-verify-hardening-and-validate-skill/TIX-015-verify-hardening-and-validate-skill.md"
+    },
+    {
+      "id": "TIX-016",
+      "title": "Structured JSONL event logging for QSOS runs",
+      "status": "done",
+      "path": "work/TIX-016-qsos-run-logging/TIX-016-qsos-run-logging.md"
+    },
+    {
+      "id": "TIX-017",
+      "title": "Subagent log events must be emitted by parent skill, not subagent",
+      "status": "done",
+      "path": "work/TIX-017-subagent-log-events-parent/TIX-017-subagent-log-events-parent.md"
+    },
+    {
+      "id": "TIX-018",
+      "title": "Instrument remaining 6 uninstrumented skills with log events",
+      "status": "done",
+      "path": "work/TIX-018-instrument-remaining-skills/TIX-018-instrument-remaining-skills.md"
     }
   ]
 }

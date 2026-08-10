@@ -16,6 +16,36 @@ Theoretical reasoning ("this should work because...") does not satisfy this prot
 
 **You may not use the words "fixed", "done", "resolved", "working", or "complete" — in any form — unless the verdict you issue in this session is CONFIRMED.** If the verdict is UNCONFIRMED or INCONCLUSIVE, your response must end with an explicit statement of what was found and a question about next steps.
 
+## Direct link requirement
+
+Every evidence claim must include a direct `file://` path or `http://` URL. The link IS the evidence — a claim without a link is not evidence.
+
+- Bad:  "Tests passed"
+- Good: "Tests passed: file:///path/to/test-results/unit.json"
+
+## Banned hedging phrases
+
+These phrases are **PROHIBITED** in any verdict or evidence statement:
+- "should work"
+- "likely fixed"
+- "appears to be working"
+- "probably"
+- "seems to"
+- "I believe"
+- "logically"
+
+If you cannot confirm without hedging, issue **UNCONFIRMED**.
+
+## Logic-only verdict rule
+
+If you have reasoned that a fix is correct but have NOT run any tool, read any output file, or followed any link — you MUST issue UNCONFIRMED and MUST include this exact statement:
+
+> "No independently-observable evidence gathered"
+
+## Cannot-check surfacing
+
+When you cannot run a test or open a file, explicitly list what you could not verify and issue **INCONCLUSIVE** (not CONFIRMED) for those specific claims. Do not silently skip or assume the outcome — surface the gap.
+
 ## Step 1 — State the claim
 
 Write one sentence describing exactly what you are claiming to have achieved. Be specific.

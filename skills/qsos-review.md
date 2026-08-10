@@ -16,6 +16,22 @@ After `/qsos-implement` has completed and emitted its completion block. Before `
 
 ---
 
+## Logging — skill_started
+
+At the start of execution, before Step 1, emit a `skill_started` log entry:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  RUN_ID=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['run_id'])" 2>/dev/null)
+  TS=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+  echo "{\"run_id\":\"$RUN_ID\",\"timestamp\":\"$TS\",\"ticket\":\"$TICKET_ID\",\"skill\":\"qsos-review\",\"type\":\"skill_started\",\"data\":{}}" >> "$LOG_PATH"
+fi
+```
+
+---
+
 ## Step 1 — Confirm implementation block
 
 Check that a `/qsos-implement` completion block is present in context:
@@ -35,6 +51,18 @@ Run /qsos-implement first, then return here.
 ---
 
 ## Step 2 — Dispatch code-reviewer agent
+
+Before dispatching the agent, emit a `subagent_spawned` log entry:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  RUN_ID=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['run_id'])" 2>/dev/null)
+  TS=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+  echo "{\"run_id\":\"$RUN_ID\",\"timestamp\":\"$TS\",\"ticket\":\"$TICKET_ID\",\"skill\":\"qsos-review\",\"type\":\"subagent_spawned\",\"data\":{\"label\":\"code-reviewer\",\"model\":\"<tier>\",\"scope_files\":[\"<diff scope>\"],\"purpose\":\"post-implement code quality review\"}}" >> "$LOG_PATH"
+fi
+```
 
 Dispatch the `code-reviewer` agent using the Agent tool:
 
@@ -56,6 +84,32 @@ Parse the agent output line by line. Each line is either a JSON finding object o
 
 **If output is `NO FINDINGS`:**
 → Skip to Step 5 (CLEAN path)
+
+**For each JSON finding, classify by confidence and emit a log entry:**
+
+For findings with severity CRITICAL or HIGH (confidence >= 5), emit a `gap_discovered` entry:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  RUN_ID=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['run_id'])" 2>/dev/null)
+  TS=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+  echo "{\"run_id\":\"$RUN_ID\",\"timestamp\":\"$TS\",\"ticket\":\"$TICKET_ID\",\"skill\":\"qsos-review\",\"type\":\"gap_discovered\",\"data\":{\"gap_type\":\"<correctness|maintainability|security|etc>\",\"description\":\"<one-line finding summary>\"}}" >> "$LOG_PATH"
+fi
+```
+
+For informational findings (LOW or MEDIUM severity, confidence < 5 or severity not CRITICAL/HIGH), emit an `insight` entry:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  RUN_ID=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['run_id'])" 2>/dev/null)
+  TS=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+  echo "{\"run_id\":\"$RUN_ID\",\"timestamp\":\"$TS\",\"ticket\":\"$TICKET_ID\",\"skill\":\"qsos-review\",\"type\":\"insight\",\"data\":{\"category\":\"codebase\",\"summary\":\"<one-line observation>\",\"actionable\":true}}" >> "$LOG_PATH"
+fi
+```
 
 **For each JSON finding, classify by confidence:**
 
@@ -129,6 +183,24 @@ Proceeding to next step.
 After either CLEAN or INFORMATIONAL output, continue the chain:
 - If `SECURITY_REVIEW: recommended` is present in the plan → run `/qsos-security`
 - Otherwise → run `/qsos-verify`
+
+---
+
+## Logging — skill_completed
+
+After emitting the Step 4 or Step 5 output, emit a `skill_completed` log entry:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  RUN_ID=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['run_id'])" 2>/dev/null)
+  TS=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+  echo "{\"run_id\":\"$RUN_ID\",\"timestamp\":\"$TS\",\"ticket\":\"$TICKET_ID\",\"skill\":\"qsos-review\",\"type\":\"skill_completed\",\"data\":{\"outcome\":\"<clean|blocked>\",\"finding_count\":<N>}}" >> "$LOG_PATH"
+fi
+```
+
+Outcome values: `clean` (no CRITICAL findings at confidence 7+), `blocked` (one or more CRITICAL findings at confidence 7+). `finding_count` is the total number of findings emitted (all severities, confidence 3+).
 
 ---
 

@@ -16,6 +16,20 @@ After `/qsos-review` (or `/qsos-security` if activated) has passed. Before `/qso
 
 ---
 
+## Logging — skill_started
+
+Emit before any other action:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  echo '{"run_id":"<from current-run.json>","timestamp":"<ISO>","ticket":"<id>","skill":"qsos-verify","type":"skill_started","data":{}}' >> "$LOG_PATH"
+fi
+```
+
+---
+
 ## Step 0 — Coverage-check gate
 
 Before loading verification context, check whether `testing/manifest.json` exists in the project.
@@ -60,6 +74,18 @@ Wait for the user's response, then use that as the claim. Continue with Step 2.
 
 ## Step 2 — Dispatch verifier agent
 
+Emit subagent_spawned immediately before dispatching:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  echo '{"run_id":"<id>","timestamp":"<ISO>","ticket":"<id>","skill":"qsos-verify","type":"subagent_spawned","data":{"label":"verifier","model":"<tier>","scope_files":["work/<ticket-slug>/evidence/"],"purpose":"evidence gathering and verdict"}}' >> "$LOG_PATH"
+fi
+```
+
+Then dispatch the verifier agent:
+
 ```
 Agent(
   description: "Verification pass — reads project files, runs test tools, and validates test result JSONs, writes evidence, low-medium cost",
@@ -80,7 +106,32 @@ INSTRUCTIONS:
    - If any test has status failed or skipped -> verdict must be UNCONFIRMED
    - If test count is 0 -> verdict must be UNCONFIRMED
 5. Save the evidence artifact (referencing the verified JSON file contents) to the evidence directory.
-6. Issue your verdict: CONFIRMED or UNCONFIRMED."
+6. Issue your verdict: CONFIRMED, UNCONFIRMED, or INCONCLUSIVE.
+
+EVIDENCE CONSTRAINTS (mandatory — all four apply to every verdict):
+
+A. DIRECT LINK REQUIREMENT
+Every evidence claim must include a direct file:// path or http:// URL. The link IS the evidence — a claim without a link is not evidence.
+- Bad:  'Tests passed'
+- Good: 'Tests passed: file:///path/to/test-results/unit.json'
+
+B. BANNED HEDGING PHRASES
+These phrases are PROHIBITED in any verdict or evidence statement:
+- 'should work'
+- 'likely fixed'
+- 'appears to be working'
+- 'probably'
+- 'seems to'
+- 'I believe'
+- 'logically'
+If you cannot confirm without hedging, issue UNCONFIRMED.
+
+C. LOGIC-ONLY VERDICT RULE
+If you have reasoned that a fix is correct but have NOT run any tool, read any output file, or followed any link — you MUST issue UNCONFIRMED and MUST include this exact statement:
+'No independently-observable evidence gathered'
+
+D. CANNOT-CHECK SURFACING
+When you cannot run a test or open a file, explicitly list what you could not verify and issue INCONCLUSIVE (not CONFIRMED) for those specific claims."
 )
 ```
 
@@ -91,6 +142,17 @@ Wait for the agent to return its verdict before proceeding.
 ## Step 3 — Handle the verdict
 
 **CONFIRMED:**
+
+Emit:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  echo '{"run_id":"<id>","timestamp":"<ISO>","ticket":"<id>","skill":"qsos-verify","type":"verdict_issued","data":{"verdict":"CONFIRMED","evidence_links":["<file:// or http:// links from verifier output>"],"weak_spots":[]}}' >> "$LOG_PATH"
+fi
+```
+
 ```
 VERIFY: CONFIRMED
 Evidence: work/<ticket-slug>/evidence/<artifact>
@@ -98,6 +160,17 @@ Evidence: work/<ticket-slug>/evidence/<artifact>
 Proceed to `/qsos-doc-sync`.
 
 **UNCONFIRMED:**
+
+Emit:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  echo '{"run_id":"<id>","timestamp":"<ISO>","ticket":"<id>","skill":"qsos-verify","type":"verdict_unconfirmed","data":{"reason":"<why unconfirmed>","what_was_not_checked":["<list>"]}}' >> "$LOG_PATH"
+fi
+```
+
 ```
 VERIFY: UNCONFIRMED
 <agent's description of what the artifact showed>
@@ -105,6 +178,17 @@ VERIFY: UNCONFIRMED
 Stop. Surface to the user. Wait for direction. Do not proceed to `/qsos-doc-sync`.
 
 **INCONCLUSIVE:**
+
+Emit:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  echo '{"run_id":"<id>","timestamp":"<ISO>","ticket":"<id>","skill":"qsos-verify","type":"verdict_inconclusive","data":{"unchecked_claims":["<list>"],"resolution_path":"<what would resolve it>"}}' >> "$LOG_PATH"
+fi
+```
+
 ```
 VERIFY: INCONCLUSIVE
 <agent's description of why the artifact is ambiguous>

@@ -47,7 +47,19 @@ Update the feature file's lifecycle tag from `@accepted` to `@in-progress`. This
 
 ---
 
+## Step 4 — Execute plan items
+
 Follow the approved plan exactly, item by item. For each code change item:
+
+**At the start of each item**, emit a log event:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  echo '{"run_id":"<from current-run.json>","timestamp":"<ISO>","ticket":"<id>","skill":"qsos-implement","type":"item_started","data":{"item_ref":"<N>","file":"<path>","action":"<description>"}}' >> "$LOG_PATH"
+fi
+```
 
 1. **Verify testing manifest**: Check `testing/manifest.json` for configured runners.
 2. **Write a failing test**: Before writing or modifying any implementation code, write a test in the project's unit or integration test directory that asserts the new behavior.
@@ -55,6 +67,16 @@ Follow the approved plan exactly, item by item. For each code change item:
 4. **Write implementation code**: Write the minimum code needed to satisfy the test.
 5. **Confirm Green state**: Run the test runner to verify the test now passes.
 6. **Confirm the item is done** before moving to the next.
+
+**After each item completes**, emit:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  echo '{"run_id":"<from current-run.json>","timestamp":"<ISO>","ticket":"<id>","skill":"qsos-implement","type":"item_completed","data":{"item_ref":"<N>","tdd":"<red_green|non_testable>"}}' >> "$LOG_PATH"
+fi
+```
 
 **When a plan item is non-testable** (e.g. comment/doc update, configuration file edit, meta-formatting), declare a minor deviation:
 ```
@@ -69,6 +91,16 @@ DEVIATION: <what was planned> → <what is actually needed>
 REASON: <why the plan item does not match reality>
 ```
 
+Before the AskUserQuestion gate, emit a log event:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  echo '{"run_id":"<from current-run.json>","timestamp":"<ISO>","ticket":"<id>","skill":"qsos-implement","type":"deviation_flagged","data":{"severity":"<minor|significant|blocked>","planned":"<what was planned>","actual":"<what is needed>","reason":"<why>"}}' >> "$LOG_PATH"
+fi
+```
+
 For **minor deviations** (different line numbers, additional helper in the same file): proceed automatically.
 
 For **significant deviations** (new files, interface changes, affects other feature areas): use `AskUserQuestion`:
@@ -78,6 +110,16 @@ For **significant deviations** (new files, interface changes, affects other feat
   - "Proceed with the deviation"
   - "Revert to the original plan approach"
   - "Abort — I need to revise the plan first"
+
+After the deviation is resolved, emit:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  echo '{"run_id":"<from current-run.json>","timestamp":"<ISO>","ticket":"<id>","skill":"qsos-implement","type":"deviation_resolved","data":{"how":"<proceeded|reverted|aborted>"}}' >> "$LOG_PATH"
+fi
+```
 
 ---
 
@@ -89,7 +131,15 @@ Before declaring implementation complete, verify:
 - No exported interface or type was changed without a corresponding plan item
 - No new dependency was introduced that wasn't present before
 
-If any unplanned change is discovered, surface it now — do not omit it from the record.
+If any unplanned change is discovered, surface it now — do not omit it from the record. For each unplanned change found, emit:
+
+```bash
+LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
+if [ -n "$LOG_PATH" ]; then
+  mkdir -p "$(dirname "$LOG_PATH")"
+  echo '{"run_id":"<from current-run.json>","timestamp":"<ISO>","ticket":"<id>","skill":"qsos-implement","type":"unplanned_change","data":{"file":"<path>","description":"<what changed>"}}' >> "$LOG_PATH"
+fi
+```
 
 ---
 

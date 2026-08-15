@@ -1,7 +1,7 @@
 ---
 id: QSO-024
 title: qsos-watch — Rust watcher hub daemon
-status: open
+status: todo
 priority: medium
 type: feat
 impact_scope:

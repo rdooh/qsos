@@ -1,7 +1,7 @@
 ---
 id: QSO-028
 title: qsos init — pre-commit hook installation
-status: open
+status: todo
 priority: low
 type: feat
 impact_scope:

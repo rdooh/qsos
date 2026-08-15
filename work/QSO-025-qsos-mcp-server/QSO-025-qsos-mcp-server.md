@@ -1,7 +1,7 @@
 ---
 id: QSO-025
 title: qsos-mcp — TypeScript MCP server
-status: open
+status: todo
 priority: medium
 type: feat
 impact_scope:

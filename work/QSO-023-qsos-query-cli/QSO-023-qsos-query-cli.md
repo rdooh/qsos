@@ -1,7 +1,7 @@
 ---
 id: QSO-023
 title: qsos query — graph query CLI
-status: open
+status: todo
 priority: high
 type: feat
 impact_scope:

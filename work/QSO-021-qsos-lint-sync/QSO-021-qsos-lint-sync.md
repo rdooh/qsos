@@ -1,7 +1,7 @@
 ---
 id: QSO-021
 title: qsos lint --sync — code and DSL drift detection
-status: open
+status: todo
 priority: medium
 type: feat
 impact_scope:

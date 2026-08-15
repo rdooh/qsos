@@ -53,10 +53,10 @@ Strux (personal) validated these mechanics. QSOS rebuilds them natively under wo
 
 ## Wave 4 — Knowledge graph
 
-**Tickets:** QSO-022 **done**, QSO-023 open | **Reference:** Strux `strux-graph`
+**Tickets:** QSO-022 **done**, QSO-023 **done** | **Reference:** Strux `strux-graph`
 
 - `qsos graph compile` → `work/graph-registry.json` ✅
-- `qsos query --ticket`, `--file`, `--blast-radius` (QSO-023)
+- `qsos query --ticket`, `--file`, `--blast-radius` ✅
 - `/qsos-orient` delegates context assembly to query
 - **TEMP dev viewer:** [QSO-031](../../work/QSO-031-temp-dev-tool-graph-viewer/QSO-031-temp-dev-tool-graph-viewer.md) — `utilities/graph-viewer.html` (not load-bearing; permanent viz → Dev OS)
 

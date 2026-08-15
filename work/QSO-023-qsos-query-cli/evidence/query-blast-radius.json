@@ -1,0 +1,32 @@
+{
+  "query_type": "blast-radius",
+  "query": "docs/decisions/ADR-010-polyglot-utilities-architecture.md",
+  "nodes": [
+    {
+      "id": "ADR-010",
+      "kind": "adr",
+      "label": "ADR-010 — ADR-010: Polyglot Utilities Architecture and Development Program"
+    },
+    {
+      "id": "spokes",
+      "kind": "dsl_element",
+      "label": "spokes (container)"
+    }
+  ],
+  "edges": [
+    {
+      "from": "ADR-010",
+      "to": "spokes",
+      "kind": "ADR→dsl_element"
+    }
+  ],
+  "summary": {
+    "tickets": 0,
+    "features": 0,
+    "scenarios": 0,
+    "adrs": 1,
+    "dsl_elements": 1,
+    "contracts": 0,
+    "edges": 1
+  }
+}

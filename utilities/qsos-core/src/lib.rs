@@ -105,6 +105,58 @@ pub struct GraphRegistry {
     pub edges: Vec<GraphEdge>,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct QuerySummary {
+    pub tickets: usize,
+    pub features: usize,
+    pub scenarios: usize,
+    pub adrs: usize,
+    pub dsl_elements: usize,
+    pub contracts: usize,
+    pub edges: usize,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct QueryResult {
+    pub query_type: String,
+    pub query: String,
+    pub nodes: Vec<GraphNode>,
+    pub edges: Vec<GraphEdge>,
+    pub summary: QuerySummary,
+}
+
+impl QueryResult {
+    pub fn from_registry(query_type: impl Into<String>, query: impl Into<String>, registry: GraphRegistry) -> Self {
+        let summary = summarize(&registry.nodes, &registry.edges);
+        Self {
+            query_type: query_type.into(),
+            query: query.into(),
+            nodes: registry.nodes,
+            edges: registry.edges,
+            summary,
+        }
+    }
+}
+
+pub fn summarize(nodes: &[GraphNode], edges: &[GraphEdge]) -> QuerySummary {
+    let mut summary = QuerySummary {
+        edges: edges.len(),
+        ..Default::default()
+    };
+    for node in nodes {
+        match node.kind.as_str() {
+            "ticket" => summary.tickets += 1,
+            "feature" => summary.features += 1,
+            "scenario" => summary.scenarios += 1,
+            "adr" => summary.adrs += 1,
+            "dsl_element" => summary.dsl_elements += 1,
+            "contract" => summary.contracts += 1,
+            _ => {}
+        }
+    }
+    summary
+}
+
 #[derive(Debug, Clone)]
 pub struct ProjectLayout {
     pub root: PathBuf,

@@ -135,7 +135,7 @@
     {
       "id": "QSO-023",
       "title": "qsos query — graph query CLI",
-      "status": "todo",
+      "status": "done",
       "path": "work/QSO-023-qsos-query-cli/QSO-023-qsos-query-cli.md"
     },
     {
@@ -159,7 +159,7 @@
     {
       "id": "QSO-027",
       "title": "Skill integration — wire skills to utilities",
-      "status": "todo",
+      "status": "in-progress",
       "path": "work/QSO-027-skill-utility-integration/QSO-027-skill-utility-integration.md"
     },
     {

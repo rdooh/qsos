@@ -16,8 +16,8 @@
 | **Run logging** (JSONL schema + viewer) | ✅ Complete |
 | **Watcher specifications** (ADR-004, triggers schema, spoke contract) | ✅ Specified, not implemented |
 | **Utilities — Phase 1–2** (scaffold + `qsos lint`) | ✅ Done — QSO-019, QSO-020 |
-| **Utilities — Phase 3** (graph compiler) | ✅ Done — QSO-022; query CLI (QSO-023) next |
-| **Utilities — Phase 3–8** (query, ingest, sync, MCP, watch, init) | 🔲 In progress — QSO-021, QSO-023–030 open |
+| **Utilities — Phase 3** (graph + query) | ✅ Done — QSO-022, QSO-023 |
+| **Utilities — Phase 3–8** (ingest, sync, MCP, watch, init) | 🔲 In progress — QSO-021, QSO-024–026, QSO-028, QSO-030; QSO-027 partial |
 | **Verification standard** | ✅ BDD scenarios, ticket verify sections, manifest floor (ADR-010 §6) |
 
 **Utilities progress:** ~25% — `qsos lint` working on QSOS repo; graph/query/ingest/watch/MCP stubbed.
@@ -74,9 +74,9 @@ Reference: Strux `strux-sensors` + `strux-curator`
 
 ---
 
-## Phase 3 — Knowledge graph (`qsos graph`, `qsos query`) 🔲
+## Phase 3 — Knowledge graph (`qsos graph`, `qsos query`) ✅
 
-**Tickets:** [QSO-022](../work/QSO-022-qsos-graph-compiler/QSO-022-qsos-graph-compiler.md) ✅, [QSO-023](../work/QSO-023-qsos-query-cli/QSO-023-qsos-query-cli.md)
+**Tickets:** [QSO-022](../work/QSO-022-qsos-graph-compiler/QSO-022-qsos-graph-compiler.md) ✅, [QSO-023](../work/QSO-023-qsos-query-cli/QSO-023-qsos-query-cli.md) ✅
 
 Reference: Strux `strux-graph`
 
@@ -171,11 +171,11 @@ Reference: Strux `watcher/src/main.rs`
 | QSO-020 | `qsos lint` static checks | 2 | ✅ done | QSO-019 |
 | QSO-021 | `qsos lint --sync` drift detection | 5 | open | QSO-020 |
 | QSO-022 | `qsos graph` compiler | 3 | ✅ done | QSO-019 |
-| QSO-023 | `qsos query` CLI | 3 | open | QSO-022 |
+| QSO-023 | `qsos query` CLI | 3 | ✅ done | QSO-022 |
 | QSO-024 | Rust watcher hub | 7 | open | QSO-019, QSO-020 |
 | QSO-025 | `qsos-mcp` TypeScript server | 6 | open | QSO-020, QSO-023 |
 | QSO-026 | Test ingestion + scenario mapping | 4 | open | QSO-022 |
-| QSO-027 | Skill integration (audit, orient, doc-sync, verify) | 2–4 | open | QSO-020, QSO-023 |
+| QSO-027 | Skill integration (audit, orient, doc-sync, verify) | 2–4 | in-progress | QSO-020, QSO-023 |
 | QSO-028 | `qsos init` + pre-commit hook | 8 | open | QSO-020 |
 | QSO-029 | catalog-mesh ticket prefix migration | — | ✅ done | — |
 | QSO-030 | `qsos init` new project setup wizard | 8 | open | QSO-019, QSO-020 |

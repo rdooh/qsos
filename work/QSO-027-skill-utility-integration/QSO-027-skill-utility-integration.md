@@ -1,7 +1,7 @@
 ---
 id: QSO-027
 title: Skill integration — wire skills to utilities
-status: todo
+status: in-progress
 priority: high
 type: feat
 impact_scope:

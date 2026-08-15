@@ -1,0 +1,19 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.11s
+     Running unittests src/lib.rs (/var/folders/xr/yd41lx194f57dqfzcw4c2dym0000gq/T/cursor-sandbox-cache/eb77707e8129d106b45bd133618f744c/cargo-target/debug/deps/qsos_graph-ed3972991022973d)
+
+running 6 tests
+test tests::scenario_id_format ... ok
+test tests::query_file_by_feature_path ... ok
+test tests::query_blast_radius_from_adr_file ... ok
+test tests::compiles_fixture_with_all_node_and_edge_types ... ok
+test tests::query_ticket_returns_connected_subgraph_with_summary ... ok
+test tests::auto_recompiles_when_registry_stale ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.14s
+
+   Doc-tests qsos_graph
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

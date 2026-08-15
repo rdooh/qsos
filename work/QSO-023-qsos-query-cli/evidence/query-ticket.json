@@ -1,0 +1,567 @@
+{
+  "query_type": "ticket",
+  "query": "QSO-022",
+  "nodes": [
+    {
+      "id": "QSO-009",
+      "kind": "ticket",
+      "label": "QSO-009 — Design Hub-and-Spoke Watcher Daemon specifications"
+    },
+    {
+      "id": "QSO-019",
+      "kind": "ticket",
+      "label": "QSO-019 — Rust utilities workspace scaffold"
+    },
+    {
+      "id": "QSO-020",
+      "kind": "ticket",
+      "label": "QSO-020 — qsos lint — static compliance checks"
+    },
+    {
+      "id": "QSO-021",
+      "kind": "ticket",
+      "label": "QSO-021 — qsos lint --sync — code and DSL drift detection"
+    },
+    {
+      "id": "QSO-022",
+      "kind": "ticket",
+      "label": "QSO-022 — qsos graph — artifact graph compiler"
+    },
+    {
+      "id": "QSO-023",
+      "kind": "ticket",
+      "label": "QSO-023 — qsos query — graph query CLI"
+    },
+    {
+      "id": "QSO-024",
+      "kind": "ticket",
+      "label": "QSO-024 — qsos-watch — Rust watcher hub daemon"
+    },
+    {
+      "id": "QSO-025",
+      "kind": "ticket",
+      "label": "QSO-025 — qsos-mcp — TypeScript MCP server"
+    },
+    {
+      "id": "QSO-026",
+      "kind": "ticket",
+      "label": "QSO-026 — Test ingestion and scenario mapping"
+    },
+    {
+      "id": "QSO-027",
+      "kind": "ticket",
+      "label": "QSO-027 — Skill integration — wire skills to utilities"
+    },
+    {
+      "id": "QSO-028",
+      "kind": "ticket",
+      "label": "QSO-028 — qsos init — pre-commit hook installation"
+    },
+    {
+      "id": "QSO-030",
+      "kind": "ticket",
+      "label": "QSO-030 — qsos init — new project setup wizard"
+    },
+    {
+      "id": "QSO-031",
+      "kind": "ticket",
+      "label": "QSO-031 — TEMP dev tool — artifact graph viewer (HTML)"
+    },
+    {
+      "id": "docs/features/qsos-utilities.feature",
+      "kind": "feature",
+      "label": "QSOS Programming Utilities"
+    },
+    {
+      "id": "docs/features/qsos-utilities.feature::Clean project passes lint",
+      "kind": "scenario",
+      "label": "Clean project passes lint"
+    },
+    {
+      "id": "docs/features/qsos-utilities.feature::Violations are reported with file and rule",
+      "kind": "scenario",
+      "label": "Violations are reported with file and rule"
+    },
+    {
+      "id": "docs/features/qsos-utilities.feature::Audit skill delegates Tier 1 to lint",
+      "kind": "scenario",
+      "label": "Audit skill delegates Tier 1 to lint"
+    },
+    {
+      "id": "docs/features/qsos-utilities.feature::Audit skill falls back when lint is unavailable",
+      "kind": "scenario",
+      "label": "Audit skill falls back when lint is unavailable"
+    },
+    {
+      "id": "docs/features/qsos-utilities.feature::Code imports drift from DSL is reported",
+      "kind": "scenario",
+      "label": "Code imports drift from DSL is reported"
+    },
+    {
+      "id": "docs/features/qsos-utilities.feature::Accepted ADR missing from DSL is reported",
+      "kind": "scenario",
+      "label": "Accepted ADR missing from DSL is reported"
+    },
+    {
+      "id": "docs/features/qsos-utilities.feature::Doc-sync runs sync before close",
+      "kind": "scenario",
+      "label": "Doc-sync runs sync before close"
+    },
+    {
+      "id": "docs/features/qsos-utilities.feature::Graph compiles artifact relationships",
+      "kind": "scenario",
+      "label": "Graph compiles artifact relationships"
+    },
+    {
+      "id": "docs/features/qsos-utilities.feature::Orient skill queries graph by ticket",
+      "kind": "scenario",
+      "label": "Orient skill queries graph by ticket"
+    },
+    {
+      "id": "docs/features/qsos-utilities.feature::File query returns governing artifacts",
+      "kind": "scenario",
+      "label": "File query returns governing artifacts"
+    },
+    {
+      "id": "docs/features/qsos-utilities.feature::Blast radius query returns downstream impact",
+      "kind": "scenario",
+      "label": "Blast radius query returns downstream impact"
+    },
+    {
+      "id": "docs/features/qsos-utilities.feature::Orient skill falls back when query is unavailable",
+      "kind": "scenario",
+      "label": "Orient skill falls back when query is unavailable"
+    },
+    {
+      "id": "docs/features/qsos-utilities.feature::Test results map to scenarios",
+      "kind": "scenario",
+      "label": "Test results map to scenarios"
+    },
+    {
+      "id": "docs/features/qsos-utilities.feature::Coverage query reports scenario pass fail status",
+      "kind": "scenario",
+      "label": "Coverage query reports scenario pass fail status"
+    },
+    {
+      "id": "docs/features/qsos-utilities.feature::File change triggers lint spoke",
+      "kind": "scenario",
+      "label": "File change triggers lint spoke"
+    },
+    {
+      "id": "docs/features/qsos-utilities.feature::Hung spoke is terminated",
+      "kind": "scenario",
+      "label": "Hung spoke is terminated"
+    },
+    {
+      "id": "docs/features/qsos-utilities.feature::Agent invokes lint via MCP",
+      "kind": "scenario",
+      "label": "Agent invokes lint via MCP"
+    },
+    {
+      "id": "docs/features/qsos-utilities.feature::Agent invokes query via MCP",
+      "kind": "scenario",
+      "label": "Agent invokes query via MCP"
+    },
+    {
+      "id": "docs/features/qsos-utilities.feature::Agent invokes graph compile via MCP",
+      "kind": "scenario",
+      "label": "Agent invokes graph compile via MCP"
+    },
+    {
+      "id": "docs/features/qsos-utilities.feature::Setup wizard scaffolds a QSOS-governed project",
+      "kind": "scenario",
+      "label": "Setup wizard scaffolds a QSOS-governed project"
+    },
+    {
+      "id": "docs/features/qsos-utilities.feature::Init check reports layout gaps on partial repos",
+      "kind": "scenario",
+      "label": "Init check reports layout gaps on partial repos"
+    },
+    {
+      "id": "docs/features/qsos-utilities.feature::Pre-commit hook lints staged files only",
+      "kind": "scenario",
+      "label": "Pre-commit hook lints staged files only"
+    },
+    {
+      "id": "docs/features/qsos-utilities.feature::Baseline suppresses pre-existing violations on adoption",
+      "kind": "scenario",
+      "label": "Baseline suppresses pre-existing violations on adoption"
+    },
+    {
+      "id": "docs/features/watcher_daemon.feature",
+      "kind": "feature",
+      "label": "Hub-and-Spoke Filesystem Watcher Daemon"
+    },
+    {
+      "id": "docs/features/watcher_daemon.feature::Matching a file event to a registered rule",
+      "kind": "scenario",
+      "label": "Matching a file event to a registered rule"
+    },
+    {
+      "id": "docs/features/watcher_daemon.feature::Non-matching event is silently ignored",
+      "kind": "scenario",
+      "label": "Non-matching event is silently ignored"
+    },
+    {
+      "id": "docs/features/watcher_daemon.feature::Rapid saves trigger only one execution",
+      "kind": "scenario",
+      "label": "Rapid saves trigger only one execution"
+    },
+    {
+      "id": "docs/features/watcher_daemon.feature::Second invocation is held while first is running",
+      "kind": "scenario",
+      "label": "Second invocation is held while first is running"
+    },
+    {
+      "id": "docs/features/watcher_daemon.feature::Hung subprocess is forcefully terminated",
+      "kind": "scenario",
+      "label": "Hung subprocess is forcefully terminated"
+    },
+    {
+      "id": "ADR-004",
+      "kind": "adr",
+      "label": "ADR-004 — ADR-004: Hub-and-Spoke Watcher Daemon Architecture"
+    },
+    {
+      "id": "ADR-010",
+      "kind": "adr",
+      "label": "ADR-010 — ADR-010: Polyglot Utilities Architecture and Development Program"
+    },
+    {
+      "id": "ADR-011",
+      "kind": "adr",
+      "label": "ADR-011 — ADR-011: Catalog-Mesh Ticket Prefix Convention"
+    },
+    {
+      "id": "spokes",
+      "kind": "dsl_element",
+      "label": "spokes (container)"
+    }
+  ],
+  "edges": [
+    {
+      "from": "QSO-009",
+      "to": "docs/features/watcher_daemon.feature",
+      "kind": "ticket→feature"
+    },
+    {
+      "from": "docs/features/watcher_daemon.feature",
+      "to": "ADR-004",
+      "kind": "feature→ADR"
+    },
+    {
+      "from": "QSO-019",
+      "to": "docs/features/qsos-utilities.feature",
+      "kind": "ticket→feature"
+    },
+    {
+      "from": "docs/features/qsos-utilities.feature",
+      "to": "ADR-010",
+      "kind": "feature→ADR"
+    },
+    {
+      "from": "QSO-020",
+      "to": "docs/features/qsos-utilities.feature",
+      "kind": "ticket→feature"
+    },
+    {
+      "from": "QSO-020",
+      "to": "QSO-019",
+      "kind": "ticket→ticket"
+    },
+    {
+      "from": "QSO-021",
+      "to": "docs/features/qsos-utilities.feature",
+      "kind": "ticket→feature"
+    },
+    {
+      "from": "QSO-021",
+      "to": "QSO-020",
+      "kind": "ticket→ticket"
+    },
+    {
+      "from": "QSO-022",
+      "to": "docs/features/qsos-utilities.feature",
+      "kind": "ticket→feature"
+    },
+    {
+      "from": "QSO-022",
+      "to": "QSO-019",
+      "kind": "ticket→ticket"
+    },
+    {
+      "from": "QSO-023",
+      "to": "docs/features/qsos-utilities.feature",
+      "kind": "ticket→feature"
+    },
+    {
+      "from": "QSO-023",
+      "to": "QSO-022",
+      "kind": "ticket→ticket"
+    },
+    {
+      "from": "QSO-024",
+      "to": "docs/features/qsos-utilities.feature",
+      "kind": "ticket→feature"
+    },
+    {
+      "from": "QSO-024",
+      "to": "docs/features/watcher_daemon.feature",
+      "kind": "ticket→feature"
+    },
+    {
+      "from": "docs/features/qsos-utilities.feature",
+      "to": "ADR-004",
+      "kind": "feature→ADR"
+    },
+    {
+      "from": "docs/features/watcher_daemon.feature",
+      "to": "ADR-010",
+      "kind": "feature→ADR"
+    },
+    {
+      "from": "QSO-024",
+      "to": "QSO-019",
+      "kind": "ticket→ticket"
+    },
+    {
+      "from": "QSO-024",
+      "to": "QSO-020",
+      "kind": "ticket→ticket"
+    },
+    {
+      "from": "QSO-025",
+      "to": "docs/features/qsos-utilities.feature",
+      "kind": "ticket→feature"
+    },
+    {
+      "from": "QSO-025",
+      "to": "QSO-020",
+      "kind": "ticket→ticket"
+    },
+    {
+      "from": "QSO-025",
+      "to": "QSO-023",
+      "kind": "ticket→ticket"
+    },
+    {
+      "from": "QSO-026",
+      "to": "docs/features/qsos-utilities.feature",
+      "kind": "ticket→feature"
+    },
+    {
+      "from": "QSO-026",
+      "to": "QSO-022",
+      "kind": "ticket→ticket"
+    },
+    {
+      "from": "QSO-027",
+      "to": "docs/features/qsos-utilities.feature",
+      "kind": "ticket→feature"
+    },
+    {
+      "from": "QSO-027",
+      "to": "QSO-020",
+      "kind": "ticket→ticket"
+    },
+    {
+      "from": "QSO-027",
+      "to": "QSO-023",
+      "kind": "ticket→ticket"
+    },
+    {
+      "from": "QSO-028",
+      "to": "docs/features/qsos-utilities.feature",
+      "kind": "ticket→feature"
+    },
+    {
+      "from": "QSO-028",
+      "to": "QSO-020",
+      "kind": "ticket→ticket"
+    },
+    {
+      "from": "QSO-030",
+      "to": "docs/features/qsos-utilities.feature",
+      "kind": "ticket→feature"
+    },
+    {
+      "from": "docs/features/qsos-utilities.feature",
+      "to": "ADR-011",
+      "kind": "feature→ADR"
+    },
+    {
+      "from": "QSO-030",
+      "to": "QSO-019",
+      "kind": "ticket→ticket"
+    },
+    {
+      "from": "QSO-030",
+      "to": "QSO-020",
+      "kind": "ticket→ticket"
+    },
+    {
+      "from": "QSO-031",
+      "to": "docs/features/qsos-utilities.feature",
+      "kind": "ticket→feature"
+    },
+    {
+      "from": "QSO-031",
+      "to": "QSO-022",
+      "kind": "ticket→ticket"
+    },
+    {
+      "from": "docs/features/qsos-utilities.feature::Clean project passes lint",
+      "to": "docs/features/qsos-utilities.feature",
+      "kind": "scenario→file"
+    },
+    {
+      "from": "docs/features/qsos-utilities.feature::Violations are reported with file and rule",
+      "to": "docs/features/qsos-utilities.feature",
+      "kind": "scenario→file"
+    },
+    {
+      "from": "docs/features/qsos-utilities.feature::Audit skill delegates Tier 1 to lint",
+      "to": "docs/features/qsos-utilities.feature",
+      "kind": "scenario→file"
+    },
+    {
+      "from": "docs/features/qsos-utilities.feature::Audit skill falls back when lint is unavailable",
+      "to": "docs/features/qsos-utilities.feature",
+      "kind": "scenario→file"
+    },
+    {
+      "from": "docs/features/qsos-utilities.feature::Code imports drift from DSL is reported",
+      "to": "docs/features/qsos-utilities.feature",
+      "kind": "scenario→file"
+    },
+    {
+      "from": "docs/features/qsos-utilities.feature::Accepted ADR missing from DSL is reported",
+      "to": "docs/features/qsos-utilities.feature",
+      "kind": "scenario→file"
+    },
+    {
+      "from": "docs/features/qsos-utilities.feature::Doc-sync runs sync before close",
+      "to": "docs/features/qsos-utilities.feature",
+      "kind": "scenario→file"
+    },
+    {
+      "from": "docs/features/qsos-utilities.feature::Graph compiles artifact relationships",
+      "to": "docs/features/qsos-utilities.feature",
+      "kind": "scenario→file"
+    },
+    {
+      "from": "docs/features/qsos-utilities.feature::Orient skill queries graph by ticket",
+      "to": "docs/features/qsos-utilities.feature",
+      "kind": "scenario→file"
+    },
+    {
+      "from": "docs/features/qsos-utilities.feature::File query returns governing artifacts",
+      "to": "docs/features/qsos-utilities.feature",
+      "kind": "scenario→file"
+    },
+    {
+      "from": "docs/features/qsos-utilities.feature::Blast radius query returns downstream impact",
+      "to": "docs/features/qsos-utilities.feature",
+      "kind": "scenario→file"
+    },
+    {
+      "from": "docs/features/qsos-utilities.feature::Orient skill falls back when query is unavailable",
+      "to": "docs/features/qsos-utilities.feature",
+      "kind": "scenario→file"
+    },
+    {
+      "from": "docs/features/qsos-utilities.feature::Test results map to scenarios",
+      "to": "docs/features/qsos-utilities.feature",
+      "kind": "scenario→file"
+    },
+    {
+      "from": "docs/features/qsos-utilities.feature::Coverage query reports scenario pass fail status",
+      "to": "docs/features/qsos-utilities.feature",
+      "kind": "scenario→file"
+    },
+    {
+      "from": "docs/features/qsos-utilities.feature::File change triggers lint spoke",
+      "to": "docs/features/qsos-utilities.feature",
+      "kind": "scenario→file"
+    },
+    {
+      "from": "docs/features/qsos-utilities.feature::Hung spoke is terminated",
+      "to": "docs/features/qsos-utilities.feature",
+      "kind": "scenario→file"
+    },
+    {
+      "from": "docs/features/qsos-utilities.feature::Agent invokes lint via MCP",
+      "to": "docs/features/qsos-utilities.feature",
+      "kind": "scenario→file"
+    },
+    {
+      "from": "docs/features/qsos-utilities.feature::Agent invokes query via MCP",
+      "to": "docs/features/qsos-utilities.feature",
+      "kind": "scenario→file"
+    },
+    {
+      "from": "docs/features/qsos-utilities.feature::Agent invokes graph compile via MCP",
+      "to": "docs/features/qsos-utilities.feature",
+      "kind": "scenario→file"
+    },
+    {
+      "from": "docs/features/qsos-utilities.feature::Setup wizard scaffolds a QSOS-governed project",
+      "to": "docs/features/qsos-utilities.feature",
+      "kind": "scenario→file"
+    },
+    {
+      "from": "docs/features/qsos-utilities.feature::Init check reports layout gaps on partial repos",
+      "to": "docs/features/qsos-utilities.feature",
+      "kind": "scenario→file"
+    },
+    {
+      "from": "docs/features/qsos-utilities.feature::Pre-commit hook lints staged files only",
+      "to": "docs/features/qsos-utilities.feature",
+      "kind": "scenario→file"
+    },
+    {
+      "from": "docs/features/qsos-utilities.feature::Baseline suppresses pre-existing violations on adoption",
+      "to": "docs/features/qsos-utilities.feature",
+      "kind": "scenario→file"
+    },
+    {
+      "from": "docs/features/watcher_daemon.feature::Matching a file event to a registered rule",
+      "to": "docs/features/watcher_daemon.feature",
+      "kind": "scenario→file"
+    },
+    {
+      "from": "docs/features/watcher_daemon.feature::Non-matching event is silently ignored",
+      "to": "docs/features/watcher_daemon.feature",
+      "kind": "scenario→file"
+    },
+    {
+      "from": "docs/features/watcher_daemon.feature::Rapid saves trigger only one execution",
+      "to": "docs/features/watcher_daemon.feature",
+      "kind": "scenario→file"
+    },
+    {
+      "from": "docs/features/watcher_daemon.feature::Second invocation is held while first is running",
+      "to": "docs/features/watcher_daemon.feature",
+      "kind": "scenario→file"
+    },
+    {
+      "from": "docs/features/watcher_daemon.feature::Hung subprocess is forcefully terminated",
+      "to": "docs/features/watcher_daemon.feature",
+      "kind": "scenario→file"
+    },
+    {
+      "from": "ADR-010",
+      "to": "spokes",
+      "kind": "ADR→dsl_element"
+    }
+  ],
+  "summary": {
+    "tickets": 13,
+    "features": 2,
+    "scenarios": 28,
+    "adrs": 3,
+    "dsl_elements": 1,
+    "contracts": 0,
+    "edges": 63
+  }
+}

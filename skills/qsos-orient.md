@@ -37,6 +37,18 @@ Load from the ticket:
 - `architecture_updated` field
 - Dependencies (`depends_on:` list) — check that all are `done` or explicitly waived
 
+### Graph-assisted context (preferred)
+
+If `qsos query` is available, load linked artifacts from the compiled graph:
+
+```bash
+qsos query --ticket <ticket-id> --root <project-root>
+```
+
+Use the returned `nodes` list as the load index — read full file contents only for artifacts in the subgraph (`feature`, `adr`, `scenario` nodes). Use `summary` counts to confirm expected coverage before reading.
+
+**Fallback:** If `qsos` is not installed, the graph registry is missing, or query fails, load artifacts manually via Steps 2–4 below and note `graph delegation skipped`.
+
 ---
 
 ## Step 2 — Load feature files

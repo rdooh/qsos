@@ -28,6 +28,30 @@ State the mode and scope before proceeding.
 
 ---
 
+## Step 1b — Tier 1: `qsos lint` delegation
+
+If the `qsos` binary is available on PATH, run static checks via the utility instead of manual file reads:
+
+```bash
+# Full project (default)
+qsos lint --root <project-root>
+
+# Single file mode
+qsos lint --file <path> --root <project-root>
+```
+
+Parse the JSON `violations` array and map results into the audit report sections below (ADR integrity, Gherkin style, feature lifecycle, DSL coverage). Violation `rule` names correspond to lint rules (e.g. `adr-naming-convention`, `feature-lifecycle-tag`, `dsl-unjustified`).
+
+**When lint succeeds (exit 0):** report those sections as `pass` without re-reading files.
+
+**When lint fails (exit 1):** translate violations into the report format; do not duplicate lint logic manually.
+
+**Fallback:** If `qsos` is not installed or not on PATH, note `utility delegation skipped` and proceed with manual Steps 2–5.
+
+Tier 2 manual checks (always run after Tier 1 when relevant): cross-entity reasoning lint cannot yet perform — e.g. ticket-scoped scope filtering, topical overlap features not linked in manifest, architectural judgement calls.
+
+---
+
 ## Step 2 — ADR integrity checks
 
 Read all files in `docs/decisions/`.

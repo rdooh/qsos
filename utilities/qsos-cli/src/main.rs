@@ -27,10 +27,12 @@ enum Commands {
         action: GraphAction,
     },
     Query {
-        #[arg(long)]
+        #[arg(long, conflicts_with_all = ["file", "blast_radius"])]
         ticket: Option<String>,
-        #[arg(long)]
+        #[arg(long, conflicts_with_all = ["ticket", "blast_radius"])]
         file: Option<PathBuf>,
+        #[arg(long, conflicts_with_all = ["ticket", "file"])]
+        blast_radius: Option<String>,
     },
     Ingest,
 }
@@ -47,7 +49,11 @@ fn main() {
     let code = match cli.command {
         Commands::Lint { file, sync } => run_lint(&layout, file.as_deref(), sync),
         Commands::Graph { action } => run_graph(&layout, action),
-        Commands::Query { ticket, file } => run_query(&layout, ticket.as_deref(), file.as_deref()),
+        Commands::Query {
+            ticket,
+            file,
+            blast_radius,
+        } => run_query(&layout, ticket.as_deref(), file.as_deref(), blast_radius.as_deref()),
         Commands::Ingest => run_ingest(&layout),
     };
 
@@ -80,18 +86,28 @@ fn run_graph(layout: &ProjectLayout, action: GraphAction) -> i32 {
     EXIT_SUCCESS
 }
 
-fn run_query(layout: &ProjectLayout, ticket: Option<&str>, _file: Option<&std::path::Path>) -> i32 {
-    let ticket = match ticket {
-        Some(t) => t,
-        None => {
-            eprintln!("qsos query requires --ticket (QSO-023)");
+fn run_query(
+    layout: &ProjectLayout,
+    ticket: Option<&str>,
+    file: Option<&std::path::Path>,
+    blast_radius: Option<&str>,
+) -> i32 {
+    let result = match (ticket, file, blast_radius) {
+        (Some(id), None, None) => qsos_graph::query_ticket(layout, id),
+        (None, Some(path), None) => {
+            let rel = layout.rel_path(path);
+            qsos_graph::query_file(layout, &rel)
+        }
+        (None, None, Some(artifact)) => qsos_graph::query_blast_radius(layout, artifact),
+        _ => {
+            eprintln!("qsos query requires exactly one of: --ticket, --file, --blast-radius");
             return EXIT_ERROR;
         }
     };
-    let registry = qsos_graph::query_ticket(layout, ticket);
+
     println!(
         "{}",
-        serde_json::to_string_pretty(&registry).unwrap_or_else(|_| "{}".into())
+        serde_json::to_string_pretty(&result).unwrap_or_else(|_| "{}".into())
     );
     EXIT_SUCCESS
 }

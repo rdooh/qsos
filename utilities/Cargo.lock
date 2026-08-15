@@ -242,8 +242,11 @@ name = "qsos-ingest"
 version = "0.1.0"
 dependencies = [
  "qsos-core",
+ "qsos-graph",
+ "regex",
  "serde",
  "serde_json",
+ "tempfile",
 ]
 
 [[package]]

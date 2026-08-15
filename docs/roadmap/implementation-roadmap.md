@@ -17,10 +17,10 @@
 | **Watcher specifications** (ADR-004, triggers schema, spoke contract) | ✅ Specified, not implemented |
 | **Utilities — Phase 1–2** (scaffold + `qsos lint`) | ✅ Done — QSO-019, QSO-020 |
 | **Utilities — Phase 3** (graph + query) | ✅ Done — QSO-022, QSO-023 |
-| **Utilities — Phase 3–8** (ingest, sync, MCP, watch, init) | 🔲 In progress — QSO-021, QSO-024–026, QSO-028; QSO-027, QSO-030 ✅ |
+| **Utilities — Phase 3–8** (ingest, sync, MCP, watch, init) | 🔲 In progress — QSO-024–025 open; QSO-021, QSO-026–028, QSO-030 ✅ |
 | **Verification standard** | ✅ BDD scenarios, ticket verify sections, manifest floor (ADR-010 §6) |
 
-**Utilities progress:** ~25% — `qsos lint` working on QSOS repo; graph/query/ingest/watch/MCP stubbed.
+**Utilities progress:** ~75% — lint, graph, query, ingest, sync, init wizard, and pre-commit hooks shipped; MCP and watcher remain.
 
 ---
 
@@ -36,12 +36,8 @@ Skills encode procedure. Utilities automate mechanical checks. Strux (personal) 
 
 | Order | Ticket | Rationale |
 |---|---|---|
-| **Now** | QSO-022 → QSO-023 | Graph unlocks orient, blast-radius, coverage |
-| Next | QSO-026 | Test ingestion — unlocks full verify path |
-| Then | QSO-030 | Setup wizard — new PoC pain point |
-| Then | QSO-026 | Test ingestion for verify/coverage-check |
-| Then | QSO-021 | Drift detection for doc-sync close gate |
-| Later | QSO-025, QSO-024, QSO-028 | MCP, watcher, pre-commit |
+| **Now** | QSO-025 | MCP server — expose lint/query/graph to agents |
+| Next | QSO-024 | Watcher hub — automate lint + graph compile on save |
 
 ---
 
@@ -88,9 +84,9 @@ Reference: Strux `strux-graph`
 
 ---
 
-## Phase 4 — Test traceability (`qsos ingest`) 🔲
+## Phase 4 — Test traceability (`qsos ingest`) ✅
 
-**Ticket:** [QSO-026](../work/QSO-026-test-ingestion-scenario-mapping/QSO-026-test-ingestion-scenario-mapping.md)
+**Ticket:** [QSO-026](../work/QSO-026-test-ingestion-scenario-mapping/QSO-026-test-ingestion-scenario-mapping.md) — **done**
 
 Reference: Strux `strux-dynamix`
 
@@ -101,9 +97,9 @@ Reference: Strux `strux-dynamix`
 
 ---
 
-## Phase 5 — Drift detection (`qsos lint --sync`) 🔲
+## Phase 5 — Drift detection (`qsos lint --sync`) ✅
 
-**Ticket:** [QSO-021](../work/QSO-021-qsos-lint-sync/QSO-021-qsos-lint-sync.md)
+**Ticket:** [QSO-021](../work/QSO-021-qsos-lint-sync/QSO-021-qsos-lint-sync.md) — **done**
 
 Reference: Strux `strux-sensors` sync rules (`auditCodeSync`, `auditADRLinks`)
 
@@ -140,14 +136,14 @@ Reference: Strux `watcher/src/main.rs`
 
 ---
 
-## Phase 8 — Project bootstrap and git hooks 🔲
+## Phase 8 — Project bootstrap and git hooks ✅
 
-**Tickets:** [QSO-028](../work/QSO-028-qsos-init-precommit/QSO-028-qsos-init-precommit.md), [QSO-030](../work/QSO-030-new-project-setup-wizard/QSO-030-new-project-setup-wizard.md)
+**Tickets:** [QSO-028](../work/QSO-028-qsos-init-precommit/QSO-028-qsos-init-precommit.md) ✅, [QSO-030](../work/QSO-030-new-project-setup-wizard/QSO-030-new-project-setup-wizard.md) ✅
 
 - `qsos init` scaffolds QSOS-governed project layout (QSO-030)
 - `qsos init --check` / `--dry-run` for adoption and inspection
-- Pre-commit hook runs `qsos lint` on staged files (QSO-028)
-- `.audit-baseline.json` support for legacy project adoption
+- `qsos init --hooks` installs pre-commit hook running `qsos lint --staged` (QSO-028)
+- `qsos init --hooks --baseline` writes `.audit-baseline.json` for legacy adoption
 
 ---
 
@@ -169,14 +165,14 @@ Reference: Strux `watcher/src/main.rs`
 |---|---|---|---|---|
 | QSO-019 | Rust utilities workspace scaffold | 1 | ✅ done | — |
 | QSO-020 | `qsos lint` static checks | 2 | ✅ done | QSO-019 |
-| QSO-021 | `qsos lint --sync` drift detection | 5 | open | QSO-020 |
+| QSO-021 | `qsos lint --sync` drift detection | 5 | ✅ done | QSO-020 |
 | QSO-022 | `qsos graph` compiler | 3 | ✅ done | QSO-019 |
 | QSO-023 | `qsos query` CLI | 3 | ✅ done | QSO-022 |
 | QSO-024 | Rust watcher hub | 7 | open | QSO-019, QSO-020 |
 | QSO-025 | `qsos-mcp` TypeScript server | 6 | open | QSO-020, QSO-023 |
-| QSO-026 | Test ingestion + scenario mapping | 4 | open | QSO-022 |
+| QSO-026 | Test ingestion + scenario mapping | 4 | ✅ done | QSO-022 |
 | QSO-027 | Skill integration (audit, orient, doc-sync, verify) | 2–4 | ✅ done | QSO-020, QSO-023 |
-| QSO-028 | `qsos init` + pre-commit hook | 8 | open | QSO-020 |
+| QSO-028 | `qsos init` + pre-commit hook | 8 | ✅ done | QSO-020 |
 | QSO-029 | catalog-mesh ticket prefix migration | — | ✅ done | — |
 | QSO-030 | `qsos init` new project setup wizard | 8 | ✅ done | QSO-019, QSO-020 |
 | QSO-031 | TEMP dev tool — artifact graph viewer | — | ✅ done | QSO-022 |

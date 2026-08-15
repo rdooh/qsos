@@ -1,0 +1,10 @@
+{
+  "tickets": [
+    {
+      "id": "QSO-901",
+      "title": "Ingest demo ticket",
+      "status": "todo",
+      "path": "work/QSO-901-demo/QSO-901-demo.md"
+    }
+  ]
+}

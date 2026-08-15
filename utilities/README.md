@@ -38,6 +38,26 @@ cargo run -p qsos-cli --bin qsos -- lint --root ..
 
 Binary: `utilities/target/release/qsos`
 
+### `qsos init`
+
+Scaffold a QSOS-governed project layout, or install git hooks:
+
+```bash
+# New project wizard
+qsos init --name "My PoC" --prefix POC-
+
+# Inspect gaps without writing
+qsos init --check --root /path/to/project
+
+# Install pre-commit hook (lints staged files only)
+qsos init --hooks --root /path/to/project
+
+# Legacy adoption — baseline existing violations, then install hook
+qsos init --hooks --baseline --root /path/to/project
+```
+
+The pre-commit hook runs `qsos lint --staged` and blocks commits when staged files have error-level violations. `.audit-baseline.json` suppresses pre-existing violations after `--baseline`.
+
 ---
 
 ## Strux reference map

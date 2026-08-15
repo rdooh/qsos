@@ -1,0 +1,15 @@
+# qsos init --hooks + git commit with staged violation
+# expect: commit rejected (exit 1), lint JSON on stdout
+
+{
+  "violations": [
+    {
+      "file": "docs/features/blank.feature",
+      "rule": "feature-not-empty",
+      "description": "file is blank",
+      "severity": "error"
+    }
+  ]
+}
+
+commit_exit=1

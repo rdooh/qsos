@@ -1,0 +1,16 @@
+{
+  "violations": [
+    {
+      "file": "docs/decisions/ADR-001-import-drift-fixture.md",
+      "rule": "adr-considered-options",
+      "description": "[ADR-001] Accepted/Superseded ADR should have ## Considered Options",
+      "severity": "note"
+    },
+    {
+      "file": "docs/architecture/architecture.dsl",
+      "rule": "import-drift",
+      "description": "container 'core' imports from 'api' in code but no relationship exists in architecture.dsl",
+      "severity": "error"
+    }
+  ]
+}

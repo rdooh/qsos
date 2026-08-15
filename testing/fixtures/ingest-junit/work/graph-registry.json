@@ -1,0 +1,56 @@
+{
+  "nodes": [
+    {
+      "id": "QSO-901",
+      "kind": "ticket",
+      "label": "QSO-901 — Ingest demo ticket"
+    },
+    {
+      "id": "docs/features/demo.feature",
+      "kind": "feature",
+      "label": "Ingest Demo"
+    },
+    {
+      "id": "docs/features/demo.feature::Graph compiles",
+      "kind": "scenario",
+      "label": "Graph compiles"
+    },
+    {
+      "id": "docs/features/demo.feature::Query works",
+      "kind": "scenario",
+      "label": "Query works"
+    },
+    {
+      "id": "core",
+      "kind": "dsl_element",
+      "label": "core (container)"
+    },
+    {
+      "id": "test::demo-graph-compiles",
+      "kind": "test",
+      "label": "Graph compiles (passed)"
+    }
+  ],
+  "edges": [
+    {
+      "from": "QSO-901",
+      "to": "docs/features/demo.feature",
+      "kind": "ticket→feature"
+    },
+    {
+      "from": "docs/features/demo.feature::Graph compiles",
+      "to": "docs/features/demo.feature",
+      "kind": "scenario→file"
+    },
+    {
+      "from": "docs/features/demo.feature::Query works",
+      "to": "docs/features/demo.feature",
+      "kind": "scenario→file"
+    },
+    {
+      "from": "test::demo-graph-compiles",
+      "to": "docs/features/demo.feature::Graph compiles",
+      "kind": "VERIFIES:passed:name-match"
+    }
+  ]
+}

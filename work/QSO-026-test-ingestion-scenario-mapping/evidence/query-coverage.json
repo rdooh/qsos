@@ -1,0 +1,21 @@
+{
+  "query_type": "coverage",
+  "scenarios": [
+    {
+      "scenario_id": "docs/features/demo.feature::Graph compiles",
+      "label": "Graph compiles",
+      "status": "verified"
+    },
+    {
+      "scenario_id": "docs/features/demo.feature::Query works",
+      "label": "Query works",
+      "status": "untested"
+    }
+  ],
+  "summary": {
+    "verified": 1,
+    "failing": 0,
+    "untested": 1,
+    "total": 2
+  }
+}

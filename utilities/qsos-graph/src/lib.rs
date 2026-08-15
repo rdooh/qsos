@@ -24,6 +24,10 @@ pub fn load_registry(layout: &ProjectLayout) -> Option<GraphRegistry> {
     serde_json::from_str(&raw).ok()
 }
 
+pub fn save_registry(layout: &ProjectLayout, registry: &GraphRegistry) {
+    write_registry(layout, registry);
+}
+
 pub fn registry_path(layout: &ProjectLayout) -> PathBuf {
     layout.work_dir.join("graph-registry.json")
 }
@@ -112,6 +116,99 @@ pub fn query_blast_radius(layout: &ProjectLayout, artifact: &str) -> QueryResult
     let rel = normalize_query_path(layout, artifact);
     let seed = resolve_node_id(&registry, &rel);
     QueryResult::from_registry("blast-radius", &rel, blast_radius(&registry, &seed))
+}
+
+#[derive(Debug, Clone, serde::Serialize)]
+pub struct ScenarioCoverage {
+    pub scenario_id: String,
+    pub label: String,
+    pub status: String,
+}
+
+#[derive(Debug, Clone, serde::Serialize, Default)]
+pub struct CoverageSummary {
+    pub verified: usize,
+    pub failing: usize,
+    pub untested: usize,
+    pub total: usize,
+}
+
+#[derive(Debug, Clone, serde::Serialize)]
+pub struct CoverageReport {
+    pub query_type: String,
+    pub scenarios: Vec<ScenarioCoverage>,
+    pub summary: CoverageSummary,
+}
+
+pub fn query_coverage(layout: &ProjectLayout) -> CoverageReport {
+    let registry = ensure_registry(layout);
+    let scenarios: Vec<&GraphNode> = registry
+        .nodes
+        .iter()
+        .filter(|n| n.kind == "scenario")
+        .collect();
+
+    let mut rows = Vec::new();
+    let mut summary = CoverageSummary {
+        total: scenarios.len(),
+        ..Default::default()
+    };
+
+    for sc in scenarios {
+        let status = scenario_test_status(&registry, &sc.id);
+        match status.as_str() {
+            "verified" => summary.verified += 1,
+            "failing" => summary.failing += 1,
+            _ => summary.untested += 1,
+        }
+        rows.push(ScenarioCoverage {
+            scenario_id: sc.id.clone(),
+            label: sc.label.clone(),
+            status,
+        });
+    }
+
+    CoverageReport {
+        query_type: "coverage".into(),
+        scenarios: rows,
+        summary,
+    }
+}
+
+fn scenario_test_status(registry: &GraphRegistry, scenario_id: &str) -> String {
+    let verifies: Vec<&GraphEdge> = registry
+        .edges
+        .iter()
+        .filter(|e| e.to == scenario_id && e.kind.starts_with("VERIFIES"))
+        .collect();
+
+    if verifies.is_empty() {
+        return "untested".into();
+    }
+
+    let mut has_pass = false;
+    let mut has_fail = false;
+
+    for edge in verifies {
+        let status = edge
+            .kind
+            .strip_prefix("VERIFIES:")
+            .and_then(|rest| rest.split(':').next())
+            .unwrap_or("unknown");
+        match status {
+            "passed" => has_pass = true,
+            "failed" | "error" => has_fail = true,
+            _ => {}
+        }
+    }
+
+    if has_fail {
+        "failing".into()
+    } else if has_pass {
+        "verified".into()
+    } else {
+        "untested".into()
+    }
 }
 
 fn normalize_query_path(layout: &ProjectLayout, path: &str) -> String {

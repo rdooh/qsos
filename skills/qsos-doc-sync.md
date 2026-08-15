@@ -133,7 +133,7 @@ Before Step 7, if the `qsos` binary is on PATH, run the close gate via utilities
 qsos lint --root <project-root>
 ```
 
-When `qsos lint --sync` is available, also run:
+Also run drift detection before close:
 
 ```bash
 qsos lint --sync --root <project-root>

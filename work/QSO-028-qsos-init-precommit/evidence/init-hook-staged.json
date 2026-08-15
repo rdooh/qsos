@@ -1,0 +1,11 @@
+{
+  "violations": [
+    {
+      "file": "docs/features/blank.feature",
+      "rule": "feature-not-empty",
+      "description": "file is blank",
+      "severity": "error"
+    }
+  ]
+}
+staged_exit=1

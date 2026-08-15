@@ -1,14 +1,20 @@
 mod adr;
+mod baseline;
 mod dsl;
 mod feature;
 mod lifecycle;
+mod staged;
+mod sync;
 
 use qsos_core::{LintReport, ProjectLayout, Violation};
 
 pub use adr::audit_adrs;
+pub use baseline::{apply_baseline, AuditBaseline};
 pub use dsl::audit_dsl;
 pub use feature::audit_features;
 pub use lifecycle::audit_lifecycle;
+pub use staged::lint_staged;
+pub use sync::audit_sync;
 
 pub fn lint_project(layout: &ProjectLayout) -> LintReport {
     let mut violations = Vec::new();
@@ -17,6 +23,21 @@ pub fn lint_project(layout: &ProjectLayout) -> LintReport {
     violations.extend(audit_lifecycle(layout));
     violations.extend(audit_dsl(layout));
     LintReport::new(violations)
+}
+
+pub fn lint_project_sync(layout: &ProjectLayout) -> LintReport {
+    let mut violations = lint_project(layout).violations;
+    violations.extend(audit_sync(layout));
+    LintReport::new(violations)
+}
+
+pub fn lint_project_with_baseline(layout: &ProjectLayout) -> LintReport {
+    let baseline = AuditBaseline::load(&layout.root);
+    apply_baseline(lint_project(layout), baseline.as_ref())
+}
+
+pub fn lint_staged_with_baseline(layout: &ProjectLayout) -> Result<LintReport, String> {
+    lint_staged(layout)
 }
 
 pub fn lint_file(layout: &ProjectLayout, target: &std::path::Path) -> LintReport {

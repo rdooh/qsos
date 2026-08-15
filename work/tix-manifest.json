@@ -123,7 +123,7 @@
     {
       "id": "QSO-021",
       "title": "qsos lint --sync — code and DSL drift detection",
-      "status": "todo",
+      "status": "done",
       "path": "work/QSO-021-qsos-lint-sync/QSO-021-qsos-lint-sync.md"
     },
     {
@@ -153,7 +153,7 @@
     {
       "id": "QSO-026",
       "title": "Test ingestion and scenario mapping",
-      "status": "todo",
+      "status": "done",
       "path": "work/QSO-026-test-ingestion-scenario-mapping/QSO-026-test-ingestion-scenario-mapping.md"
     },
     {
@@ -165,7 +165,7 @@
     {
       "id": "QSO-028",
       "title": "qsos init — pre-commit hook installation",
-      "status": "todo",
+      "status": "done",
       "path": "work/QSO-028-qsos-init-precommit/QSO-028-qsos-init-precommit.md"
     },
     {

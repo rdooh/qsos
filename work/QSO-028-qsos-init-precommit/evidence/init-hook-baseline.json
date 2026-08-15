@@ -1,0 +1,9 @@
+{
+  "hook_installed": true,
+  "hook_path": "/var/folders/xr/yd41lx194f57dqfzcw4c2dym0000gq/T/tmp.aeqpEZbHLR/.git/hooks/pre-commit",
+  "baseline_written": true
+}
+baseline_commit=0
+{
+  "violations": []
+}

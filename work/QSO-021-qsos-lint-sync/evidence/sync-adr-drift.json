@@ -1,0 +1,34 @@
+{
+  "violations": [
+    {
+      "file": "docs/decisions/ADR-001-sync-drift-fixture.md",
+      "rule": "adr-considered-options",
+      "description": "[ADR-001] Accepted/Superseded ADR should have ## Considered Options",
+      "severity": "note"
+    },
+    {
+      "file": "docs/architecture/architecture.dsl",
+      "rule": "dsl-unjustified",
+      "description": "element 'core' not referenced in any Accepted ADR",
+      "severity": "note"
+    },
+    {
+      "file": "docs/architecture/architecture.dsl",
+      "rule": "adr-unlinked",
+      "description": "Accepted ADR-001 not referenced in architecture.dsl",
+      "severity": "note"
+    },
+    {
+      "file": "docs/architecture/architecture.dsl",
+      "rule": "adr-unlinked",
+      "description": "Accepted ADR-001 not referenced in architecture.dsl",
+      "severity": "error"
+    },
+    {
+      "file": "docs/architecture/architecture.dsl",
+      "rule": "dsl-unjustified",
+      "description": "element 'core' not referenced in any Accepted ADR",
+      "severity": "error"
+    }
+  ]
+}

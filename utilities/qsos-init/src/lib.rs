@@ -1,3 +1,7 @@
+mod hooks;
+
+pub use hooks::{check_hooks, install_hooks, install_hooks_with_baseline, HookReport};
+
 use qsos_core::{EXIT_ERROR, EXIT_SUCCESS};
 use serde::Serialize;
 use std::collections::BTreeSet;
@@ -26,6 +30,8 @@ pub struct InitReport {
     pub skipped: Vec<String>,
     pub missing: Vec<String>,
     pub planned: Vec<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub hook: Option<HookReport>,
 }
 
 impl InitReport {
@@ -49,6 +55,7 @@ pub fn run_init(root: &Path, config: &InitConfig, mode: InitMode) -> Result<Init
                     report.missing.push(entry.rel.clone());
                 }
             }
+            report.hook = Some(check_hooks(root));
             return Ok(report);
         }
         InitMode::DryRun => {

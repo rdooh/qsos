@@ -1,0 +1,10 @@
+{
+  "violations": [
+    {
+      "file": "docs/decisions/ADR-001-clean-sync-fixture.md",
+      "rule": "adr-considered-options",
+      "description": "[ADR-001] Accepted/Superseded ADR should have ## Considered Options",
+      "severity": "note"
+    }
+  ]
+}

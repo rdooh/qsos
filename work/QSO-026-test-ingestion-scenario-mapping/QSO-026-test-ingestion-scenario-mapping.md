@@ -1,7 +1,7 @@
 ---
 id: QSO-026
 title: Test ingestion and scenario mapping
-status: todo
+status: done
 priority: high
 type: feat
 impact_scope:

@@ -123,7 +123,7 @@
     {
       "id": "QSO-021",
       "title": "qsos lint --sync — code and DSL drift detection",
-      "status": "open",
+      "status": "todo",
       "path": "work/QSO-021-qsos-lint-sync/QSO-021-qsos-lint-sync.md"
     },
     {
@@ -135,37 +135,37 @@
     {
       "id": "QSO-023",
       "title": "qsos query — graph query CLI",
-      "status": "open",
+      "status": "todo",
       "path": "work/QSO-023-qsos-query-cli/QSO-023-qsos-query-cli.md"
     },
     {
       "id": "QSO-024",
       "title": "qsos-watch — Rust watcher hub daemon",
-      "status": "open",
+      "status": "todo",
       "path": "work/QSO-024-rust-watcher-hub/QSO-024-rust-watcher-hub.md"
     },
     {
       "id": "QSO-025",
       "title": "qsos-mcp — TypeScript MCP server",
-      "status": "open",
+      "status": "todo",
       "path": "work/QSO-025-qsos-mcp-server/QSO-025-qsos-mcp-server.md"
     },
     {
       "id": "QSO-026",
       "title": "Test ingestion and scenario mapping",
-      "status": "open",
+      "status": "todo",
       "path": "work/QSO-026-test-ingestion-scenario-mapping/QSO-026-test-ingestion-scenario-mapping.md"
     },
     {
       "id": "QSO-027",
       "title": "Skill integration — wire skills to utilities",
-      "status": "open",
+      "status": "todo",
       "path": "work/QSO-027-skill-utility-integration/QSO-027-skill-utility-integration.md"
     },
     {
       "id": "QSO-028",
       "title": "qsos init — pre-commit hook installation",
-      "status": "open",
+      "status": "todo",
       "path": "work/QSO-028-qsos-init-precommit/QSO-028-qsos-init-precommit.md"
     },
     {
@@ -177,7 +177,7 @@
     {
       "id": "QSO-030",
       "title": "qsos init — new project setup wizard",
-      "status": "open",
+      "status": "todo",
       "path": "work/QSO-030-new-project-setup-wizard/QSO-030-new-project-setup-wizard.md"
     },
     {

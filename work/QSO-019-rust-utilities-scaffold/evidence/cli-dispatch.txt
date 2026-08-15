@@ -1,0 +1,35 @@
+=== qsos --help ===
+QSOS utilities — lint, graph, query, ingest
+
+Usage: qsos [OPTIONS] <COMMAND>
+
+Commands:
+  lint    Static compliance checks (ADR, Gherkin, lifecycle, DSL)
+  graph   
+  query   
+  ingest  
+  help    Print this message or the help of the given subcommand(s)
+
+Options:
+      --root <ROOT>  [default: .]
+  -h, --help         Print help
+
+=== qsos lint (exit) ===
+violations=26 errors=0 exit=0
+
+=== qsos graph compile ===
+{
+  "nodes": [],
+  "edges": []
+}
+
+=== qsos query --ticket QSO-020 ===
+{
+  "nodes": [],
+  "edges": []
+}
+
+=== qsos ingest ===
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.08s
+     Running `/var/folders/xr/yd41lx194f57dqfzcw4c2dym0000gq/T/cursor-sandbox-cache/eb77707e8129d106b45bd133618f744c/cargo-target/debug/qsos ingest --root ..`
+qsos ingest not yet implemented (QSO-026)

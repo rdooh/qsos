@@ -18,7 +18,7 @@ Any of these work:
 - "use QSOS to select a ticket" → finds the most ready unstarted ticket
 - "use QSOS to verify yesterday's work" → finds recently implemented tickets, runs `/qsos-verify`
 - "use QSOS" with no direction → scans state and picks up where work left off
-- "use QSOS on TIX-007" → anchors to that ticket and determines its next stage
+- "use QSOS on QSO-007" → anchors to that ticket and determines its next stage
 
 ---
 
@@ -36,7 +36,7 @@ If an active ticket is identified (from the invocation or from scanning `work/`)
 ```
 work/<ticket-slug>/logs/qsos-run-<run_id>.jsonl
 ```
-where `ticket-slug` is the full `work/` directory name (e.g. `work/TIX-016-qsos-run-logging/logs/qsos-run-20260729-143022.jsonl`).
+where `ticket-slug` is the full `work/` directory name (e.g. `work/QSO-016-qsos-run-logging/logs/qsos-run-20260729-143022.jsonl`).
 
 Fallback (no ticket context):
 ```
@@ -51,7 +51,7 @@ mkdir -p "$(dirname "<log_path>")"
 
 Write `.qsos/current-run.json`:
 ```json
-{"run_id": "<id>", "log_path": "<path>", "ticket": "<TIX-NNN or null>", "started_at": "<ISO timestamp>"}
+{"run_id": "<id>", "log_path": "<path>", "ticket": "<QSO-NNN or null>", "started_at": "<ISO timestamp>"}
 ```
 
 ### 0.4 — Append run_started event
@@ -60,7 +60,7 @@ Write `.qsos/current-run.json`:
 LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
 if [ -n "$LOG_PATH" ]; then
   mkdir -p "$(dirname "$LOG_PATH")"
-  echo '{"run_id":"<id>","timestamp":"<ISO>","ticket":"<TIX-NNN or null>","skill":"qsos","type":"run_started","data":{"chain_depth":"<full|lite>","entry_point":"<skill>","invocation":"<what user said>"}}' >> "$LOG_PATH"
+  echo '{"run_id":"<id>","timestamp":"<ISO>","ticket":"<QSO-NNN or null>","skill":"qsos","type":"run_started","data":{"chain_depth":"<full|lite>","entry_point":"<skill>","invocation":"<what user said>"}}' >> "$LOG_PATH"
 fi
 ```
 
@@ -140,7 +140,7 @@ Then use `AskUserQuestion` with a single question:
 After the user confirms, append the `chain_depth_decided` event using the canonical append pattern:
 
 ```json
-{"run_id":"<id>","timestamp":"<ISO>","ticket":"<TIX-NNN or null>","skill":"qsos","type":"chain_depth_decided","data":{"ticket_type":"<feat|fix|chore>","depth":"<full|lite>","rationale":"<one line>"}}
+{"run_id":"<id>","timestamp":"<ISO>","ticket":"<QSO-NNN or null>","skill":"qsos","type":"chain_depth_decided","data":{"ticket_type":"<feat|fix|chore>","depth":"<full|lite>","rationale":"<one line>"}}
 ```
 
 ---
@@ -207,14 +207,14 @@ Examples of correct output:
 At each skill transition, append `skill_started` and `skill_completed` log events using the canonical append pattern:
 
 ```json
-{"run_id":"<id>","timestamp":"<ISO>","ticket":"<TIX-NNN or null>","skill":"<skill>","type":"skill_started","data":{}}
-{"run_id":"<id>","timestamp":"<ISO>","ticket":"<TIX-NNN or null>","skill":"<skill>","type":"skill_completed","data":{"outcome":"<go|blocked|confirmed|etc>"}}
+{"run_id":"<id>","timestamp":"<ISO>","ticket":"<QSO-NNN or null>","skill":"<skill>","type":"skill_started","data":{}}
+{"run_id":"<id>","timestamp":"<ISO>","ticket":"<QSO-NNN or null>","skill":"<skill>","type":"skill_completed","data":{"outcome":"<go|blocked|confirmed|etc>"}}
 ```
 
 If the chain stops due to a BLOCKED verdict, API error, or user cancellation, append a `run_interrupted` event:
 
 ```json
-{"run_id":"<id>","timestamp":"<ISO>","ticket":"<TIX-NNN or null>","skill":"qsos","type":"run_interrupted","data":{"source":"<user|api_error|context_limit|unknown>","last_skill":"<skill>"}}
+{"run_id":"<id>","timestamp":"<ISO>","ticket":"<QSO-NNN or null>","skill":"qsos","type":"run_interrupted","data":{"source":"<user|api_error|context_limit|unknown>","last_skill":"<skill>"}}
 ```
 
 ---
@@ -224,7 +224,7 @@ If the chain stops due to a BLOCKED verdict, API error, or user cancellation, ap
 When the chain reaches a natural stopping point (ticket closed, blocked, or waiting for human input), append the `run_completed` event using the canonical append pattern:
 
 ```json
-{"run_id":"<id>","timestamp":"<ISO>","ticket":"<TIX-NNN or null>","skill":"qsos","type":"run_completed","data":{"outcome":"<done|blocked|abandoned>","skills_run":["<list>"]}}
+{"run_id":"<id>","timestamp":"<ISO>","ticket":"<QSO-NNN or null>","skill":"qsos","type":"run_completed","data":{"outcome":"<done|blocked|abandoned>","skills_run":["<list>"]}}
 ```
 
 Then produce:

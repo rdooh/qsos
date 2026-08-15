@@ -1,6 +1,6 @@
 ---
 feature: TDD discipline and verify test floor
-ticket: TIX-012
+ticket: QSO-012
 status: @accepted
 architecture_updated: false
 ---

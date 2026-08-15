@@ -15,3 +15,9 @@ test-results/
 # pytest coverage artifacts
 .coverage
 htmlcov/
+
+# Generated graph registry (rebuilt via qsos graph compile)
+work/graph-registry.json
+
+# Active run pointer (transient)
+.qsos/current-run.json

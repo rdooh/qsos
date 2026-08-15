@@ -1,6 +1,6 @@
 ---
 feature: Pytest coverage threshold enforcement
-ticket: TIX-014
+ticket: QSO-014
 status: @done
 architecture_updated: false
 ---

@@ -1,10 +1,13 @@
 {
   "unit_runner": "pytest",
   "e2e_runner": null,
+  "utilities_runner": "cargo",
+  "utilities_root": "utilities",
   "coverage_threshold": 15,
   "pre_commit_hook": true,
   "pre_push_hook": false,
   "decisions": [
-    "docs/decisions/ADR-006-test-harness-manifest-schema.md"
+    "docs/decisions/ADR-006-test-harness-manifest-schema.md",
+    "docs/decisions/ADR-010-polyglot-utilities-architecture.md"
   ]
 }

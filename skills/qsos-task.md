@@ -1,5 +1,5 @@
 ---
-description: Cross-cutting task tracking adapter — resolves the active medium (Jira, TIX files, or local plan) and provides a consistent interface for all task operations.
+description: Cross-cutting task tracking adapter — resolves the active medium (Jira, QSO ticket files, or local plan) and provides a consistent interface for all task operations.
 ---
 
 # /task
@@ -28,13 +28,13 @@ Calls from other skills look like:
 Scan the project in this order and stop at the first match:
 
 1. **Jira** — check `.mcp.json` or environment for Jira MCP configuration; check if a project key is resolvable from context (e.g. a ticket ID like `PROJ-123` in the task description)
-2. **TIX files** — check for `work/` directory containing `tix-manifest.json`
+2. **QSO ticket files** — check for `work/` directory containing `tix-manifest.json`
 3. **Local plan** — check for `plan.md` or `PLAN.md` in the working directory containing markdown checkboxes (`- [ ]`)
 4. **None detected** — ask the user to declare which medium to use
 
 State the result in one line before proceeding:
 
-> "I'll use [Jira project KEY / TIX files at work/ / local plan at plan.md] — proceed?"
+> "I'll use [Jira project KEY / QSO ticket files at work/ / local plan at plan.md] — proceed?"
 
 Continue unless redirected. Do not ask again for the remainder of the session once resolved.
 
@@ -47,7 +47,7 @@ Continue unless redirected. Do not ask again for the remainder of the session on
 Return tickets/tasks that are `ready` or `todo` and have no unresolved blocking dependencies.
 
 - **Jira:** query open issues in the project, filter by status
-- **TIX files:** read `work/tix-manifest.json`, return entries with `status: ready` or `status: todo`
+- **QSO ticket files:** read `work/tix-manifest.json`, return entries with `status: ready` or `status: todo`
 - **Local plan:** list unchecked checkboxes (`- [ ]`)
 
 ### `read <id>` — load ticket content
@@ -55,7 +55,7 @@ Return tickets/tasks that are `ready` or `todo` and have no unresolved blocking 
 Return the full ticket: title, description, status, linked feature files, linked ADRs, `architecture_updated` field, dependencies.
 
 - **Jira:** fetch the issue; note the description and any linked docs in fields or comments
-- **TIX files:** read `work/<id>-slug/<id>-slug.md` including YAML frontmatter
+- **QSO ticket files:** read `work/<id>-slug/<id>-slug.md` including YAML frontmatter
 - **Local plan:** find the matching checkbox line and any sub-items beneath it
 
 ### `start <id>` — mark in-progress
@@ -63,7 +63,7 @@ Return the full ticket: title, description, status, linked feature files, linked
 Update the ticket status to `in-progress`.
 
 - **Jira:** transition the issue to In Progress
-- **TIX files:** update `status: in-progress` in the frontmatter of `work/<id>-slug/<id>-slug.md`; update entry in `work/tix-manifest.json`
+- **QSO ticket files:** update `status: in-progress` in the frontmatter of `work/<id>-slug/<id>-slug.md`; update entry in `work/tix-manifest.json`
 - **Local plan:** change `- [ ]` to `- [~]` (in-progress marker)
 
 ### `update <id> <note>` — attach a note or artifact
@@ -71,7 +71,7 @@ Update the ticket status to `in-progress`.
 Add information to the ticket without changing its status.
 
 - **Jira:** post a comment
-- **TIX files:** append a note to the body of `work/<id>-slug/<id>-slug.md` under a `## Updates` section
+- **QSO ticket files:** append a note to the body of `work/<id>-slug/<id>-slug.md` under a `## Updates` section
 - **Local plan:** not supported — note this and continue
 
 ### `close <id> <evidence>` — mark done
@@ -79,7 +79,7 @@ Add information to the ticket without changing its status.
 Mark the ticket complete and attach a pointer to the evidence artifact.
 
 - **Jira:** transition to Done; post a comment with the evidence reference
-- **TIX files:** update `status: done`; append the evidence reference to the ticket body
+- **QSO ticket files:** update `status: done`; append the evidence reference to the ticket body
 - **Local plan:** change `- [~]` or `- [ ]` to `- [x]`
 
 ---
@@ -96,7 +96,7 @@ Do not silently omit the operation. Do not pretend it happened.
 
 ## Capability reference
 
-| Operation | Jira | TIX files | Local plan |
+| Operation | Jira | QSO ticket files | Local plan |
 |---|---|---|---|
 | find eligible work | ✓ | ✓ | ✓ |
 | read for direction | ✓ | ✓ | ✓ (limited) |
@@ -107,7 +107,7 @@ Do not silently omit the operation. Do not pretend it happened.
 | close with evidence pointer | ✓ | ✓ | ✓ (check off) |
 | sprint / priority / watchers | ✓ | — | — |
 
-For full TIX file format and ticket readiness gate definitions, see `docs/standards/project-structure.md`.
+For full QSO ticket file format and ticket readiness gate definitions, see `docs/standards/project-structure.md`.
 
 ---
 

@@ -1,6 +1,6 @@
 ---
 feature: Verify Refactor and Doc-Sync Update
-ticket: TIX-005
+ticket: QSO-005
 status: @done
 architecture_updated: false
 ---

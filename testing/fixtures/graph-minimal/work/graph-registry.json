@@ -1,0 +1,51 @@
+{
+  "nodes": [
+    {
+      "id": "QSO-901",
+      "kind": "ticket",
+      "label": "QSO-901 — Demo ticket"
+    },
+    {
+      "id": "docs/features/demo.feature",
+      "kind": "feature",
+      "label": "Graph Minimal Fixture"
+    },
+    {
+      "id": "docs/features/demo.feature::Graph compiles",
+      "kind": "scenario",
+      "label": "Graph compiles"
+    },
+    {
+      "id": "ADR-901",
+      "kind": "adr",
+      "label": "ADR-901 — ADR-901: Demo Decision"
+    },
+    {
+      "id": "qsosCore",
+      "kind": "dsl_element",
+      "label": "qsosCore (container)"
+    }
+  ],
+  "edges": [
+    {
+      "from": "QSO-901",
+      "to": "docs/features/demo.feature",
+      "kind": "ticket→feature"
+    },
+    {
+      "from": "docs/features/demo.feature",
+      "to": "ADR-901",
+      "kind": "feature→ADR"
+    },
+    {
+      "from": "docs/features/demo.feature::Graph compiles",
+      "to": "docs/features/demo.feature",
+      "kind": "scenario→file"
+    },
+    {
+      "from": "ADR-901",
+      "to": "qsosCore",
+      "kind": "ADR→dsl_element"
+    }
+  ]
+}

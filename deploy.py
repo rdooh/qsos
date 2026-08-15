@@ -20,6 +20,10 @@ GEMINI_PLUGIN_DIR = os.path.join(GEMINI_DIR, "config", "plugins", "qsos")
 GEMINI_SKILLS_DST = os.path.join(GEMINI_PLUGIN_DIR, "skills")
 GEMINI_AGENTS_DST = os.path.join(GEMINI_PLUGIN_DIR, "agents")
 
+# Cursor Target Paths
+CURSOR_DIR = os.path.expanduser("~/.cursor")
+CURSOR_SKILLS_DST = os.path.join(CURSOR_DIR, "skills")
+
 
 def load_model_config():
     """
@@ -142,6 +146,14 @@ def is_symlink_correct(link_path, target_path):
         return os.readlink(link_path) == target_path
     except OSError:
         return False
+
+
+def build_skill_md_content(src_content, skill_name, default_description=None):
+    """Build directory-style SKILL.md content for Gemini/Cursor targets."""
+    fm, body, _ = parse_md_frontmatter(src_content)
+    name = fm.get("name", skill_name)
+    description = fm.get("description", default_description or f"QSOS skill: {skill_name}")
+    return f"---\nname: {name}\ndescription: {description}\n---\n\n{body}"
 
 
 class ClaudeTarget:
@@ -364,8 +376,7 @@ class GeminiTarget:
                 fm, body, _ = parse_md_frontmatter(src_content)
                 description = fm.get("description", f"QSOS skill: {skill_name}")
                 
-                # construct expected content format for Gemini SKILL.md
-                expected_content = f"---\nname: {skill_name}\ndescription: {description}\n---\n\n{body}"
+                expected_content = build_skill_md_content(src_content, skill_name, description)
                 
                 target_dir = os.path.join(GEMINI_SKILLS_DST, skill_name)
                 os.makedirs(target_dir, exist_ok=True)
@@ -445,7 +456,7 @@ class GeminiTarget:
                         src_content = f.read()
                     fm, body, _ = parse_md_frontmatter(src_content)
                     description = fm.get("description", f"QSOS skill: {skill_name}")
-                    expected_content = f"---\nname: {skill_name}\ndescription: {description}\n---\n\n{body}"
+                    expected_content = build_skill_md_content(src_content, skill_name, description)
                     
                     with open(target_file, "r", encoding="utf-8") as f:
                         target_content = f.read()
@@ -523,15 +534,135 @@ class GeminiTarget:
                     print(f"  cleaned obsolete agent {filename}")
 
 
+class CursorTarget:
+    name = "cursor"
+
+    def __init__(self, model_config):
+        self.model_config = model_config
+
+    def is_installed(self):
+        return os.path.exists(CURSOR_DIR)
+
+    def deploy(self, mode="copy"):
+        print("Deploying to Cursor...")
+        os.makedirs(CURSOR_SKILLS_DST, exist_ok=True)
+        self.clean_obsolete()
+
+        if os.path.exists(SKILLS_SRC):
+            for filename in os.listdir(SKILLS_SRC):
+                if not filename.endswith(".md"):
+                    continue
+                src_path = os.path.join(SKILLS_SRC, filename)
+                skill_name = os.path.splitext(filename)[0]
+
+                with open(src_path, "r", encoding="utf-8") as f:
+                    src_content = f.read()
+
+                fm, _, _ = parse_md_frontmatter(src_content)
+                description = fm.get("description", f"QSOS skill: {skill_name}")
+                expected_content = build_skill_md_content(src_content, skill_name, description)
+
+                target_dir = os.path.join(CURSOR_SKILLS_DST, skill_name)
+                os.makedirs(target_dir, exist_ok=True)
+                target_file = os.path.join(target_dir, "SKILL.md")
+                marker_file = os.path.join(target_dir, ".qsos-deploy")
+
+                with open(target_file, "w", encoding="utf-8") as f:
+                    f.write(expected_content)
+                with open(marker_file, "w", encoding="utf-8") as f:
+                    f.write("qsos\n")
+                print(f"  created     skills/{skill_name}/SKILL.md")
+
+    def check(self):
+        print(f"Cursor integration ({CURSOR_SKILLS_DST}):")
+        ok = 0
+        missing = 0
+        mismatch = 0
+        obsolete_count = 0
+
+        if os.path.exists(SKILLS_SRC):
+            for filename in os.listdir(SKILLS_SRC):
+                if not filename.endswith(".md"):
+                    continue
+                skill_name = os.path.splitext(filename)[0]
+                src_path = os.path.join(SKILLS_SRC, filename)
+                target_file = os.path.join(CURSOR_SKILLS_DST, skill_name, "SKILL.md")
+
+                if not os.path.exists(target_file):
+                    print(f"  missing        skills/{skill_name}/SKILL.md")
+                    missing += 1
+                else:
+                    with open(src_path, "r", encoding="utf-8") as f:
+                        src_content = f.read()
+                    fm, _, _ = parse_md_frontmatter(src_content)
+                    description = fm.get("description", f"QSOS skill: {skill_name}")
+                    expected_content = build_skill_md_content(src_content, skill_name, description)
+
+                    with open(target_file, "r", encoding="utf-8") as f:
+                        target_content = f.read()
+
+                    if target_content != expected_content:
+                        print(f"  mismatch       skills/{skill_name}/SKILL.md")
+                        mismatch += 1
+                    else:
+                        ok += 1
+
+        if os.path.exists(CURSOR_SKILLS_DST):
+            for name in os.listdir(CURSOR_SKILLS_DST):
+                marker = os.path.join(CURSOR_SKILLS_DST, name, ".qsos-deploy")
+                if not os.path.isfile(marker):
+                    continue
+                if not os.path.exists(os.path.join(SKILLS_SRC, f"{name}.md")):
+                    print(f"  stale          skills/{name}")
+                    obsolete_count += 1
+
+        return {
+            "ok": ok,
+            "missing": missing,
+            "broken": 0,
+            "wrong-target": 0,
+            "stale": obsolete_count,
+            "mismatch": mismatch
+        }
+
+    def clean(self):
+        print("Cleaning Cursor artifacts...")
+        removed = 0
+        if os.path.exists(CURSOR_SKILLS_DST) and os.path.exists(SKILLS_SRC):
+            for filename in os.listdir(SKILLS_SRC):
+                skill_name = os.path.splitext(filename)[0]
+                target_dir = os.path.join(CURSOR_SKILLS_DST, skill_name)
+                marker = os.path.join(target_dir, ".qsos-deploy")
+                if os.path.isfile(marker) and os.path.isdir(target_dir):
+                    shutil.rmtree(target_dir)
+                    print(f"  removed     skills/{skill_name}")
+                    removed += 1
+        return removed
+
+    def clean_obsolete(self):
+        if not os.path.exists(CURSOR_SKILLS_DST):
+            return
+        for name in os.listdir(CURSOR_SKILLS_DST):
+            marker = os.path.join(CURSOR_SKILLS_DST, name, ".qsos-deploy")
+            if not os.path.isfile(marker):
+                continue
+            if not os.path.exists(os.path.join(SKILLS_SRC, f"{name}.md")):
+                target_dir = os.path.join(CURSOR_SKILLS_DST, name)
+                if os.path.isdir(target_dir):
+                    shutil.rmtree(target_dir)
+                    print(f"  cleaned obsolete skill {name}")
+
+
 def main():
     import argparse
     parser = argparse.ArgumentParser(description="QSOS Multi-Runtime Deployer")
-    parser.add_argument("--target", choices=["claude", "gemini", "all"], default="all",
+    parser.add_argument("--target", choices=["claude", "gemini", "cursor", "all"], default="all",
                         help="Deployment target runtime (default: all detected)")
     parser.add_argument("--check", action="store_true", help="Report status without making changes")
     parser.add_argument("--copy", action="store_true", help="Copy files instead of symlinking for Claude target")
     parser.add_argument("--clean", action="store_true", help="Remove all deployed artifacts")
     parser.add_argument("--fix", action="store_true", help="Heal/redeploy target runtime(s)")
+    parser.add_argument("--yes", action="store_true", help="Skip confirmation prompts")
     
     args = parser.parse_args()
     
@@ -548,7 +679,7 @@ def main():
             print(f"Loaded model config from: {config_path}")
             
     # 2. Initialize targets
-    targets = [ClaudeTarget(model_config), GeminiTarget(model_config)]
+    targets = [ClaudeTarget(model_config), GeminiTarget(model_config), CursorTarget(model_config)]
     
     # 3. Filter targets by detection and CLI flag
     active_targets = []
@@ -575,7 +706,8 @@ def main():
         
     if args.clean:
         print("\nQSOS Clean mode")
-        confirm(f"Remove all deployed artifacts for: {', '.join([t.name for t in active_targets])}?")
+        if not args.yes:
+            confirm(f"Remove all deployed artifacts for: {', '.join([t.name for t in active_targets])}?")
         for t in active_targets:
             t.clean()
         print("\nDone cleaning.")
@@ -629,7 +761,8 @@ def main():
     # Print tier resolution table and require confirmation before any writes
     print_tier_table(model_config)
     targets_str = ', '.join([t.name for t in active_targets])
-    confirm(f"Deploy to {targets_str} using the model mapping above?")
+    if not args.yes:
+        confirm(f"Deploy to {targets_str} using the model mapping above?")
 
     print("\nQSOS deploy")
     mode = "copy" if args.copy else "symlink"

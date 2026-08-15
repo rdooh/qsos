@@ -1,6 +1,6 @@
 ---
 feature: Workspace Directory and Testing Layout Standards
-ticket: TIX-013
+ticket: QSO-013
 status: @done
 architecture_updated: false
 ---
@@ -34,7 +34,7 @@ evidence are placed to ensure uniformity across projects.
 ## Feature: Point-in-time ticket evidence
 
 **Scenario: Verification evidence is stored in the ticket workspace**
-  Given an active ticket TIX-013
+  Given an active ticket QSO-013
   When a verifier runs verification or captures visual evidence (e.g. screenshots, curl logs)
-  Then the artifacts are saved under `work/TIX-013/evidence/` or `work/TIX-013/screenshots/`
+  Then the artifacts are saved under `work/QSO-013/evidence/` or `work/QSO-013/screenshots/`
   And they are committed to version control as the ticket's durable record of success

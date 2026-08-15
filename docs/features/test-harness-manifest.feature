@@ -1,6 +1,6 @@
 ---
 feature: Test harness manifest
-ticket: TIX-011
+ticket: QSO-011
 status: @done
 architecture_updated: false
 ---

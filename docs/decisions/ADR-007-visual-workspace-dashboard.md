@@ -23,14 +23,14 @@ We need a design for a visual dashboard that consumes local workspace telemetry 
   - *Con:* Coupled to VS Code. If developers use other IDEs or terminal environments, the dashboard is inaccessible.
 
 - **Option C: Hyperloop (Tauri/React Desktop Application) (chosen)** — A standalone desktop application built using Rust (Tauri) and React.
-  - *Pro:* Stands as an independent visual command center. Tauri provides direct access to native filesystem APIs (via Rust `notify` crate) and command execution. Decoupled from the IDE but runs in the developer's system tray. Can easily integrate with the Hub-and-Spoke Watcher Daemon (TIX-009) via IPC.
+  - *Pro:* Stands as an independent visual command center. Tauri provides direct access to native filesystem APIs (via Rust `notify` crate) and command execution. Decoupled from the IDE but runs in the developer's system tray. Can easily integrate with the Hub-and-Spoke Watcher Daemon (QSO-009) via IPC.
   - *Con:* Requires compiling a Tauri bundle.
 
 ## Decision
 
 We propose **Option C**: using the `hyperloop` repository as the container for the visual command center. The dashboard will operate as a read-only telemetry engine that:
 1. Watches the workspace filesystem recursively using a background thread (or subscribes to the Watcher Daemon).
-2. Parses structured files: `work/tix-manifest.json`, `work/TIX-NNN/TIX-NNN.md`, `testing/manifest.json`, `docs/decisions/ADR-NNN.md`, `docs/features/name.feature`.
+2. Parses structured files: `work/tix-manifest.json`, `work/QSO-NNN/QSO-NNN.md`, `testing/manifest.json`, `docs/decisions/ADR-NNN.md`, `docs/features/name.feature`.
 3. Parses transient outputs: `test-results/unit.json`, `test-results/integration.json`.
 4. Renders interactive cards for:
    - **Backlog & Velocity**: burn-down charts, active ticket queues, cycle times.

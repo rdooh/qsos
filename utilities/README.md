@@ -1,36 +1,86 @@
 # utilities/
 
-Future home of QSOS programming utilities — CLI tools and MCP server.
+QSOS programming utilities — Rust CLI core, Rust watcher hub, TypeScript MCP server.
 
-Per the roadmap in `docs/roadmap/utilities.md`:
-
-- **Wave 1** — `qsos lint` CLI: ADR integrity, Gherkin style, feature lifecycle checks
-- **Wave 2** — `qsos lint --sync`: code import vs DSL drift detection
-- **Wave 3** — `qsos init`: pre-commit hook installation
-- **Wave 4** — `qsos graph`: knowledge graph compiler and query interface
-- **Wave 5** — `qsos-mcp`: MCP server exposing utilities as typed tool calls
-
-Nothing lives here yet. When Wave 1 begins, source will be added here alongside a `package.json` or equivalent build manifest.
+**ADR:** [ADR-010](../docs/decisions/ADR-010-polyglot-utilities-architecture.md)  
+**Roadmap:** [implementation-roadmap.md](../docs/roadmap/implementation-roadmap.md)
 
 ---
 
-## Hub-and-Spoke Watcher Daemon (TIX-009)
+## Layout (target)
 
-The watcher daemon (Hub) spawns automation utilities (Spokes) as isolated subprocesses in
-response to filesystem events. The Hub implementation will live in this directory once
-TIX-009 moves from specification to implementation.
+```
+utilities/
+├── Cargo.toml          # Rust workspace root
+├── qsos-cli/             # `qsos` binary — subcommand dispatch
+├── qsos-lint/            # static sensors (ADR, Gherkin, DSL, sync)
+├── qsos-graph/           # graph compiler + query engine
+├── qsos-ingest/          # test result → scenario mapping
+├── qsos-watch/           # hub daemon (triggers.toml)
+├── qsos-mcp/             # TypeScript MCP server
+├── serve.py              # log viewer (Python — unchanged)
+└── log-viewer.html
+```
 
-### Specifications
+Scaffold ticket: [QSO-019](../work/QSO-019-rust-utilities-scaffold/QSO-019-rust-utilities-scaffold.md)
 
-- **[triggers-schema.md](../docs/specs/triggers-schema.md)** — The `triggers.toml` rule
-  schema. Defines the full field reference for path, event, command, debounce, concurrency,
-  timeout, and overflow policy.
+## Build
 
-- **[spoke-contract.md](../docs/specs/spoke-contract.md)** — The Spoke subprocess interface
-  contract. Defines exit codes, stdout JSON format, Hub log events, and known gaps.
+```bash
+cd utilities
+cargo build --release
+cargo test
+cargo clippy -- -D warnings
 
-### Architecture
+# Lint the QSOS repo from utilities/
+cargo run -p qsos-cli --bin qsos -- lint --root ..
+```
 
-See [ADR-004](../docs/decisions/ADR-004-hub-and-spoke-watcher.md) for the Hub-and-Spoke
-design decision and the [architecture DSL](../docs/architecture/architecture.dsl) for the
-full container and component model.
+Binary: `utilities/target/release/qsos`
+
+---
+
+## Strux reference map
+
+Strux is a personal R&D project. QSOS rebuilds proven designs natively — no runtime coupling.
+
+| QSOS crate | Strux reference |
+|---|---|
+| `qsos-lint` | `packages/strux-sensors`, `packages/strux-curator` |
+| `qsos-graph` | `packages/strux-graph` |
+| `qsos-ingest` | `packages/strux-dynamix` |
+| `qsos-watch` | `watcher/` |
+| `qsos-mcp` | `packages/strux-mcp` |
+
+---
+
+## Hub-and-Spoke Watcher
+
+Specifications (QSO-009):
+
+- [triggers-schema.md](../docs/specs/triggers-schema.md)
+- [spoke-contract.md](../docs/specs/spoke-contract.md)
+- [ADR-004](../docs/decisions/ADR-004-hub-and-spoke-watcher.md)
+
+Implementation: [QSO-024](../work/QSO-024-rust-watcher-hub/QSO-024-rust-watcher-hub.md)
+
+Spokes invoke `qsos` subcommands (Rust binaries), not Node scripts.
+
+---
+
+## Current files
+
+| File | Language | Purpose |
+|---|---|---|
+| `serve.py` | Python | Dev server — log viewer + graph viewer APIs |
+| `log-viewer.html` | HTML/JS | Run log viewer UI |
+| `graph-viewer.html` | HTML/JS | **TEMP dev tool** — artifact graph browser (not load-bearing) |
+
+```bash
+# Compile graph, then browse locally
+cargo run -p qsos-cli --bin qsos -- graph compile --root ..
+python3 utilities/serve.py
+# → http://localhost:8765/utilities/graph-viewer.html
+```
+
+Permanent visualization → Developer Operating System Visual Surface (Pillar 4). This viewer is scratch tooling only.

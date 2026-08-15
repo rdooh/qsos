@@ -10,7 +10,7 @@ QSOS runs produce verbose conversational prose in the terminal. Output scrolls o
 is not persisted, and burns tokens that the developer may never read. There is no audit
 trail of what happened during a run, what decisions were made, or what health issues
 occurred (churn, rabbit holes, interruptions). Future analysis — "why did we spend so many
-tokens on TIX-012?" — is impossible without a structured record.
+tokens on QSO-012?" — is impossible without a structured record.
 
 Three decisions need to be made:
 
@@ -39,7 +39,7 @@ Every event shares a common envelope:
 {
   "run_id": "<uuid>",
   "timestamp": "<ISO 8601>",
-  "ticket": "<TIX-NNN or null>",
+  "ticket": "<QSO-NNN or null>",
   "skill": "<active skill name or null>",
   "type": "<event_type>",
   "data": { ... }
@@ -152,7 +152,7 @@ work/<ticket-slug>/logs/qsos-run-<run_id>.jsonl    # ticket-anchored run
 
 **Rationale:**
 - Ticket-anchored logs live alongside evidence and other ticket artefacts in `work/` —
-  consistent with workspace-directory-standards (ADR-013 / TIX-013).
+  consistent with workspace-directory-standards (ADR-013 / QSO-013).
 - `run_id` in the filename means multiple runs for the same ticket don't overwrite each
   other — every run is independently inspectable.
 - `.qsos/logs/` as fallback keeps exploratory runs out of `work/` but still persisted.
@@ -190,19 +190,19 @@ runs accumulate — the taxonomy and paths should be treated as a stable API.
 
 ## Worked example
 
-A short fictional run (TIX-016, partial chain: qsos → plan → implement) showing what the JSONL log looks like in practice.
+A short fictional run (QSO-016, partial chain: qsos → plan → implement) showing what the JSONL log looks like in practice.
 
 ```jsonl
-{"run_id":"a3f1c9e2-8b47-4d2a-bc06-1e7f30d52a84","timestamp":"2026-07-29T09:14:01.012Z","ticket":"TIX-016","skill":null,"type":"run_started","data":{"chain_depth":2,"entry_point":"qsos","invocation":"qsos TIX-016"}}
-{"run_id":"a3f1c9e2-8b47-4d2a-bc06-1e7f30d52a84","timestamp":"2026-07-29T09:14:01.388Z","ticket":"TIX-016","skill":"qsos","type":"chain_depth_decided","data":{"ticket_type":"feature","depth":2,"rationale":"Feature ticket with approved spec — plan + implement"}}
-{"run_id":"a3f1c9e2-8b47-4d2a-bc06-1e7f30d52a84","timestamp":"2026-07-29T09:14:02.105Z","ticket":"TIX-016","skill":"qsos-plan","type":"skill_started","data":{"skill":"qsos-plan"}}
-{"run_id":"a3f1c9e2-8b47-4d2a-bc06-1e7f30d52a84","timestamp":"2026-07-29T09:14:18.772Z","ticket":"TIX-016","skill":"qsos-plan","type":"plan_produced","data":{"item_count":4,"items":["Add subagent taxonomy to ADR-009","Add worked example to ADR-009","Update skill-started handler to emit subagent_spawned","Write tests for subagent event types"]}}
-{"run_id":"a3f1c9e2-8b47-4d2a-bc06-1e7f30d52a84","timestamp":"2026-07-29T09:15:04.331Z","ticket":"TIX-016","skill":"qsos-plan","type":"plan_approved","data":{}}
-{"run_id":"a3f1c9e2-8b47-4d2a-bc06-1e7f30d52a84","timestamp":"2026-07-29T09:15:04.512Z","ticket":"TIX-016","skill":"qsos-plan","type":"skill_completed","data":{"skill":"qsos-plan","outcome":"approved"}}
-{"run_id":"a3f1c9e2-8b47-4d2a-bc06-1e7f30d52a84","timestamp":"2026-07-29T09:15:05.001Z","ticket":"TIX-016","skill":"qsos-implement","type":"skill_started","data":{"skill":"qsos-implement"}}
-{"run_id":"a3f1c9e2-8b47-4d2a-bc06-1e7f30d52a84","timestamp":"2026-07-29T09:15:06.204Z","ticket":"TIX-016","skill":"qsos-implement","type":"item_started","data":{"item_ref":"1","file":"docs/decisions/ADR-009-qsos-run-logging-schema.md","action":"edit"}}
-{"run_id":"a3f1c9e2-8b47-4d2a-bc06-1e7f30d52a84","timestamp":"2026-07-29T09:15:22.890Z","ticket":"TIX-016","skill":"qsos-implement","type":"deviation_flagged","data":{"severity":"minor","planned":"Add subagent taxonomy after Skill lifecycle section","actual":"Taxonomy section order required insertion before Human gates — structural position differs","reason":"Human gates immediately followed Skill lifecycle with no gap; insertion point adjusted to preserve logical grouping"}}
-{"run_id":"a3f1c9e2-8b47-4d2a-bc06-1e7f30d52a84","timestamp":"2026-07-29T09:15:23.110Z","ticket":"TIX-016","skill":"qsos-implement","type":"deviation_resolved","data":{"how":"proceeded"}}
+{"run_id":"a3f1c9e2-8b47-4d2a-bc06-1e7f30d52a84","timestamp":"2026-07-29T09:14:01.012Z","ticket":"QSO-016","skill":null,"type":"run_started","data":{"chain_depth":2,"entry_point":"qsos","invocation":"qsos QSO-016"}}
+{"run_id":"a3f1c9e2-8b47-4d2a-bc06-1e7f30d52a84","timestamp":"2026-07-29T09:14:01.388Z","ticket":"QSO-016","skill":"qsos","type":"chain_depth_decided","data":{"ticket_type":"feature","depth":2,"rationale":"Feature ticket with approved spec — plan + implement"}}
+{"run_id":"a3f1c9e2-8b47-4d2a-bc06-1e7f30d52a84","timestamp":"2026-07-29T09:14:02.105Z","ticket":"QSO-016","skill":"qsos-plan","type":"skill_started","data":{"skill":"qsos-plan"}}
+{"run_id":"a3f1c9e2-8b47-4d2a-bc06-1e7f30d52a84","timestamp":"2026-07-29T09:14:18.772Z","ticket":"QSO-016","skill":"qsos-plan","type":"plan_produced","data":{"item_count":4,"items":["Add subagent taxonomy to ADR-009","Add worked example to ADR-009","Update skill-started handler to emit subagent_spawned","Write tests for subagent event types"]}}
+{"run_id":"a3f1c9e2-8b47-4d2a-bc06-1e7f30d52a84","timestamp":"2026-07-29T09:15:04.331Z","ticket":"QSO-016","skill":"qsos-plan","type":"plan_approved","data":{}}
+{"run_id":"a3f1c9e2-8b47-4d2a-bc06-1e7f30d52a84","timestamp":"2026-07-29T09:15:04.512Z","ticket":"QSO-016","skill":"qsos-plan","type":"skill_completed","data":{"skill":"qsos-plan","outcome":"approved"}}
+{"run_id":"a3f1c9e2-8b47-4d2a-bc06-1e7f30d52a84","timestamp":"2026-07-29T09:15:05.001Z","ticket":"QSO-016","skill":"qsos-implement","type":"skill_started","data":{"skill":"qsos-implement"}}
+{"run_id":"a3f1c9e2-8b47-4d2a-bc06-1e7f30d52a84","timestamp":"2026-07-29T09:15:06.204Z","ticket":"QSO-016","skill":"qsos-implement","type":"item_started","data":{"item_ref":"1","file":"docs/decisions/ADR-009-qsos-run-logging-schema.md","action":"edit"}}
+{"run_id":"a3f1c9e2-8b47-4d2a-bc06-1e7f30d52a84","timestamp":"2026-07-29T09:15:22.890Z","ticket":"QSO-016","skill":"qsos-implement","type":"deviation_flagged","data":{"severity":"minor","planned":"Add subagent taxonomy after Skill lifecycle section","actual":"Taxonomy section order required insertion before Human gates — structural position differs","reason":"Human gates immediately followed Skill lifecycle with no gap; insertion point adjusted to preserve logical grouping"}}
+{"run_id":"a3f1c9e2-8b47-4d2a-bc06-1e7f30d52a84","timestamp":"2026-07-29T09:15:23.110Z","ticket":"QSO-016","skill":"qsos-implement","type":"deviation_resolved","data":{"how":"proceeded"}}
 ```
 
 Signal-level events (deviation_flagged, verdict_issued, test_failure, etc.) are identifiable by type without parsing data — a renderer can visually distinguish them from informational events.
@@ -210,4 +210,4 @@ Signal-level events (deviation_flagged, verdict_issued, test_failure, etc.) are 
 ## Related
 
 - ADR-008 — CTRF evidence format (validate-skill) — complementary evidence format
-- TIX-013 — workspace directory standards — log path follows same conventions
+- QSO-013 — workspace directory standards — log path follows same conventions

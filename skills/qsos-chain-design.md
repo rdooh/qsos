@@ -49,7 +49,7 @@ For artifact formats, file locations, and cross-artifact relationships, see
 
 ### Cross-cutting skills
 
-**`/qsos-task`** — Task tracking adapter. Resolves medium (Jira → TIX files → local plan → ask), exposes consistent interface: find / read / start / update / close. All chain skills call this rather than touching ticket systems directly.
+**`/qsos-task`** — Task tracking adapter. Resolves medium (Jira → QSO ticket files → local plan → ask), exposes consistent interface: find / read / start / update / close. All chain skills call this rather than touching ticket systems directly.
 
 **`/qsos-bug`** — Bug triage entry point. Reproduce → classify (gap vs. conflict) → update feature file → hand to `/qsos-plan`. Does not implement the fix.
 
@@ -71,7 +71,7 @@ For artifact formats, file locations, and cross-artifact relationships, see
 `/qsos-task` is an adapter, not a workflow step. Every skill that touches task state calls it. Medium is resolved once per session and confirmed with the user. See `project-structure.md` for medium preference order and capability matrix.
 
 ### Ticket is a folder
-Each ticket lives at `work/TIX-NNN-slug/TIX-NNN-slug.md`. Evidence accumulates alongside it in subfolders. See `project-structure.md` and the document-space quadrant model.
+Each ticket lives at `work/QSO-NNN-slug/QSO-NNN-slug.md`. Evidence accumulates alongside it in subfolders. See `project-structure.md` and the document-space quadrant model.
 
 ### Architecture and decisions are a separate group from features
 Three artifact groups: Requirements+Features / Architecture+Decisions / Contracts+Statecharts. `/qsos-feature-doc` owns group 1. `/qsos-architecture` owns group 2. Group 3 artifacts (contracts, statecharts) are referenced by ADRs — `/qsos-verify` includes evidence types for both.

@@ -1,6 +1,6 @@
 ---
 feature: Hub-and-Spoke Filesystem Watcher Daemon
-ticket: TIX-009
+ticket: QSO-009
 status: @done
 architecture_updated: true
 ---

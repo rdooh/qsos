@@ -1,0 +1,10 @@
+[package]
+name = "qsos-core"
+description = "Shared types and project layout for QSOS utilities"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }

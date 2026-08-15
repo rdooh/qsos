@@ -2,7 +2,7 @@
 
 **Document type:** Specification  
 **Status:** Draft  
-**Ticket:** TIX-009  
+**Ticket:** QSO-009  
 **ADR:** [ADR-004 — Hub-and-Spoke Watcher Daemon Architecture](../decisions/ADR-004-hub-and-spoke-watcher.md)
 
 ---

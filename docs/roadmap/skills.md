@@ -34,9 +34,23 @@ The complete chain from idea to verified delivery is built and operational.
 
 ---
 
-## Near-term: skills to extend or add
+## Near-term: utilities delegation (active program)
 
-The chain is complete. What remains is deepening individual skills and adding coverage for artifact types not yet fully served.
+The chain is complete. The active work is wiring skills to native utilities (ADR-010, QSO-027):
+
+| Skill | Utility delegation | Ticket |
+|---|---|---|
+| `/qsos-audit` | Tier 1 → `qsos lint` | QSO-020, QSO-027 |
+| `/qsos-orient` | Context → `qsos query --ticket` | QSO-023, QSO-027 |
+| `/qsos-doc-sync` | Pre-close → `qsos lint [--sync]` | QSO-020, QSO-021, QSO-027 |
+| `/qsos-verify` | Coverage → `qsos ingest` + graph query | QSO-026, QSO-027 |
+| `/qsos-coverage-check` | Untested scenarios → graph query | QSO-026, QSO-027 |
+
+See [implementation-roadmap.md](./implementation-roadmap.md) for the full utilities program.
+
+---
+
+## Future: skills to extend or add
 
 ### Contracts and statecharts
 
@@ -54,8 +68,6 @@ A `/qsos-init` skill that sets up the standard directory structure, creates `doc
 
 ## Longer term: skills that delegate to utilities
 
-As programming utilities come online (see `roadmap/utilities.md`), individual skills will become simpler. Instead of running manual checks, they will invoke a command and interpret the output.
+As programming utilities come online (see [utilities.md](./utilities.md) and [implementation-roadmap.md](./implementation-roadmap.md)), individual skills become simpler — invoke a command, interpret JSON output, retain manual fallback.
 
-The pattern is already established: `/qsos-audit` says "run compliance tooling if available; fall back to manual checks if not." Every skill in the chain is written with this delegation pattern in mind. When the utility exists, the manual fallback becomes unreachable — and the skill gets shorter.
-
-The skills do not change their interface when utilities arrive. The agent experience stays the same. The quality of the checks improves.
+QSO-027 tracks the skill updates. The agent interface does not change when utilities arrive.

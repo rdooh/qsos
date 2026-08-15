@@ -36,3 +36,7 @@ We choose **Option C** (Hub-and-Spoke Watcher Daemon) for optimal fault isolatio
 ## 6-month reversal test
 
 Reversing this decision would require returning to individual package watchers or consolidating all linter logic directly into the watcher process. Since the Hub is decoupled from the actual script implementations, reversal cost is moderate.
+
+## Related decisions
+
+- [ADR-010 — Polyglot Utilities Architecture](./ADR-010-polyglot-utilities-architecture.md) — Spoke commands are `qsos` Rust subcommands; hub implemented in Rust (`qsos-watch`).

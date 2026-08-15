@@ -1,6 +1,6 @@
 ---
 feature: QSOS Monorepo Consolidation
-ticket: TIX-001
+ticket: QSO-001
 status: @done
 architecture_updated: true
 ---

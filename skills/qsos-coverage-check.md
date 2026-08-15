@@ -267,7 +267,7 @@ Do not proceed to `/qsos-verify`. State each blocker gap as text, then use `AskU
 
 If "Write missing tests now": write the test(s), re-run the test command to confirm they pass, re-run the coverage check. If PASS, proceed to `/qsos-verify`.
 
-If "Defer": create a follow-up ticket (next TIX number) scoped to "add missing tests for <function/scenario>" with `priority: high` and `depends_on: []`. Note it in the coverage report, then proceed to `/qsos-verify` with an explicit `COVERAGE DEFERRED` annotation.
+If "Defer": create a follow-up ticket (next QSO number) scoped to "add missing tests for <function/scenario>" with `priority: high` and `depends_on: []`. Note it in the coverage report, then proceed to `/qsos-verify` with an explicit `COVERAGE DEFERRED` annotation.
 
 ---
 

@@ -1,0 +1,17 @@
+[package]
+name = "qsos-cli"
+description = "QSOS unified CLI — lint, graph, query, ingest"
+version.workspace = true
+edition.workspace = true
+
+[[bin]]
+name = "qsos"
+path = "src/main.rs"
+
+[dependencies]
+clap = { workspace = true }
+qsos-core = { workspace = true }
+qsos-graph = { workspace = true }
+qsos-ingest = { workspace = true }
+qsos-lint = { workspace = true }
+serde_json = { workspace = true }

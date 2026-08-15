@@ -1,0 +1,22 @@
+apiVersion: catalog-mesh.io/v1alpha1
+kind: Component
+metadata:
+  name: qsos
+  description: "Quality Sauce Operating System — developer-layer quality system for AI-assisted spec-first development. Skill chain orchestrator, specialist agents, and native utilities (Rust CLI, Rust watcher, TypeScript MCP)."
+  prefix: "QSO-"
+  domain: "Developer Quality Systems & Agent Workflow Standards"
+  tags:
+    - qsos
+    - quality-sauce
+    - skill-chain
+    - spec-first
+    - agent-orchestration
+    - work-standards
+  repo: "https://github.com/rdooh/qsos"
+spec:
+  type: tool
+  lifecycle: active
+  owner: robdooh
+  ticket_manifest: work/tix-manifest.json
+  ticket_pattern: "work/QSO-NNN-slug/QSO-NNN-slug.md"
+  depends_on: []

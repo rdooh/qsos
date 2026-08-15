@@ -15,10 +15,19 @@ workspace {
                 taskScheduler = component "Task Scheduler & Queue" "Manages task debouncing, concurrency limits, and execution timeouts." "Rust Tokio Queue"
             }
 
-            spokes = container "Auditor & Compiler Utilities (Spokes)" "Decoupled validation scripts executed as isolated processes." "Node.js / CLI" {
-                featureAuditor = component "Gherkin Auditor" "Parses BDD scenarios and checks lifecycle compliance tags." "Node.js"
-                dslCompiler = component "Structurizr C4 Compiler" "Generates Mermaid diagrams from architecture.dsl source." "Node.js / Python"
-                ticketCompiler = component "Ticket Manifest Compiler" "Compiles active tickets and work registries." "Node.js"
+            qsosCore = container "QSOS Core CLI" "Unified Rust binary for lint, graph, query, and test ingestion." "Rust" {
+                lintEngine = component "Static Lint Engine" "ADR, Gherkin, lifecycle, and sync/drift checks." "Rust / tree-sitter"
+                graphEngine = component "Graph Compiler" "Compiles artifact relationships into queryable graph registry." "Rust / petgraph"
+                ingestEngine = component "Test Ingest Engine" "Maps JUnit/Jest results to Gherkin scenarios." "Rust"
+            }
+
+            spokes = container "Auditor Spokes" "qsos subcommands executed as isolated subprocesses by the watcher hub." "Rust CLI" {
+                lintSpoke = component "Lint Spoke" "qsos lint — static compliance on file change." "Rust"
+                graphSpoke = component "Graph Spoke" "qsos graph compile — rebuild registry on artifact change." "Rust"
+            }
+
+            mcpServer = container "QSOS MCP Server" "TypeScript MCP server exposing qsos tools to agents." "TypeScript" {
+                mcpTools = component "MCP Tool Handlers" "qsos_lint, qsos_query, qsos_graph — delegates to qsos binary." "TypeScript"
             }
 
             triggersConfig = container "Triggers Configuration" "TOML file mapping file prefixes to automation rules." "triggers.toml File"
@@ -31,9 +40,11 @@ workspace {
         watcherHost -> triggersConfig "Loads rules from"
         watcherHost -> globalState "Watches filesystem changes inside"
         watcherHost -> spokes "Spawns and monitors execution of"
-        
-        spokes -> globalState "Audits features, ADRs, and writes diagrams to"
+        spokes -> qsosCore "Invokes subcommands of"
+        qsosCore -> globalState "Reads artifacts and writes graph registry to"
         spokes -> watcherHost "Returns exit codes and JSON audit logs to"
+        mcpServer -> qsosCore "Shells to qsos binary"
+        user -> mcpServer "Agent tool calls via MCP"
         
         watcherHost -> ideExtension "Pipes execution updates to"
         supervisor -> watcherHost "Monitors process health of"

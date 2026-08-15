@@ -1,6 +1,6 @@
 ---
 feature: Evidence-grounded verify verdicts
-ticket: TIX-015
+ticket: QSO-015
 status: @done
 architecture_updated: false
 adrs:

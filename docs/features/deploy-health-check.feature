@@ -1,6 +1,6 @@
 ---
 feature: Deploy health check
-ticket: TIX-006
+ticket: QSO-006
 status: @done
 architecture_updated: false
 ---

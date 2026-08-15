@@ -1,0 +1,5 @@
+Edge kinds (fixture):
+- ADR→dsl_element
+- feature→ADR
+- scenario→file
+- ticket→feature

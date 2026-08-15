@@ -1,6 +1,6 @@
 ---
 feature: QSOS Security Skill
-ticket: TIX-004
+ticket: QSO-004
 status: @done
 architecture_updated: false
 ---

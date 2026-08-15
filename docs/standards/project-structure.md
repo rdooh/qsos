@@ -36,11 +36,28 @@ This model is defined in Strux ADR-023 and is the authority for all QSOS-governe
 
 ## The Skill–Strux Division of Labour
 
-**Common-skills (QSOS)** tells agents *how to produce correct artifacts* — prescriptive and proactive.
+**QSOS (work)** tells agents *how to produce correct artifacts* — prescriptive and proactive.
 
-**Strux** monitors artifacts *after the fact* and reports violations — descriptive and reactive.
+**Strux (personal)** is a parallel R&D project that explored the same artifact standards independently. It validated lint, graph, watcher, and test-ingestion mechanics that QSOS is now rebuilding natively.
 
-They are complementary. As compliance tooling matures, skills delegate their audit steps to it (e.g. `/qsos-doc-sync` delegating to installed tooling). Until then, `/qsos-audit` covers the most important checks manually.
+They are **permanently separate systems** (work vs. personal IP). They share *standards* (this document, quadrant model) but never share *runtime implementations*. As QSOS utilities mature, skills delegate mechanical checks to QSOS-native tooling — not to Strux.
+
+Until utilities ship, `/qsos-audit` covers the most important checks manually.
+
+---
+
+## Component identity and ticket prefix
+
+Each QSOS-governed project declares its ticket prefix in `catalog-mesh.yaml` at the repository root:
+
+```yaml
+metadata:
+  prefix: "QSO-"
+```
+
+For QSOS itself, the prefix is **`QSO-`**. Ticket IDs, folder names, and markdown filenames all use this prefix: `QSO-019-rust-utilities-scaffold`. The manifest file remains `work/tix-manifest.json` (ecosystem-standard schema name).
+
+See [ADR-011](../decisions/ADR-011-catalog-mesh-ticket-prefix.md).
 
 ---
 
@@ -60,8 +77,8 @@ docs/                              — durable specification + durable evidence
 
 work/                              — point-in-time work (transient)
   tix-manifest.json                — compiled ticket registry (auto-generated)
-  TIX-NNN-slug/                    — one folder per ticket
-    TIX-NNN-slug.md                — always present; frontmatter + description
+  QSO-NNN-slug/                    — one folder per ticket
+    QSO-NNN-slug.md                — always present; frontmatter + description
     screenshots/                   — UI evidence captured during verification (committed)
     evidence/                      — verify runs, test logs captured during verification (committed)
     logs/                          — debug output (typically git-ignored)
@@ -89,7 +106,7 @@ Each top-level directory carries a `README.md` that self-identifies its quadrant
 >
 > **Transient Output vs. Committed Evidence**:
 > - Machine-readable test runner outputs (`unit.json`, `coverage.json`) are transient and **must go to the `test-results/` directory**. This directory is machine-specific and **must be git-ignored**.
-> - Point-in-time proof of success captured during the verification phase (screenshots, curl payloads, CLI execution logs) **must go to the active ticket folder** (`work/TIX-NNN/evidence/` or `work/TIX-NNN/screenshots/`) and **must be committed to git**. This ensures a durable history of the ticket's verification.
+> - Point-in-time proof of success captured during the verification phase (screenshots, curl payloads, CLI execution logs) **must go to the active ticket folder** (`work/QSO-NNN/evidence/` or `work/QSO-NNN/screenshots/`) and **must be committed to git**. This ensures a durable history of the ticket's verification.
 
 ---
 
@@ -100,7 +117,7 @@ Each top-level directory carries a `README.md` that self-identifies its quadrant
 
 | Artifact | Location | Format | Strux sensor |
 |---|---|---|---|
-| Ticket | `work/TIX-NNN-slug/TIX-NNN-slug.md` | Markdown with YAML frontmatter | `strux-tix` |
+| Ticket | `work/QSO-NNN-slug/QSO-NNN-slug.md` | Markdown with YAML frontmatter | `strux-tix` |
 | Feature file | `docs/features/feature-name.feature` | Gherkin + lifecycle tags | `gherkin-rules` |
 
 ### Group 2 — Architecture + Decisions
@@ -136,7 +153,7 @@ QSOS feature files use a hybrid markdown/Gherkin format with YAML frontmatter. T
 ```markdown
 ---
 feature: [Feature Title]
-ticket: TIX-NNN
+ticket: QSO-NNN
 status: @proposed
 architecture_updated: false
 ---
@@ -260,27 +277,27 @@ Every element is tagged `Current` or `Target`:
 Each ticket is a directory under `work/`:
 
 ```
-work/TIX-NNN-slug/
-  TIX-NNN-slug.md    — always present; named to match directory so open tabs are self-identifying
+work/QSO-NNN-slug/
+  QSO-NNN-slug.md    — always present; named to match directory so open tabs are self-identifying
   screenshots/       — optional
   evidence/          — optional
   logs/              — optional (typically git-ignored)
 ```
 
-The `TIX-NNN-slug.md` file is the minimum viable ticket. Subfolders accumulate as the work generates artifacts.
+The `QSO-NNN-slug.md` file is the minimum viable ticket. Subfolders accumulate as the work generates artifacts.
 
 ### Medium preference order
 Skills resolve the task tracking medium in this order:
 
 1. **Jira** — if MCP is configured and a project key is resolvable
-2. **TIX files** — if `work/` directory exists with `tix-manifest.json`
+2. **QSO ticket files** — if `work/` directory exists with `tix-manifest.json`
 3. **Local plan** — if a `plan.md` with checkboxes exists
 4. **None** — ask the user to declare
 
 On resolution: *"I'll use [medium] for task tracking — proceed?"* Continue unless redirected.
 
 ### Capability matrix
-| Operation | Jira | TIX files | Local plan |
+| Operation | Jira | QSO ticket files | Local plan |
 |---|---|---|---|
 | find eligible work | ✓ | ✓ | ✓ |
 | read for direction | ✓ | ✓ | ✓ (limited) |
@@ -291,10 +308,10 @@ On resolution: *"I'll use [medium] for task tracking — proceed?"* Continue unl
 | close with evidence pointer | ✓ | ✓ | ✓ (check off) |
 | sprint / priority / watchers | ✓ | — | — |
 
-### TIX file format
+### QSO ticket file format
 ```markdown
 ---
-id: TIX-NNN
+id: QSO-NNN
 title: [Ticket Title]
 status: [todo | ready | in-progress | done]
 priority: [low | medium | high]
@@ -307,7 +324,7 @@ adrs:
   - [docs/decisions/ADR-NNN-relevant-decision.md]
 architecture_updated: [true | false]
 depends_on:
-  - [TIX-NNN]
+  - [QSO-NNN]
 jira: [PROJ-123]           # optional
 ---
 
@@ -337,8 +354,8 @@ verified_by: /verify
 
 ## Evidence
 
-- Test results: work/TIX-NNN-slug/evidence/unit.json
-- Screenshot: work/TIX-NNN-slug/screenshots/post-deploy.png
+- Test results: work/QSO-NNN-slug/evidence/unit.json
+- Screenshot: work/QSO-NNN-slug/screenshots/post-deploy.png
 ```
 
 ---
@@ -403,7 +420,7 @@ When `/doc-sync` runs post-implementation, it verifies this graph is internally 
 | Planning | `/plan` | Ticket (readiness), features, ADRs | Nothing — produces plan for approval |
 | Implementation | `/implement` | Plan, feature file | Ticket → `in-progress` |
 | Coverage check | `/coverage-check` | Change set, feature file, test dirs | PASS or GAPS FOUND — blocks `/verify` on uncovered pure functions and happy-path scenarios |
-| Verification | `/verify` | — | Evidence artifact (`work/TIX-NNN/evidence/`) |
+| Verification | `/verify` | — | Evidence artifact (`work/QSO-NNN/evidence/`) |
 | Doc sync | `/doc-sync` | All of the above | Feature → `@done`, DSL Target → Current, ticket → `done` |
 | Bug triage | `/bug` | Feature files, ticket | Gap scenario or conflict note in feature file |
 

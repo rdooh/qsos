@@ -8,7 +8,7 @@ This document outlines the phases of building the **Hyperloop Dashboard**, the v
 *Objective: Build the parser layer that reads the workspace's structured data.*
 
 1. **Parser Engine**: Build parser utilities to read:
-   - `work/tix-manifest.json` and `work/TIX-NNN/` markdown frontmatter.
+   - `work/tix-manifest.json` and `work/QSO-NNN/` markdown frontmatter.
    - `testing/manifest.json` configurations.
    - `docs/decisions/ADR-NNN.md` files.
 2. **Dashboard UI**:
@@ -32,7 +32,7 @@ This document outlines the phases of building the **Hyperloop Dashboard**, the v
 ## Phase 3 — Live Telemetry & Verification Floor
 *Objective: Connect the dashboard to active test runners and filesystem events.*
 
-1. **File Watcher**: Integrate Tauri's native filesystem watch APIs (via Rust `notify` crate) or hook into the Hub-and-Spoke Watcher Daemon (TIX-009) to trigger updates on save.
+1. **File Watcher**: Integrate Tauri's native filesystem watch APIs (via Rust `notify` crate) or hook into the Hub-and-Spoke Watcher Daemon (QSO-009) to trigger updates on save.
 2. **Transient Parser**: Read `test-results/unit.json` and `test-results/integration.json` on modification.
 3. **Live Test Cards**:
    - Stream test run status directly in the UI.
@@ -45,4 +45,4 @@ This document outlines the phases of building the **Hyperloop Dashboard**, the v
 *Objective: Allow agents to verify the UI of the dashboard itself.*
 
 1. **Playwright Integration**: Wire up Playwright tests to boot the dashboard, run assertions, and capture screenshots.
-2. **Visual Evidence**: Save test run screenshots directly into the ticket's `work/TIX-NNN/screenshots/` folder.
+2. **Visual Evidence**: Save test run screenshots directly into the ticket's `work/QSO-NNN/screenshots/` folder.

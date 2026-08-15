@@ -1,6 +1,6 @@
 ---
 feature: Structured QSOS run logging
-ticket: TIX-016
+ticket: QSO-016
 status: @done
 architecture_updated: false
 adrs: []

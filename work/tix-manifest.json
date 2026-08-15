@@ -1,112 +1,190 @@
 {
   "tickets": [
     {
-      "id": "TIX-001",
+      "id": "QSO-001",
       "title": "Consolidate QSOS into monorepo structure with deploy script",
       "status": "done",
-      "path": "work/TIX-001-monorepo-consolidation/TIX-001-monorepo-consolidation.md"
+      "path": "work/QSO-001-monorepo-consolidation/QSO-001-monorepo-consolidation.md"
     },
     {
-      "id": "TIX-002",
+      "id": "QSO-002",
       "title": "Define five QSOS agent definitions",
       "status": "done",
-      "path": "work/TIX-002-agent-definitions/TIX-002-agent-definitions.md"
+      "path": "work/QSO-002-agent-definitions/QSO-002-agent-definitions.md"
     },
     {
-      "id": "TIX-003",
+      "id": "QSO-003",
       "title": "Add qsos-review skill \u2014 post-implement code quality gate",
       "status": "done",
-      "path": "work/TIX-003-review-skill/TIX-003-review-skill.md"
+      "path": "work/QSO-003-review-skill/QSO-003-review-skill.md"
     },
     {
-      "id": "TIX-004",
+      "id": "QSO-004",
       "title": "Add qsos-security skill \u2014 optional architect-triggered security gate",
       "status": "done",
-      "path": "work/TIX-004-security-skill/TIX-004-security-skill.md"
+      "path": "work/QSO-004-security-skill/QSO-004-security-skill.md"
     },
     {
-      "id": "TIX-005",
+      "id": "QSO-005",
       "title": "Refactor qsos-verify to dispatch verifier agent + update qsos-doc-sync",
       "status": "done",
-      "path": "work/TIX-005-verify-refactor/TIX-005-verify-refactor.md"
+      "path": "work/QSO-005-verify-refactor/QSO-005-verify-refactor.md"
     },
     {
-      "id": "TIX-006",
+      "id": "QSO-006",
       "title": "Add deploy.sh health check mode",
       "status": "done",
-      "path": "work/TIX-006-deploy-health-check/TIX-006-deploy-health-check.md"
+      "path": "work/QSO-006-deploy-health-check/QSO-006-deploy-health-check.md"
     },
     {
-      "id": "TIX-007",
+      "id": "QSO-007",
       "title": "Unified multi-runtime deployer (replace deploy.sh + deploy_gemini.py)",
       "status": "done",
-      "path": "work/TIX-007-unified-deployer/TIX-007-unified-deployer.md"
+      "path": "work/QSO-007-unified-deployer/QSO-007-unified-deployer.md"
     },
     {
-      "id": "TIX-008",
+      "id": "QSO-008",
       "title": "Agent model tier configuration \u2014 abstract low/mid/high tiers with config-driven mapping",
       "status": "done",
-      "path": "work/TIX-008-agent-model-tier-config/TIX-008-agent-model-tier-config.md"
+      "path": "work/QSO-008-agent-model-tier-config/QSO-008-agent-model-tier-config.md"
     },
     {
-      "id": "TIX-009",
+      "id": "QSO-009",
       "title": "Design Hub-and-Spoke Watcher Daemon specifications",
       "status": "done",
-      "path": "work/TIX-009-hub-and-spoke-watcher/TIX-009-hub-and-spoke-watcher.md"
+      "path": "work/QSO-009-hub-and-spoke-watcher/QSO-009-hub-and-spoke-watcher.md"
     },
     {
-      "id": "TIX-010",
+      "id": "QSO-010",
       "title": "Model tier enforcement \u2014 prevent concrete model IDs in agent source files",
       "status": "done",
-      "path": "work/TIX-010-model-tier-enforcement/TIX-010-model-tier-enforcement.md"
+      "path": "work/QSO-010-model-tier-enforcement/QSO-010-model-tier-enforcement.md"
     },
     {
-      "id": "TIX-011",
+      "id": "QSO-011",
       "title": "Test harness manifest and qsos-coverage-check skill",
       "status": "done",
-      "path": "work/TIX-011-test-harness-manifest/TIX-011-test-harness-manifest.md"
+      "path": "work/QSO-011-test-harness-manifest/QSO-011-test-harness-manifest.md"
     },
     {
-      "id": "TIX-012",
+      "id": "QSO-012",
       "title": "TDD discipline in qsos-implement + test runner floor in qsos-verify",
       "status": "done",
-      "path": "work/TIX-012-tdd-and-verify-floor/TIX-012-tdd-and-verify-floor.md"
+      "path": "work/QSO-012-tdd-and-verify-floor/QSO-012-tdd-and-verify-floor.md"
     },
     {
-      "id": "TIX-013",
+      "id": "QSO-013",
       "title": "Codify standard directories for tests, transient results, and ticket evidence",
       "status": "done",
-      "path": "work/TIX-013-workspace-directory-standards/TIX-013-workspace-directory-standards.md"
+      "path": "work/QSO-013-workspace-directory-standards/QSO-013-workspace-directory-standards.md"
     },
     {
-      "id": "TIX-014",
+      "id": "QSO-014",
       "title": "Add pytest coverage threshold enforcement",
       "status": "done",
-      "path": "work/TIX-014-pytest-coverage-threshold/TIX-014-pytest-coverage-threshold.md"
+      "path": "work/QSO-014-pytest-coverage-threshold/QSO-014-pytest-coverage-threshold.md"
     },
     {
-      "id": "TIX-015",
+      "id": "QSO-015",
       "title": "Verify hardening and qsos-validate human-in-the-loop skill",
       "status": "done",
-      "path": "work/TIX-015-verify-hardening-and-validate-skill/TIX-015-verify-hardening-and-validate-skill.md"
+      "path": "work/QSO-015-verify-hardening-and-validate-skill/QSO-015-verify-hardening-and-validate-skill.md"
     },
     {
-      "id": "TIX-016",
+      "id": "QSO-016",
       "title": "Structured JSONL event logging for QSOS runs",
       "status": "done",
-      "path": "work/TIX-016-qsos-run-logging/TIX-016-qsos-run-logging.md"
+      "path": "work/QSO-016-qsos-run-logging/QSO-016-qsos-run-logging.md"
     },
     {
-      "id": "TIX-017",
+      "id": "QSO-017",
       "title": "Subagent log events must be emitted by parent skill, not subagent",
       "status": "done",
-      "path": "work/TIX-017-subagent-log-events-parent/TIX-017-subagent-log-events-parent.md"
+      "path": "work/QSO-017-subagent-log-events-parent/QSO-017-subagent-log-events-parent.md"
     },
     {
-      "id": "TIX-018",
+      "id": "QSO-018",
       "title": "Instrument remaining 6 uninstrumented skills with log events",
       "status": "done",
-      "path": "work/TIX-018-instrument-remaining-skills/TIX-018-instrument-remaining-skills.md"
+      "path": "work/QSO-018-instrument-remaining-skills/QSO-018-instrument-remaining-skills.md"
+    },
+    {
+      "id": "QSO-019",
+      "title": "Rust utilities workspace scaffold",
+      "status": "done",
+      "path": "work/QSO-019-rust-utilities-scaffold/QSO-019-rust-utilities-scaffold.md"
+    },
+    {
+      "id": "QSO-020",
+      "title": "qsos lint — static compliance checks",
+      "status": "done",
+      "path": "work/QSO-020-qsos-lint-static/QSO-020-qsos-lint-static.md"
+    },
+    {
+      "id": "QSO-021",
+      "title": "qsos lint --sync — code and DSL drift detection",
+      "status": "open",
+      "path": "work/QSO-021-qsos-lint-sync/QSO-021-qsos-lint-sync.md"
+    },
+    {
+      "id": "QSO-022",
+      "title": "qsos graph — artifact graph compiler",
+      "status": "done",
+      "path": "work/QSO-022-qsos-graph-compiler/QSO-022-qsos-graph-compiler.md"
+    },
+    {
+      "id": "QSO-023",
+      "title": "qsos query — graph query CLI",
+      "status": "open",
+      "path": "work/QSO-023-qsos-query-cli/QSO-023-qsos-query-cli.md"
+    },
+    {
+      "id": "QSO-024",
+      "title": "qsos-watch — Rust watcher hub daemon",
+      "status": "open",
+      "path": "work/QSO-024-rust-watcher-hub/QSO-024-rust-watcher-hub.md"
+    },
+    {
+      "id": "QSO-025",
+      "title": "qsos-mcp — TypeScript MCP server",
+      "status": "open",
+      "path": "work/QSO-025-qsos-mcp-server/QSO-025-qsos-mcp-server.md"
+    },
+    {
+      "id": "QSO-026",
+      "title": "Test ingestion and scenario mapping",
+      "status": "open",
+      "path": "work/QSO-026-test-ingestion-scenario-mapping/QSO-026-test-ingestion-scenario-mapping.md"
+    },
+    {
+      "id": "QSO-027",
+      "title": "Skill integration — wire skills to utilities",
+      "status": "open",
+      "path": "work/QSO-027-skill-utility-integration/QSO-027-skill-utility-integration.md"
+    },
+    {
+      "id": "QSO-028",
+      "title": "qsos init — pre-commit hook installation",
+      "status": "open",
+      "path": "work/QSO-028-qsos-init-precommit/QSO-028-qsos-init-precommit.md"
+    },
+    {
+      "id": "QSO-029",
+      "title": "Adopt catalog-mesh ticket prefix (TIX- to QSO- migration)",
+      "status": "done",
+      "path": "work/QSO-029-catalog-mesh-ticket-prefix/QSO-029-catalog-mesh-ticket-prefix.md"
+    },
+    {
+      "id": "QSO-030",
+      "title": "qsos init — new project setup wizard",
+      "status": "open",
+      "path": "work/QSO-030-new-project-setup-wizard/QSO-030-new-project-setup-wizard.md"
+    },
+    {
+      "id": "QSO-031",
+      "title": "TEMP dev tool — artifact graph viewer (HTML)",
+      "status": "done",
+      "path": "work/QSO-031-temp-dev-tool-graph-viewer/QSO-031-temp-dev-tool-graph-viewer.md"
     }
   ]
 }

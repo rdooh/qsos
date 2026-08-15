@@ -14,7 +14,8 @@ agents/       — Specialist agent definitions (deployed to ~/.claude/agents/)
 utilities/    — Future CLI and MCP server source
 extension/    — Future VS Code side panel
 docs/         — Capabilities, roadmap, decisions, standards, feature files
-work/         — Active and closed tickets (TIX-NNN-slug/)
+work/         — Active and closed tickets (QSO-NNN-slug/)
+catalog-mesh.yaml — Component identity and ticket prefix (QSO-)
 deploy.sh     — Deploy skills and agents to Claude Code (symlink mode by default)
 deploy_gemini.py — Deploy skills and agents to Gemini CLI plugin system
 ```
@@ -28,7 +29,7 @@ deploy_gemini.py — Deploy skills and agents to Gemini CLI plugin system
 ./deploy.sh --clean   # remove all deployed QSOS artifacts
 ```
 
-A unified multi-runtime deployer (`deploy.py`) is planned — see [TIX-007](work/TIX-007-unified-deployer/ticket.md) and [ADR-003](docs/decisions/ADR-003-multi-runtime-deployment.md).
+A unified multi-runtime deployer (`deploy.py`) is planned — see [QSO-007](work/QSO-007-unified-deployer/ticket.md) and [ADR-003](docs/decisions/ADR-003-multi-runtime-deployment.md).
 
 ## The chain
 
@@ -47,6 +48,8 @@ Tooling arrives progressively to automate what the skills describe manually. A c
 This means the skills are the source of truth for *what* should happen. The tooling is the source of truth for *whether* it happened efficiently. When the two diverge, the skill wins.
 
 The practical consequence: you can start using QSOS today, with nothing installed, and get most of the value. Every utility added later ratchets that value forward without changing the underlying principles.
+
+**Active development program:** Utilities implementation (ADR-010). See [implementation-roadmap.md](docs/roadmap/implementation-roadmap.md). Tickets QSO-019 through QSO-028.
 
 ---
 

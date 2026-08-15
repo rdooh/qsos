@@ -1,0 +1,64 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.12s
+     Running unittests src/main.rs (/var/folders/xr/yd41lx194f57dqfzcw4c2dym0000gq/T/cursor-sandbox-cache/eb77707e8129d106b45bd133618f744c/cargo-target/debug/deps/qsos-56cfccc3fdc9f8b9)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (/var/folders/xr/yd41lx194f57dqfzcw4c2dym0000gq/T/cursor-sandbox-cache/eb77707e8129d106b45bd133618f744c/cargo-target/debug/deps/qsos_core-3e5ead1390956d74)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (/var/folders/xr/yd41lx194f57dqfzcw4c2dym0000gq/T/cursor-sandbox-cache/eb77707e8129d106b45bd133618f744c/cargo-target/debug/deps/qsos_graph-08af223dae36607f)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (/var/folders/xr/yd41lx194f57dqfzcw4c2dym0000gq/T/cursor-sandbox-cache/eb77707e8129d106b45bd133618f744c/cargo-target/debug/deps/qsos_ingest-373b2cbb6011770f)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (/var/folders/xr/yd41lx194f57dqfzcw4c2dym0000gq/T/cursor-sandbox-cache/eb77707e8129d106b45bd133618f744c/cargo-target/debug/deps/qsos_lint-db9e79f7ccbb6456)
+
+running 3 tests
+test dsl::tests::skips_when_no_dsl ... ok
+test adr::tests::catches_bad_adr_filename ... ok
+test tests::lint_qsos_repo_has_known_notes_only ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.42s
+
+     Running unittests src/main.rs (/var/folders/xr/yd41lx194f57dqfzcw4c2dym0000gq/T/cursor-sandbox-cache/eb77707e8129d106b45bd133618f744c/cargo-target/debug/deps/qsos_watch-5d5385613724d704)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests qsos_core
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests qsos_graph
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests qsos_ingest
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests qsos_lint
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

@@ -1,0 +1,18 @@
+   Compiling qsos-graph v0.1.0 (/Users/robdooh/Documents/GitHub/Personal Projects/qsos/utilities/qsos-graph)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.04s
+     Running unittests src/lib.rs (/var/folders/xr/yd41lx194f57dqfzcw4c2dym0000gq/T/cursor-sandbox-cache/eb77707e8129d106b45bd133618f744c/cargo-target/debug/deps/qsos_graph-ed3972991022973d)
+
+running 4 tests
+test tests::scenario_id_format ... ok
+test tests::compiles_fixture_with_all_node_and_edge_types ... ok
+test tests::query_ticket_returns_connected_subgraph ... ok
+test tests::writes_registry_to_work_dir ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.19s
+
+   Doc-tests qsos_graph
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

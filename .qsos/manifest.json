@@ -1,5 +1,5 @@
 {
-  "ticket": "TIX-016",
+  "ticket": "QSO-016",
   "generated_at": "2026-07-29T00:00:00Z",
   "dependency_graph": "Sub-job 1 (qsos.md) must complete before sub-jobs 2-5 — all skill files read .qsos/current-run.json and copy the canonical append pattern defined there. Sub-job 6 (ADR-009) is independent. No shared files across sub-jobs.",
   "sub_jobs": [

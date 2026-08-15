@@ -1,0 +1,10 @@
+[package]
+name = "qsos-ingest"
+description = "Test result ingestion and scenario mapping for QSOS"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+qsos-core = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }

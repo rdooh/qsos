@@ -1,6 +1,6 @@
 ---
 feature: QSOS Agent Definitions
-ticket: TIX-002
+ticket: QSO-002
 status: @done
 architecture_updated: true
 ---

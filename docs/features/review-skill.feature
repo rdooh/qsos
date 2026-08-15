@@ -1,6 +1,6 @@
 ---
 feature: QSOS Review Skill
-ticket: TIX-003
+ticket: QSO-003
 status: @done
 architecture_updated: false
 ---

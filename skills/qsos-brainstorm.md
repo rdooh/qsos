@@ -109,13 +109,13 @@ fi
 
 ## Step 5 — Draft the ticket
 
-Determine the next TIX number by reading `work/tix-manifest.json` (or start at TIX-001 if none exists).
+Determine the next QSO number by reading `work/tix-manifest.json` (or start at QSO-001 if none exists).
 
-Create `work/TIX-NNN-<slug>/TIX-NNN-<slug>.md` using the format from `docs/standards/project-structure.md`:
+Create `work/QSO-NNN-<slug>/QSO-NNN-<slug>.md` using the format from `docs/standards/project-structure.md`:
 
 ```markdown
 ---
-id: TIX-NNN
+id: QSO-NNN
 title: <title>
 status: todo
 priority: medium
@@ -138,7 +138,7 @@ Then call `/task update` to register the new ticket in the active medium. After 
 LOG_PATH=$(python3 -c "import json; print(json.load(open('.qsos/current-run.json'))['log_path'])" 2>/dev/null)
 if [ -n "$LOG_PATH" ]; then
   mkdir -p "$(dirname "$LOG_PATH")"
-  python3 -c "import json,datetime; d=json.load(open('.qsos/current-run.json')); print(json.dumps({'run_id':d['run_id'],'timestamp':datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),'ticket':d.get('ticket',''),'skill':'qsos-brainstorm','type':'file_created','data':{'path':'work/TIX-NNN-<slug>/TIX-NNN-<slug>.md'}}))" >> "$LOG_PATH"
+  python3 -c "import json,datetime; d=json.load(open('.qsos/current-run.json')); print(json.dumps({'run_id':d['run_id'],'timestamp':datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),'ticket':d.get('ticket',''),'skill':'qsos-brainstorm','type':'file_created','data':{'path':'work/QSO-NNN-<slug>/QSO-NNN-<slug>.md'}}))" >> "$LOG_PATH"
 fi
 ```
 
@@ -150,7 +150,7 @@ fi
 BRAINSTORM VERDICT: READY FOR /feature-doc | NEEDS CLARIFICATION — <reason>
 
 FEATURE FILE: docs/features/<slug>.feature [@proposed] — created
-TICKET: work/TIX-NNN-<slug>/TIX-NNN-<slug>.md [todo] — created
+TICKET: work/QSO-NNN-<slug>/QSO-NNN-<slug>.md [todo] — created
 OVERLAPS: none | <description>
 CONFLICTS: none | BLOCKED — <ADR reference and nature of conflict>
 VOCABULARY ALIGNED: yes | <terms adjusted>

@@ -1,0 +1,12 @@
+[package]
+name = "qsos-watch"
+description = "Hub-and-spoke filesystem watcher daemon for QSOS"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+qsos-core = { workspace = true }
+
+[[bin]]
+name = "qsos-watch"
+path = "src/main.rs"

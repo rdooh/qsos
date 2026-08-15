@@ -1,0 +1,2 @@
+work/graph-registry.json
+(written by qsos graph compile)

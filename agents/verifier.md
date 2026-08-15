@@ -125,7 +125,7 @@ If the tool is not available (e.g., Playwright not installed, no test suite exis
 ## Step 4 — Save the evidence artifact
 
 Write the evidence artifact to the ticket's evidence directory:
-`work/TIX-NNN-slug/evidence/`
+`work/QSO-NNN-slug/evidence/`
 
 Name the file descriptively: `unit-test-output.txt`, `api-response.json`, `screenshot-post-fix.png`, etc.
 

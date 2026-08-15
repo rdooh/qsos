@@ -2,7 +2,7 @@
 
 **Document type:** Specification  
 **Status:** Draft  
-**Ticket:** TIX-009  
+**Ticket:** QSO-009  
 **ADR:** [ADR-004 — Hub-and-Spoke Watcher Daemon Architecture](../decisions/ADR-004-hub-and-spoke-watcher.md)
 
 ---
@@ -25,7 +25,7 @@ Each rule is a TOML table entry under `[[rules]]`.
 name        = "Feature Spec Audit"        # required — human-readable identifier, unique per file
 path        = "docs/features/"            # required — path prefix or glob to watch
 event       = "modify"                    # required — see Event types below
-command     = "node utilities/auditor.js" # required — shell command executed as a Spoke subprocess
+command     = "qsos lint"                 # required — shell command executed as a Spoke subprocess
 debounce_ms = 300                         # optional — default: 300ms
 concurrency = 1                           # optional — default: 1; max concurrent instances of this rule
 timeout_ms  = 10000                       # optional — default: 10000ms (10s); 0 = no timeout
@@ -135,7 +135,7 @@ non-zero exit code and a structured error on stderr. The following conditions ar
 
 ## Known gaps
 
-- **Glob pattern support** is not in scope for TIX-009. Path prefix matching covers current
+- **Glob pattern support** is not in scope for QSO-009. Path prefix matching covers current
   use cases. Glob support may be added in a future ticket when needed.
 - **IPC between Hub and IDE Extension** is not specified here. The Daemon Supervisor in the
   IDE Extension monitors the Hub process; the protocol for streaming execution updates is

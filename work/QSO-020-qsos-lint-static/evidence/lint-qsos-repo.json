@@ -1,0 +1,160 @@
+{
+  "violations": [
+    {
+      "file": "docs/decisions/ADR-008-validation-skill-and-evidence-format.md",
+      "rule": "adr-considered-options",
+      "description": "[ADR-008] Accepted/Superseded ADR should have ## Considered Options",
+      "severity": "note"
+    },
+    {
+      "file": "docs/decisions/ADR-009-qsos-run-logging-schema.md",
+      "rule": "adr-considered-options",
+      "description": "[ADR-009] Accepted/Superseded ADR should have ## Considered Options",
+      "severity": "note"
+    },
+    {
+      "file": "docs/architecture/architecture.dsl",
+      "rule": "dsl-unjustified",
+      "description": "element 'qsosSystem' not referenced in any Accepted ADR",
+      "severity": "note"
+    },
+    {
+      "file": "docs/architecture/architecture.dsl",
+      "rule": "dsl-unjustified",
+      "description": "element 'ideExtension' not referenced in any Accepted ADR",
+      "severity": "note"
+    },
+    {
+      "file": "docs/architecture/architecture.dsl",
+      "rule": "dsl-unjustified",
+      "description": "element 'panelView' not referenced in any Accepted ADR",
+      "severity": "note"
+    },
+    {
+      "file": "docs/architecture/architecture.dsl",
+      "rule": "dsl-unjustified",
+      "description": "element 'supervisor' not referenced in any Accepted ADR",
+      "severity": "note"
+    },
+    {
+      "file": "docs/architecture/architecture.dsl",
+      "rule": "dsl-unjustified",
+      "description": "element 'watcherHost' not referenced in any Accepted ADR",
+      "severity": "note"
+    },
+    {
+      "file": "docs/architecture/architecture.dsl",
+      "rule": "dsl-unjustified",
+      "description": "element 'eventListener' not referenced in any Accepted ADR",
+      "severity": "note"
+    },
+    {
+      "file": "docs/architecture/architecture.dsl",
+      "rule": "dsl-unjustified",
+      "description": "element 'ruleMatcher' not referenced in any Accepted ADR",
+      "severity": "note"
+    },
+    {
+      "file": "docs/architecture/architecture.dsl",
+      "rule": "dsl-unjustified",
+      "description": "element 'taskScheduler' not referenced in any Accepted ADR",
+      "severity": "note"
+    },
+    {
+      "file": "docs/architecture/architecture.dsl",
+      "rule": "dsl-unjustified",
+      "description": "element 'qsosCore' not referenced in any Accepted ADR",
+      "severity": "note"
+    },
+    {
+      "file": "docs/architecture/architecture.dsl",
+      "rule": "dsl-unjustified",
+      "description": "element 'lintEngine' not referenced in any Accepted ADR",
+      "severity": "note"
+    },
+    {
+      "file": "docs/architecture/architecture.dsl",
+      "rule": "dsl-unjustified",
+      "description": "element 'graphEngine' not referenced in any Accepted ADR",
+      "severity": "note"
+    },
+    {
+      "file": "docs/architecture/architecture.dsl",
+      "rule": "dsl-unjustified",
+      "description": "element 'ingestEngine' not referenced in any Accepted ADR",
+      "severity": "note"
+    },
+    {
+      "file": "docs/architecture/architecture.dsl",
+      "rule": "dsl-unjustified",
+      "description": "element 'lintSpoke' not referenced in any Accepted ADR",
+      "severity": "note"
+    },
+    {
+      "file": "docs/architecture/architecture.dsl",
+      "rule": "dsl-unjustified",
+      "description": "element 'graphSpoke' not referenced in any Accepted ADR",
+      "severity": "note"
+    },
+    {
+      "file": "docs/architecture/architecture.dsl",
+      "rule": "dsl-unjustified",
+      "description": "element 'mcpServer' not referenced in any Accepted ADR",
+      "severity": "note"
+    },
+    {
+      "file": "docs/architecture/architecture.dsl",
+      "rule": "dsl-unjustified",
+      "description": "element 'mcpTools' not referenced in any Accepted ADR",
+      "severity": "note"
+    },
+    {
+      "file": "docs/architecture/architecture.dsl",
+      "rule": "dsl-unjustified",
+      "description": "element 'triggersConfig' not referenced in any Accepted ADR",
+      "severity": "note"
+    },
+    {
+      "file": "docs/architecture/architecture.dsl",
+      "rule": "dsl-unjustified",
+      "description": "element 'globalState' not referenced in any Accepted ADR",
+      "severity": "note"
+    },
+    {
+      "file": "docs/architecture/architecture.dsl",
+      "rule": "adr-unlinked",
+      "description": "Accepted ADR-004 not referenced in architecture.dsl",
+      "severity": "note"
+    },
+    {
+      "file": "docs/architecture/architecture.dsl",
+      "rule": "adr-unlinked",
+      "description": "Accepted ADR-001 not referenced in architecture.dsl",
+      "severity": "note"
+    },
+    {
+      "file": "docs/architecture/architecture.dsl",
+      "rule": "adr-unlinked",
+      "description": "Accepted ADR-002 not referenced in architecture.dsl",
+      "severity": "note"
+    },
+    {
+      "file": "docs/architecture/architecture.dsl",
+      "rule": "adr-unlinked",
+      "description": "Accepted ADR-003 not referenced in architecture.dsl",
+      "severity": "note"
+    },
+    {
+      "file": "docs/architecture/architecture.dsl",
+      "rule": "adr-unlinked",
+      "description": "Accepted ADR-010 not referenced in architecture.dsl",
+      "severity": "note"
+    },
+    {
+      "file": "docs/architecture/architecture.dsl",
+      "rule": "adr-unlinked",
+      "description": "Accepted ADR-011 not referenced in architecture.dsl",
+      "severity": "note"
+    }
+  ]
+}

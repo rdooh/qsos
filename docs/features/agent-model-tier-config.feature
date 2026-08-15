@@ -1,6 +1,6 @@
 ---
 feature: Agent model tier configuration
-ticket: TIX-008
+ticket: QSO-008
 status: @done
 architecture_updated: false
 ---

@@ -159,7 +159,7 @@
     {
       "id": "QSO-027",
       "title": "Skill integration — wire skills to utilities",
-      "status": "in-progress",
+      "status": "done",
       "path": "work/QSO-027-skill-utility-integration/QSO-027-skill-utility-integration.md"
     },
     {
@@ -177,7 +177,7 @@
     {
       "id": "QSO-030",
       "title": "qsos init — new project setup wizard",
-      "status": "todo",
+      "status": "done",
       "path": "work/QSO-030-new-project-setup-wizard/QSO-030-new-project-setup-wizard.md"
     },
     {

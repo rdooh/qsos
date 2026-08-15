@@ -70,6 +70,18 @@ What claim are you verifying? State it in one sentence.
 
 Wait for the user's response, then use that as the claim. Continue with Step 2.
 
+### Step 1c — Graph scenario coverage (when available)
+
+After `/qsos-coverage-check`, if `qsos ingest` has been run and the graph registry is current, load scenario verification status:
+
+```bash
+qsos query --ticket <ticket-id> --root <project-root>
+```
+
+Include graph-backed coverage in the evidence record passed to the verifier agent. Scenarios without `VERIFIES` edges are coverage gaps to surface in the verdict context.
+
+**Fallback:** If ingest is unavailable (QSO-026 not shipped) or query fails, rely on coverage-check report and test runner output only.
+
 ---
 
 ## Step 2 — Dispatch verifier agent

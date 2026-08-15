@@ -1,7 +1,7 @@
 ---
 id: QSO-030
 title: qsos init — new project setup wizard
-status: todo
+status: done
 priority: high
 type: feat
 impact_scope:

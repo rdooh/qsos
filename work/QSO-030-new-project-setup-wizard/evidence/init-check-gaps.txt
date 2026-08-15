@@ -1,0 +1,25 @@
+{
+  "created": [],
+  "skipped": [],
+  "missing": [
+    "docs/decisions",
+    "docs/architecture",
+    "docs/architecture/diagrams",
+    "docs/contracts",
+    "docs/statecharts",
+    "docs/releases",
+    "docs/standards",
+    "work",
+    "testing",
+    "test-results",
+    "catalog-mesh.yaml",
+    "docs/README.md",
+    "docs/architecture/architecture.dsl",
+    "work/README.md",
+    "testing/README.md",
+    "work/tix-manifest.json",
+    "testing/manifest.json",
+    ".gitignore"
+  ],
+  "planned": []
+}

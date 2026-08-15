@@ -125,7 +125,25 @@ If the manifest does not exist, skip this step and note the absence.
 
 ---
 
-## Step 6b — Note code dependency drift (manual check)
+## Step 6c — Utility lint gate (preferred)
+
+Before Step 7, if the `qsos` binary is on PATH, run the close gate via utilities:
+
+```bash
+qsos lint --root <project-root>
+```
+
+When `qsos lint --sync` is available, also run:
+
+```bash
+qsos lint --sync --root <project-root>
+```
+
+**Block close** on lint exit code 1 (errors). Surface violations in the sync report.
+
+**Fallback:** If `qsos` is unavailable, run `/qsos-audit` scoped to the closing ticket and treat blockers the same way.
+
+---
 
 Read `docs/architecture/architecture.dsl`. For each container element that was changed or added during this ticket's implementation, ask: does the import/dependency structure in the code still match the `->` relationships declared in the DSL?
 

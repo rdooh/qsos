@@ -28,6 +28,14 @@ fi
 
 ## Step 1 — Resolve the ticket
 
+On **unfamiliar repos**, run layout check before loading ticket context:
+
+```bash
+qsos init --check --root <project-root>
+```
+
+If gaps are reported, surface them to the user before planning — the repo may need `qsos init` scaffolding first.
+
 Call `/task read` with the ticket ID from context, or infer the ticket from the task description. If no ticket ID can be determined, ask for one before continuing — planning without a ticket reference is planning without a record.
 
 Load from the ticket:

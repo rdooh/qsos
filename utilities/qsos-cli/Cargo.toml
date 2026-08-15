@@ -14,4 +14,5 @@ qsos-core = { workspace = true }
 qsos-graph = { workspace = true }
 qsos-ingest = { workspace = true }
 qsos-lint = { workspace = true }
+qsos-init = { workspace = true }
 serde_json = { workspace = true }

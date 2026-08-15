@@ -17,7 +17,7 @@
 | **Watcher specifications** (ADR-004, triggers schema, spoke contract) | ✅ Specified, not implemented |
 | **Utilities — Phase 1–2** (scaffold + `qsos lint`) | ✅ Done — QSO-019, QSO-020 |
 | **Utilities — Phase 3** (graph + query) | ✅ Done — QSO-022, QSO-023 |
-| **Utilities — Phase 3–8** (ingest, sync, MCP, watch, init) | 🔲 In progress — QSO-021, QSO-024–026, QSO-028, QSO-030; QSO-027 partial |
+| **Utilities — Phase 3–8** (ingest, sync, MCP, watch, init) | 🔲 In progress — QSO-021, QSO-024–026, QSO-028; QSO-027, QSO-030 ✅ |
 | **Verification standard** | ✅ BDD scenarios, ticket verify sections, manifest floor (ADR-010 §6) |
 
 **Utilities progress:** ~25% — `qsos lint` working on QSOS repo; graph/query/ingest/watch/MCP stubbed.
@@ -37,7 +37,7 @@ Skills encode procedure. Utilities automate mechanical checks. Strux (personal) 
 | Order | Ticket | Rationale |
 |---|---|---|
 | **Now** | QSO-022 → QSO-023 | Graph unlocks orient, blast-radius, coverage |
-| Next | QSO-027 (partial) | Wire `/qsos-audit` to `qsos lint` — immediate token win |
+| Next | QSO-026 | Test ingestion — unlocks full verify path |
 | Then | QSO-030 | Setup wizard — new PoC pain point |
 | Then | QSO-026 | Test ingestion for verify/coverage-check |
 | Then | QSO-021 | Drift detection for doc-sync close gate |
@@ -70,7 +70,7 @@ Reference: Strux `strux-sensors` + `strux-curator`
 - Structured violation output: `{ file, line, rule, description, severity }`
 - Exit 0 clean / 1 violations
 
-**Skill integration ticket:** [QSO-027](../work/QSO-027-skill-utility-integration/QSO-027-skill-utility-integration.md) (partial — audit tier 1)
+**Skill integration ticket:** [QSO-027](../work/QSO-027-skill-utility-integration/QSO-027-skill-utility-integration.md) ✅ done
 
 ---
 
@@ -175,10 +175,10 @@ Reference: Strux `watcher/src/main.rs`
 | QSO-024 | Rust watcher hub | 7 | open | QSO-019, QSO-020 |
 | QSO-025 | `qsos-mcp` TypeScript server | 6 | open | QSO-020, QSO-023 |
 | QSO-026 | Test ingestion + scenario mapping | 4 | open | QSO-022 |
-| QSO-027 | Skill integration (audit, orient, doc-sync, verify) | 2–4 | in-progress | QSO-020, QSO-023 |
+| QSO-027 | Skill integration (audit, orient, doc-sync, verify) | 2–4 | ✅ done | QSO-020, QSO-023 |
 | QSO-028 | `qsos init` + pre-commit hook | 8 | open | QSO-020 |
 | QSO-029 | catalog-mesh ticket prefix migration | — | ✅ done | — |
-| QSO-030 | `qsos init` new project setup wizard | 8 | open | QSO-019, QSO-020 |
+| QSO-030 | `qsos init` new project setup wizard | 8 | ✅ done | QSO-019, QSO-020 |
 | QSO-031 | TEMP dev tool — artifact graph viewer | — | ✅ done | QSO-022 |
 
 ---

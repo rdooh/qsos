@@ -35,6 +35,21 @@ enum Commands {
         blast_radius: Option<String>,
     },
     Ingest,
+    /// Scaffold a QSOS-governed project layout
+    Init {
+        #[arg(long)]
+        name: Option<String>,
+        #[arg(long)]
+        prefix: Option<String>,
+        #[arg(long)]
+        description: Option<String>,
+        #[arg(long)]
+        test_runner: Option<String>,
+        #[arg(long)]
+        check: bool,
+        #[arg(long)]
+        dry_run: bool,
+    },
 }
 
 #[derive(Subcommand)]
@@ -55,6 +70,22 @@ fn main() {
             blast_radius,
         } => run_query(&layout, ticket.as_deref(), file.as_deref(), blast_radius.as_deref()),
         Commands::Ingest => run_ingest(&layout),
+        Commands::Init {
+            name,
+            prefix,
+            description,
+            check,
+            dry_run,
+            test_runner,
+        } => run_init(
+            &cli.root,
+            name.as_deref(),
+            prefix.as_deref(),
+            description.as_deref(),
+            test_runner.as_deref(),
+            check,
+            dry_run,
+        ),
     };
 
     process::exit(code);
@@ -115,6 +146,81 @@ fn run_query(
 fn run_ingest(layout: &ProjectLayout) -> i32 {
     match qsos_ingest::ingest(layout) {
         Ok(()) => EXIT_SUCCESS,
+        Err(msg) => {
+            eprintln!("{msg}");
+            EXIT_ERROR
+        }
+    }
+}
+
+fn run_init(
+    root: &std::path::Path,
+    name: Option<&str>,
+    prefix: Option<&str>,
+    description: Option<&str>,
+    test_runner: Option<&str>,
+    check: bool,
+    dry_run: bool,
+) -> i32 {
+    use qsos_init::{InitConfig, InitMode};
+
+    let mode = if check {
+        InitMode::Check
+    } else if dry_run {
+        InitMode::DryRun
+    } else {
+        InitMode::Write
+    };
+
+    let config = if check {
+        InitConfig {
+            name: name.unwrap_or("project").to_string(),
+            prefix: prefix
+                .map(|p| qsos_init::normalize_prefix(p).unwrap_or_else(|_| p.to_string()))
+                .unwrap_or_else(|| "XXX-".into()),
+            description: description.unwrap_or("").to_string(),
+            test_runner: test_runner.map(str::to_string),
+        }
+    } else {
+        let name = match name {
+            Some(n) => match qsos_init::validate_name(n) {
+                Ok(()) => n.to_string(),
+                Err(e) => {
+                    eprintln!("{e}");
+                    return EXIT_ERROR;
+                }
+            },
+            None => {
+                eprintln!("qsos init requires --name (unless --check)");
+                return EXIT_ERROR;
+            }
+        };
+        let prefix = match prefix {
+            Some(p) => match qsos_init::normalize_prefix(p) {
+                Ok(p) => p,
+                Err(e) => {
+                    eprintln!("{e}");
+                    return EXIT_ERROR;
+                }
+            },
+            None => {
+                eprintln!("qsos init requires --prefix (unless --check)");
+                return EXIT_ERROR;
+            }
+        };
+        InitConfig {
+            name,
+            prefix,
+            description: description.unwrap_or("QSOS-governed project").to_string(),
+            test_runner: test_runner.map(str::to_string),
+        }
+    };
+
+    match qsos_init::run_init(root, &config, mode) {
+        Ok(report) => {
+            println!("{}", serde_json::to_string_pretty(&report).unwrap_or_else(|_| "{}".into()));
+            report.exit_code(mode)
+        }
         Err(msg) => {
             eprintln!("{msg}");
             EXIT_ERROR

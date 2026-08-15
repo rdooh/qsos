@@ -211,6 +211,7 @@ dependencies = [
  "qsos-core",
  "qsos-graph",
  "qsos-ingest",
+ "qsos-init",
  "qsos-lint",
  "serde_json",
 ]
@@ -243,6 +244,17 @@ dependencies = [
  "qsos-core",
  "serde",
  "serde_json",
+]
+
+[[package]]
+name = "qsos-init"
+version = "0.1.0"
+dependencies = [
+ "qsos-core",
+ "qsos-lint",
+ "serde",
+ "serde_json",
+ "tempfile",
 ]
 
 [[package]]

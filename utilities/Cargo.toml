@@ -6,6 +6,7 @@ members = [
     "qsos-graph",
     "qsos-ingest",
     "qsos-watch",
+    "qsos-init",
     "qsos-cli",
 ]
 
@@ -27,3 +28,4 @@ qsos-lint = { path = "qsos-lint" }
 qsos-graph = { path = "qsos-graph" }
 qsos-ingest = { path = "qsos-ingest" }
 qsos-watch = { path = "qsos-watch" }
+qsos-init = { path = "qsos-init" }

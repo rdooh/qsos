@@ -1,0 +1,5 @@
+skills/qsos-audit.md
+skills/qsos-orient.md
+skills/qsos-doc-sync.md
+skills/qsos-verify.md
+skills/qsos-coverage-check.md

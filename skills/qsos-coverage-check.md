@@ -152,6 +152,20 @@ Flag uncovered scenarios as `[UNCOVERED_SCENARIO: <scenario name>]`.
 
 **Note:** this is a textual proximity check, not runtime coverage. It catches obvious gaps (no test file at all for a new command) — it does not prove full branch coverage.
 
+### Step 5b — Graph-assisted scenario coverage (preferred)
+
+When `qsos query` is available and the graph registry is compiled:
+
+```bash
+qsos query --ticket <ticket-id> --root <project-root>
+```
+
+Cross-reference `scenario` nodes in the subgraph against test coverage. When `qsos ingest` has been run (QSO-026), use `VERIFIES` edges to mark scenarios as covered.
+
+Flag scenarios with no verifying test edge as `[UNCOVERED_SCENARIO: <name>]`.
+
+**Fallback:** If utilities are unavailable or ingest has not run, use Step 5 textual proximity check only and note `graph delegation skipped`.
+
 ---
 
 ## Step 6 — Assess severity

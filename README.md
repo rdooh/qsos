@@ -14,7 +14,8 @@ agents/       — Specialist agent definitions (deployed to ~/.claude/agents/)
 utilities/    — Future CLI and MCP server source
 extension/    — Future VS Code side panel
 docs/         — Capabilities, roadmap, decisions, standards, feature files
-work/         — Active and closed tickets conforming to Open TIX v1.0 (catalyst/opentix/SPEC.md)
+work/         — Active and closed tickets (conforming to Open TIX v1.0 Specification)
+
 catalog-mesh.yaml — Component identity and ticket prefix (QSO-)
 deploy.sh     — Deploy skills and agents to Claude Code (symlink mode by default)
 deploy_gemini.py — Deploy skills and agents to Gemini CLI plugin system

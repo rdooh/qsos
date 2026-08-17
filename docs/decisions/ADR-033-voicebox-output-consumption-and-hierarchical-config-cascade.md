@@ -43,9 +43,13 @@ graph TD
 3. **Realtime Chunked Bitstream (SSE / WebSocket)**:
    - *Use Case*: Ultra-low latency agent chat (First-Word-Out < 250ms).
    - *Consumption*: Emits progressive audio byte chunks as speech is synthesized.
-4. **Structured Telemetry & Metadata**:
+4. **Simultaneous Multiplexed Mode (Live Stream + Simultaneous Disk Save)**:
+   - *Use Case*: Realtime conversational agent chat that requires instant live ear streaming while simultaneously archiving full recorded audio master files to disk.
+   - *Consumption*: As audio byte chunks are generated, VoiceBox splits the stream—transmitting bytes live over SSE/WebSocket to the host application while simultaneously buffering and writing the master MP3/WAV file to disk.
+5. **Structured Telemetry & Metadata**:
    - *Use Case*: Quality tracking, performance monitoring.
-   - *Consumption*: Returns JSON metadata containing `ttfa_ms`, `sample_rate`, `engine_used`, `duration_sec`, and `voice_id`.
+   - *Consumption*: Returns JSON metadata containing `ttfa_ms`, `sample_rate`, `engine_used`, `duration_sec`, `voice_id`, and `saved_filepath`.
+
 
 ---
 

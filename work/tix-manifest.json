@@ -185,6 +185,12 @@
       "title": "TEMP dev tool — artifact graph viewer (HTML)",
       "status": "done",
       "path": "work/QSO-031-temp-dev-tool-graph-viewer/QSO-031-temp-dev-tool-graph-viewer.md"
+    },
+    {
+      "id": "QSO-032",
+      "title": "Provider-Agnostic Canonical Plan Standard (Strategy vs Action Taxonomy)",
+      "status": "ready",
+      "path": "work/QSO-032-provider-agnostic-canonical-plans/QSO-032-provider-agnostic-canonical-plans.md"
     }
   ]
 }

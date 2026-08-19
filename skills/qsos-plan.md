@@ -114,6 +114,18 @@ Then use `AskUserQuestion` with a single question:
   - "Changes needed — I'll describe them"
   - "Abort — do not implement"
 
+**On approval — persist the plan (Open TIX v1.1 §6):**
+
+Write the approved plan to:
+
+```text
+work/plans/YYYY-MM-DD-action-<slug>.md
+```
+
+Use today's date and a slug derived from the ticket or feature area. Frontmatter MUST include `type: action`, `status: active`, `tickets: [<id>]`, and linked `adrs:` when applicable. Body follows the action-plan template in [Open TIX SPEC §6](../../catalyst/opentix/SPEC.md).
+
+Add `plan: work/plans/...` to the ticket frontmatter. Update `work/tix-manifest.json` `active_plan` if this is the current execution plan.
+
 **If the user selects "Approved — proceed to implementation":**
 
 Log the `plan_approved` event, then hand off to `/qsos-implement`:

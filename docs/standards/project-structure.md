@@ -77,6 +77,7 @@ docs/                              — durable specification + durable evidence
 
 work/                              — point-in-time work (transient)
   tix-manifest.json                — compiled ticket registry (auto-generated)
+  plans/                           — multi-ticket execution plans (Open TIX v1.1 §6)
   QSO-NNN-slug/                    — one folder per ticket
     QSO-NNN-slug.md                — always present; frontmatter + description
     screenshots/                   — UI evidence captured during verification (committed)
@@ -316,6 +317,7 @@ title: [Ticket Title]
 status: [todo | ready | in-progress | done]
 priority: [low | medium | high]
 type: [feat | fix | chore | refactor]
+plan: work/plans/YYYY-MM-DD-action-<slug>.md   # optional — parent Open TIX plan
 impact_scope:
   - [packages/component-name]
 features:
@@ -338,6 +340,16 @@ A ticket is `ready` (eligible for implementation) when:
 - No open blocking dependencies
 
 The `/plan` skill checks readiness before producing an implementation plan.
+
+### Plans (Open TIX v1.1)
+
+Multi-ticket execution plans live in `work/plans/` per **[Open TIX SPEC §6](https://github.com/rdooh/opentix/blob/main/SPEC.md)** (local: `catalyst/opentix/SPEC.md`). QSOS does not duplicate the plan schema.
+
+| Artifact | Owner |
+| :--- | :--- |
+| Plan format | Open TIX (`catalyst/opentix/`) |
+| Plan persistence | `/qsos-plan` on approval |
+| Plan context load | `/qsos-orient` reads `status: active` plans |
 
 ---
 
